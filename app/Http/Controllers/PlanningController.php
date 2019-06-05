@@ -58,7 +58,7 @@ class PlanningController extends Controller
      */
     public function edit(Planning $planning)
     {
-        //
+        return view('planning/editplanning');
     }
 
     /**
