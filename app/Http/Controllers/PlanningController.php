@@ -2,9 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\Planning;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+
+use App\Planning as Planning;
 
 class PlanningController extends Controller
 {
@@ -15,7 +16,8 @@ class PlanningController extends Controller
      */
     public function index()
     {
-        return view('planning/planning');
+        $tasks = Planning::all();
+        return view('planning/planning',compact('tasks'));
     }
 
     /**

@@ -6,12 +6,27 @@
     <link href='../packages/core/main.css' rel='stylesheet' />
     <link href='../packages/daygrid/main.css' rel='stylesheet' />
     <link type="javascript" src="../js/script.js" />
+    <link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.1.0/fullcalendar.min.css' />
+
 
     <script src='../packages/core/main.js'></script>
     <script src='../packages/daygrid/main.js'></script>
     <script src="http://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="//code.jquery.com/jquery-1.11.3.min.js"></script>
+    <script src='https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.17.1/moment.min.js'></script>
+    <script src='https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.1.0/fullcalendar.min.js'></script>
+    <!-- <script type="text/javascript">
+      function printConsole() {
+          let date;
+          let myDom = $("#calendar > div.fc-view-container > div > table > tbody > tr > td > div > div > div > div.fc-bg > table > tbody > tr > td.fc-day");
+          myDom.on('click',function(e){
+              date = $(this)[0].dataset.date;
+              document.cookie = 'date='+date+'';
+          });
+      }
+    </script> -->
 
-    <script>
+    <!-- <script>
 
       document.addEventListener('DOMContentLoaded', function() {
         var calendarEl = document.getElementById('calendar');
@@ -23,7 +38,7 @@
         calendar.render();
       });
 
-    </script>
+    </script> -->
   </head>
   <body>
 
@@ -32,19 +47,24 @@
     @endif
 
     <div id='calendar' onclick="printConsole()"></div>
-
-    
+    <div>
+        <script>
+            $(document).ready(function() {
+                // page is now ready, initialize the calendar...
+                $('#calendar').fullCalendar({
+                    // put your options and callbacks here
+                    events : [
+                        @foreach($tasks as $task)
+                        {
+                            title : '{{ $task->operator }}',
+                            start : '{{ $task->date }}'
+                        },
+                        @endforeach
+                    ]
+                })
+            });
+        </script>
+    </div>
   </body>
-  <script type="text/javascript">
-    function printConsole() {
-        let date;
-        let myDom = $("#calendar > div.fc-view-container > div > table > tbody > tr > td > div > div > div > div.fc-bg > table > tbody > tr > td.fc-day");
-        myDom.on('click',function(e){
-            date = $(this)[0].dataset.date;
-            console.log("date: ", date);
-            $(this).attr('href','activity');
-        });
-        console.log("myDom: ", myDom);
-    }
-  </script>
+  
 </html>

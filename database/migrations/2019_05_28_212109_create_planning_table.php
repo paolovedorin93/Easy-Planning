@@ -13,7 +13,7 @@ class CreatePlanningTable extends Migration
      */
     public function up()
     {
-        Schema::create('planning', function (Blueprint $table) {
+        Schema::create('plannings', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->string('operator');
             $table->date('date');
@@ -30,6 +30,6 @@ class CreatePlanningTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('planning');
+        Schema::dropIfExists('plannings');
     }
 }
