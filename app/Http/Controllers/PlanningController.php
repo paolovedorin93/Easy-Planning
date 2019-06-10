@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 
 use App\Planning as Planning;
+use App\Worker as Worker;
 
 class PlanningController extends Controller
 {
@@ -17,7 +18,8 @@ class PlanningController extends Controller
     public function index()
     {
         $tasks = Planning::all();
-        return view('planning/planning',compact('tasks'));
+        $workers = Worker::all();
+        return view('planning/planning',compact('tasks','workers'));
     }
 
     /**
