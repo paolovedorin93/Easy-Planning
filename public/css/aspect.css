@@ -1,0 +1,4 @@
+.fc-row.fc-week.fc-widget-content,
+.fc-scroller.fc-day-grid-container {
+    height: 100px !important;
+}
