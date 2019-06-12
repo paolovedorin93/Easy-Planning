@@ -2,11 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\Worker;
+use App\Worker as Worker;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 
-use App\User as User;
 
 class WorkerController extends Controller
 {
@@ -17,7 +16,7 @@ class WorkerController extends Controller
      */
     public function index()
     {
-        $workers = User::all();
+        $workers = Worker::all();
         return view('worker/workers',compact('workers'));
     }
 

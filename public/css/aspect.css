@@ -2,3 +2,7 @@
 .fc-scroller.fc-day-grid-container {
     height: 100px !important;
 }
+
+.noBorders {
+    border: none;
+}
