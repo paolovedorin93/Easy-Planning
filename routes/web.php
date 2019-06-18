@@ -21,7 +21,9 @@ Route::get('/home', 'HomeController@index')->name('home');
 
 Route::get('/planning', 'PlanningController@index')->name('planning');
 
-Route::get('planning/activity', 'PlanningController@edit')->name('activity');
+Route::get('/planning/add', 'PlanningController@create')->name('planning');
+
+Route::any('/planning/activity/{id}/edit', 'PlanningController@edit')->name('activity');
 
 Route::get('/workers', 'WorkerController@index')->name('worker');
 
