@@ -15,7 +15,7 @@
     <script src="http://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
     <script src="//code.jquery.com/jquery-1.11.3.min.js"></script>
     <script src='https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.17.1/moment.min.js'></script>
-    <script src='https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.1.0/fullcalendar.min.js'></script>
+    <script src='https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.1.0/fullcalendar.min.js'></script> 
   </head>
   <body>
 
@@ -30,12 +30,14 @@
       $(document).ready(function() {
         // page is now ready, initialize the calendar...
         $('#calendar{{ $worker->name }}').fullCalendar({
+          lang: 'it',
           header: {
               left: 'prev,next today',
               center: 'title',
-              right: 'month,basicWeek,basicDay'
+              right: 'month,basicWeek,basicDay',
           },
           defaultView: 'basicWeek',
+          hiddenDays: [0,6],
           // put your options and callbacks here
           events: [
             @foreach($tasks as $task)
@@ -51,13 +53,36 @@
         });
         @foreach($tasks as $task)
           @if($worker->name === $task->operator)
-            $(".fc-title").toggleClass("{{ $task->operator }}");
-            $(".{{ $task->operator }}").removeClass("fc-title");
+            $('.fc-title').toggleClass('{{ $task->operator }}');
+            $('.{{ $task->operator }}').removeClass('fc-title');
           @endif
         @endforeach
       });
     </script>
     @endforeach
+
+    <div id='calendarHard'></div>
+    <script>
+      $(document).ready(function() {
+        // page is now ready, initialize the calendar...
+        $('#calendarHard').fullCalendar({
+          defaultView: 'basicWeek',
+          hiddenDays: [0,6],
+          events: [
+            @foreach($tasks as $task)
+              {
+                  start : '{{ $task->date }}',
+                  end : '{{ $task->enddate }}',
+              },
+            @endforeach
+          ]
+        });
+        @foreach($tasks as $task)
+          $('.fc-title').toggleClass('{{ $task->operator }}');
+          $('{{ $task->operator }}').removeClass('fc-title');
+        @endforeach
+      });
+    </script>
   </body>
   
 </html>
