@@ -64,7 +64,7 @@
     <div id='calendarHard'></div>
     <script>
       $(document).ready(function() {
-        // page is now ready, initialize the calendar...
+        $('intensity').removeClass('intensity');
         $('#calendarHard').fullCalendar({
           defaultView: 'basicWeek',
           hiddenDays: [0,6],
@@ -77,10 +77,30 @@
             @endforeach
           ]
         });
-        @foreach($tasks as $task)
-          $('.fc-title').toggleClass('{{ $task->operator }}');
-          $('{{ $task->operator }}').removeClass('fc-title');
-        @endforeach
+        let busyWorker = 0;
+        let worker, date, assWorker, day, today, strName;
+        
+          @for($numDay=0;$numDay<5;$numDay++)
+            @if($numDay===0)
+              strName = 'mon';
+            @endif
+            @if($numDay===1)
+              strName = 'tue';
+            @endif
+            @if($numDay===2)
+              strName = 'wed';
+            @endif
+            @if($numDay===3)
+              strName = 'thu';
+            @endif
+            @if($numDay===4)
+              strName = 'fri';
+            @endif
+            console.log("STRNAME: ", strName);
+            date = $('#calendarTest1 > div.fc-view-container > div > table > tbody > tr > td > div > div > div > div.fc-bg > table > tbody > tr > .fc-widget-content.fc-'+strName)[0].dataset.date;
+            console.log("DATE: ", date);
+          @endfor
+        
       });
     </script>
   </body>
