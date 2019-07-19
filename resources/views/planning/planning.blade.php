@@ -46,6 +46,7 @@
                   title : '{{ $task->operator }} >>> {{ $task->activity }}',
                   start : '{{ $task->date }}',
                   end : '{{ $task->enddate }}',
+                  url : '{{ $task->id }}/edit',
               },
               @endif
             @endforeach
@@ -55,6 +56,7 @@
           @if($worker->name === $task->operator)
             $('.fc-title').toggleClass('{{ $task->operator }}');
             $('.{{ $task->operator }}').removeClass('fc-title');
+            $("#calendar{{ $worker->name }} > div.fc-view-container > div > table > tbody > tr > td > div > div > div > div.fc-content-skeleton > table > tbody > tr > td.fc-event-container > a").addClass("{{ $task->type }}");
           @endif
         @endforeach
       });
@@ -71,38 +73,50 @@
           events: [
             @foreach($tasks as $task)
               {
-                  start : '{{ $task->date }}',
-                  end : '{{ $task->enddate }}',
+                start : '{{ $task->date }}',
+                end : '{{ $task->enddate }}',
+                title : '{{ $task->date }}',
               },
             @endforeach
-          ]
+          ],
+          eventRender: function(){
+            //add here your eventRender
+          },
         });
-        let busyWorker = 0;
-        let worker, date, assWorker, day, today, strName;
-        
-          @for($numDay=0;$numDay<5;$numDay++)
-            @if($numDay===0)
-              strName = 'mon';
-            @endif
-            @if($numDay===1)
-              strName = 'tue';
-            @endif
-            @if($numDay===2)
-              strName = 'wed';
-            @endif
-            @if($numDay===3)
-              strName = 'thu';
-            @endif
-            @if($numDay===4)
-              strName = 'fri';
-            @endif
-            console.log("STRNAME: ", strName);
-            date = $('#calendarTest1 > div.fc-view-container > div > table > tbody > tr > td > div > div > div > div.fc-bg > table > tbody > tr > .fc-widget-content.fc-'+strName)[0].dataset.date;
-            console.log("DATE: ", date);
-          @endfor
-        
+        let dateActivity, dateCalendar, dom, i, allDom, myDom, workerBusy, operator, date, dateOperator, oldDateOperator;
+        oldDateOperator = [ ];
+        @foreach($tasks as $task)
+          dateActivity = "{{ $task->date }}";
+          operator = "{{ $task->operator }}";
+          dateOperator = [ operator, dateActivity ];
+          dom = $("#calendarHard > div.fc-view-container > div > table > tbody > tr > td > div > div > div > div.fc-bg > table > tbody > tr > td");
+          allDom = $("#calendarHard > div.fc-view-container > div > table > tbody > tr > td > div > div > div > div.fc-bg > table > tbody > tr").children();
+          for(i=0;i<dom.length;i++){
+            dateCalendar = dom[i].dataset.date;
+            //console.log("dateOperator === oldDateOperator", dateOperator != oldDateOperator);
+            if(dateActivity === dateCalendar) {
+              if(oldDateOperator[0] != dateOperator[0]){
+                var insertDom = function insertAtIndex(e) {
+                  let index = e+1;
+                  $("#calendarHard > div.fc-view-container > div > table > tbody > tr > td > div > div > div > div.fc-bg > table > tbody > tr > td:nth-child(" + (index) + ")").append("<div>great things</div>");
+                }
+                insertDom(i);
+                workerBusy = $("#calendarHard > div.fc-view-container > div > table > tbody > tr > td > div > div > div > div.fc-bg > table > tbody > tr > td:nth-child(" + (i+1) + ")").children().length;
+                if({{sizeof($workers)}} - workerBusy === 3)
+                $("#calendarHard > div.fc-view-container > div > table > tbody > tr > td > div > div > div > div.fc-bg > table > tbody > tr > td:nth-child(" + (i+1) + ")").toggleClass("noOne");
+                if({{sizeof($workers)}} - workerBusy === 2)
+                $("#calendarHard > div.fc-view-container > div > table > tbody > tr > td > div > div > div > div.fc-bg > table > tbody > tr > td:nth-child(" + (i+1) + ")").toggleClass("one");
+                if({{sizeof($workers)}} - workerBusy === 1)
+                $("#calendarHard > div.fc-view-container > div > table > tbody > tr > td > div > div > div > div.fc-bg > table > tbody > tr > td:nth-child(" + (i+1) + ")").toggleClass("two");
+                if({{sizeof($workers)}} - workerBusy === 0)
+                $("#calendarHard > div.fc-view-container > div > table > tbody > tr > td > div > div > div > div.fc-bg > table > tbody > tr > td:nth-child(" + (i+1) + ")").toggleClass("three");
+                console.log("dateOperator - oldDateOperator: ", dateOperator, oldDateOperator);
+                oldDateOperator = [ operator, dateActivity ];
+              }
+            }
+          }
+        @endforeach
       });
     </script>
   </body>
-  
 </html>

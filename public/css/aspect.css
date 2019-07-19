@@ -3,6 +3,34 @@
     height: 100px !important;
 }
 
-.noBorders {
-    border: none;
+.interno {
+    background-color: red !important;
+    border-color: red !important;
+}
+
+.confermato {
+    background-color: green !important;
+    border-color: green !important;
+}
+
+.attesa {
+    background-color: brown !important;
+    border-color: brown !important;
+    color: #fff !important;
+}
+
+.noOne {
+    background-color: green !important;
+}
+
+.one {
+    background-color: lightgreen !important;
+}
+
+.two {
+    background-color: #FF5D00 !important;
+}
+
+.three {
+    background-color: #f00 !important;
 }

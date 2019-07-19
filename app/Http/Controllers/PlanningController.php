@@ -17,8 +17,9 @@ class PlanningController extends Controller
      */
     public function index()
     {
-        $tasks = Planning::all();
+        $tasks = collect(Planning::all());
         $workers = Worker::all();
+        $tasks = $tasks->sortBy('operator');
         return view('planning/planning',compact('tasks','workers'));
     }
 

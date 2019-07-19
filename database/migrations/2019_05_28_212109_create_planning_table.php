@@ -19,6 +19,7 @@ class CreatePlanningTable extends Migration
             $table->date('date');
             $table->string('activity');
             $table->string('state');
+            $table->string('type');
             $table->timestamps();
         });
     }
