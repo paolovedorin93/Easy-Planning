@@ -34,3 +34,7 @@
 .three {
     background-color: #f00 !important;
 }
+
+.hidden {
+    display: none;
+}
