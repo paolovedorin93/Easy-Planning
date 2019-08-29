@@ -20,10 +20,14 @@ Auth::routes();
 Route::get('/home', 'HomeController@index')->name('home');
 
 Route::get('/planning', 'PlanningController@index')->name('planning');
-
 Route::get('/planning/add', 'PlanningController@create')->name('planning');
+Route::get('planning/{id}/edit', 'PlanningController@edit')->name('activity');
+Route::get('planning/{id}/delete', 'PlanningController@delete');
+Route::any('/planning/{id}/edited',['as'=>'new_activity','uses'=>'PlanningController@update']);
+Route::get('/planning/add',['as'=>'new_activity','uses'=>'PlanningController@create']);
+Route::any('/planning/added',['as'=>'new_activity','uses'=>'PlanningController@store']);
 
-Route::any('/planning/activity/{id}/edit', 'PlanningController@edit')->name('activity');
+//Route::resource('planning','PlanningController'); --> NON FUNZIONA IL RESTO DELLE FUNZIONI
 
 Route::get('/workers', 'WorkerController@index')->name('worker');
 

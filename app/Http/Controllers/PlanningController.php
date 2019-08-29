@@ -30,7 +30,7 @@ class PlanningController extends Controller
      */
     public function create()
     {
-        //
+        return view('planning/add');
     }
 
     /**
@@ -41,7 +41,15 @@ class PlanningController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $activity = new Planning;
+        $activity->activity = $request->get('activity');
+        $activity->operator = $request->get('operator');
+        $activity->date = $request->get('date');
+        $activity->type = $request->get('type');
+        $activity->hour = $request->get('hour');
+        $activity->state = $request->get('state');
+        $activity->save();
+        return redirect('/planning');
     }
 
     /**
@@ -61,9 +69,10 @@ class PlanningController extends Controller
      * @param  \App\Planning  $planning
      * @return \Illuminate\Http\Response
      */
-    public function edit(Planning $planning)
+    public function edit($id)
     {
-        return view('planning/editplanning');
+        $activity = Planning::find($id);
+        return view('planning/editplanning', compact('activity'));
     }
 
     /**
@@ -73,9 +82,17 @@ class PlanningController extends Controller
      * @param  \App\Planning  $planning
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Planning $planning)
+    public function update(Request $request, $id)
     {
-        //
+        $activity = Planning::find($id);
+        $activity->activity = $request->get('activity');
+        $activity->operator = $request->get('operator');
+        $activity->date = $request->get('date');
+        $activity->type = $request->get('type');
+        $activity->hour = $request->get('hour');
+        $activity->state = $request->get('state');
+        $activity->save();
+        return redirect('/planning');
     }
 
     /**

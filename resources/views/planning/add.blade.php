@@ -2,13 +2,12 @@
 <html lang='it'>
   <head>
     <meta charset='utf-8' />
-    <meta name="csrf-token" content="{{ csrf_token() }}">
-    
+
     <link type="javascript" src="../js/script.js" />
-    <link type="javascript" src="../public/js/function.js"/>
+
     
     <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
-    
+
     <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
     <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
     <script src="https://github.com/jquery/jquery-ui/blob/master/ui/i18n/datepicker-it.js"></script>
@@ -20,14 +19,14 @@
             dayNamesMin: [ "Dom", "Lun", "Mar", "Mer", "Gio", "Ven", "Sab" ],
             monthNames: [ "Gennaio","Febbraio","Marzo","Aprile","Maggio","Giugno",
                           "Luglio","Agosto","Settembre","Ottobre","Novembre","Dicembre" ],
-            firstDay: 1
+            firstday: 1
         });
     } );
     </script>
-
+    
   </head>
   <body>
-    <form method="post" action="{{ action('PlanningController@update', [$activity['id']]) }}" onsubmit='return checkRequired()'>
+    <form method="post" action="{{ action('PlanningController@store') }}">
         {{ csrf_field() }}
         <table class="table table-striped">
             <thead>
@@ -44,18 +43,18 @@
                 <tr align="center">
                     <td>
                         <div class="col-sm-10">
-                            <textarea name="activity" rows="2" cols="40" required placeholder="{{ $activity->activity }}">{{ $activity->activity }}</textarea>
+                            <textarea name="activity" rows="2" cols="40" required></textarea>
                         </div>
                     </td>
                     <td>
                         <div class="form-group row">
                             <div class="col-sm-10">
-                                <input name="type" rows="2" cols="40" required value="{{ $activity->type }}" placeholder="{{ $activity->type }}">
+                                <input name="type" rows="2" cols="40" required>
                             </div>
                         </div>
                     </td>
                     <td>
-                        <div class="form-group row" id="hourDiv">
+                        <div class="form-group row">
                             <div class="col-sm-10">
                                 <input type="checkbox" name="hour" value="0"><span>Mattino</span>
                                 <input type="checkbox" name="hour" value="1"><span>Pomeriggio</span>
@@ -72,14 +71,14 @@
                     <td>
                         <div class="form-group row">
                             <div class="col-sm-10">
-                                <input name="operator" value="{{ $activity->operator }}">
+                                <input name="operator" value="---">
                             </div>
                         </div>
                     </td>
                     <td>
                         <div class="form-group row">
                             <div class="col-sm-10">
-                                <input name="state" value="">
+                                <input name="state" value="-">
                             </div>
                         </div>
                     </td>
@@ -94,13 +93,3 @@
     </form>
   </body>
 </html>
-<script>
-    function checkRequired(){
-        var checkedboxes = $('#hourDiv :checkbox:checked').length;
-
-        if (checkedboxes === 0){
-            alert('Selezionare periodo di attività');
-            return false;
-        }
-    }
-</script>

@@ -46,67 +46,65 @@
                   title : '{{ $task->operator }} >>> {{ $task->activity }}',
                   start : '{{ $task->date }}',
                   end : '{{ $task->enddate }}',
-                  url : '{{ $task->id }}/edit',
+                  url : '{{ action("PlanningController@edit", $task["id"]) }}',
+                  className : '{{ $task->type }}',
               },
               @endif
             @endforeach
           ]
         });
-        @foreach($tasks as $task)
-          @if($worker->name === $task->operator)
-            $('.fc-title').toggleClass('{{ $task->operator }}');
-            $('.{{ $task->operator }}').removeClass('fc-title');
-            $("#calendar{{ $worker->name }} > div.fc-view-container > div > table > tbody > tr > td > div > div > div > div.fc-content-skeleton > table > tbody > tr > td.fc-event-container > a").addClass("{{ $task->type }}");
-          @endif
-        @endforeach
       });
     </script>
     @endforeach
 
-    <div id='calendarHard'></div>
+    <div id='calendarHardMor'></div>
+    <div id='calendarHardEvn'></div>
     <script>
       $(document).ready(function() {
         $('intensity').removeClass('intensity');
-        $('#calendarHard').fullCalendar({
+        $('#calendarHardMor').fullCalendar({
           defaultView: 'basicWeek',
           hiddenDays: [0,6],
         });
-        let dateActivity, dateCalendar, dom, i, allDom, myDom, workerBusy, operator, date, dateOperator, oldDateOperator, checkMore;
+        $('#calendarHardEvn').fullCalendar({
+          defaultView: 'basicWeek',
+          hiddenDays: [0,6],
+        });
+        let dateActivity, dateCalendar, dom, i, myDom, workerBusy, operator, date, dateOperator, oldDateOperator, checkMore, calendar;
         oldDateOperator = [ ];
         @foreach($tasks as $task)
           dateActivity = "{{ $task->date }}";
           operator = "{{ $task->operator }}";
           hour = "{{ $task->hour }}";
-          console.log("task hour 0: ", hour, operator, dateActivity);
           dateOperator = [ operator, dateActivity ];
-          dom = $("#calendarHard > div.fc-view-container > div > table > tbody > tr > td > div > div > div > div.fc-bg > table > tbody > tr > td");
-          allDom = $("#calendarHard > div.fc-view-container > div > table > tbody > tr > td > div > div > div > div.fc-bg > table > tbody > tr").children();
+          if(hour==="0"){
+            calendar = "#calendarHardMor";
+            dom = $("#calendarHardMor > div.fc-view-container > div > table > tbody > tr > td > div > div > div > div.fc-bg > table > tbody > tr > td");
+          } else{
+            calendar = "#calendarHardEvn";
+            dom = $("#calendarHardEvn > div.fc-view-container > div > table > tbody > tr > td > div > div > div > div.fc-bg > table > tbody > tr > td");
+          }
           for(i=0;i<dom.length;i++){
             dateCalendar = dom[i].dataset.date;
-            $("#calendarHard > div.fc-view-container > div > table > tbody > tr > td > div > div > div > div.fc-bg > table > tbody > tr > td:nth-child(" + (i+1) + ")").toggleClass("noOne");
-            //console.log("dateOperator === oldDateOperator", dateOperator != oldDateOperator);
+            $(calendar + " > div.fc-view-container > div > table > tbody > tr > td > div > div > div > div.fc-bg > table > tbody > tr > td:nth-child(" + (i+1) + ")").toggleClass("noOne");
             if(dateActivity === dateCalendar) {
-              // console.log("ATTENZIONE !!!");
-              // console.log("Operator arrays_", oldDateOperator[0], dateOperator[0], oldDateOperator[1], dateOperator[1]);
-              // console.log("FINE ATTENZIONE !!!");
               if(oldDateOperator[0]===dateOperator[0])
                 if(oldDateOperator[1]===dateOperator[1])
                   checkMore = 1;
               if(oldDateOperator[1] != dateOperator[1] || checkMore != 1){
                 var insertDom = function insertAtIndex(e) {
                   let index = e+1;
-                  $("#calendarHard > div.fc-view-container > div > table > tbody > tr > td > div > div > div > div.fc-bg > table > tbody > tr > td:nth-child(" + (index) + ")").append('<div class="hidden">great things</div>');
+                  $(calendar + " > div.fc-view-container > div > table > tbody > tr > td > div > div > div > div.fc-bg > table > tbody > tr > td:nth-child(" + (index) + ")").append('<div class="hidden">great things</div>');
                 }
                 insertDom(i);
-                workerBusy = $("#calendarHard > div.fc-view-container > div > table > tbody > tr > td > div > div > div > div.fc-bg > table > tbody > tr > td:nth-child(" + (i+1) + ")").children().length;
+                workerBusy = $(calendar + " > div.fc-view-container > div > table > tbody > tr > td > div > div > div > div.fc-bg > table > tbody > tr > td:nth-child(" + (i+1) + ")").children().length;
                 //TODO: sistemare calcolo per intensità giornata
                 if({{sizeof($workers)}} - workerBusy === 2)
-                $("#calendarHard > div.fc-view-container > div > table > tbody > tr > td > div > div > div > div.fc-bg > table > tbody > tr > td:nth-child(" + (i+1) + ")").toggleClass("one");
+                $(calendar + " > div.fc-view-container > div > table > tbody > tr > td > div > div > div > div.fc-bg > table > tbody > tr > td:nth-child(" + (i+1) + ")").toggleClass("one");
                 if({{sizeof($workers)}} - workerBusy === 1)
-                $("#calendarHard > div.fc-view-container > div > table > tbody > tr > td > div > div > div > div.fc-bg > table > tbody > tr > td:nth-child(" + (i+1) + ")").toggleClass("two");
+                $(calendar + " > div.fc-view-container > div > table > tbody > tr > td > div > div > div > div.fc-bg > table > tbody > tr > td:nth-child(" + (i+1) + ")").toggleClass("two");
                 if({{sizeof($workers)}} - workerBusy === 0)
-                $("#calendarHard > div.fc-view-container > div > table > tbody > tr > td > div > div > div > div.fc-bg > table > tbody > tr > td:nth-child(" + (i+1) + ")").toggleClass("three");
-                //console.log("dateOperator - oldDateOperator: ", dateOperator, oldDateOperator);
+                $(calendar + " > div.fc-view-container > div > table > tbody > tr > td > div > div > div > div.fc-bg > table > tbody > tr > td:nth-child(" + (i+1) + ")").toggleClass("three");
                 oldDateOperator = [ operator, dateActivity ];
               }
               checkMore = 0;
