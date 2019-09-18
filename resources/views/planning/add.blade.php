@@ -36,7 +36,6 @@
                     <th>Periodo</th>
                     <th>Data</th>
                     <th>Operator</th>
-                    <th>State</th>
                 </tr>
             </thead>
             <tbody>
@@ -71,14 +70,11 @@
                     <td>
                         <div class="form-group row">
                             <div class="col-sm-10">
-                                <input name="operator" value="---">
-                            </div>
-                        </div>
-                    </td>
-                    <td>
-                        <div class="form-group row">
-                            <div class="col-sm-10">
-                                <input name="state" value="-">
+                                <select name="operator">
+                                    @foreach($users as $user)
+                                        <option value="{{ $user->name }}">{{ $user->name }}</option>
+                                    @endforeach
+                                </select>
                             </div>
                         </div>
                     </td>

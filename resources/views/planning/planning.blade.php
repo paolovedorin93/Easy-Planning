@@ -15,7 +15,7 @@
     <script src="http://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
     <script src="//code.jquery.com/jquery-1.11.3.min.js"></script>
     <script src='https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.17.1/moment.min.js'></script>
-    <script src='https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.1.0/fullcalendar.min.js'></script> 
+    <script src='https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.1.0/fullcalendar.min.js'></script>
   </head>
   <body>
 
@@ -38,6 +38,16 @@
           },
           defaultView: 'basicWeek',
           hiddenDays: [0,6],
+          eventMouseover : function(data, event, element) {
+            var content = '<h3>'+data.title+'</h3>' + 
+                '<p><b>Start:</b> '+data.start+'<br />' + 
+                (data.end && '<p><b>End:</b> '+data.end+'</p>' || '');
+
+            $(element).tooltip({
+            title: event.title,
+            container: "body"
+        });
+          },
           // put your options and callbacks here
           events: [
             @foreach($tasks as $task)
@@ -60,57 +70,48 @@
     <div id='calendarHardMor'></div>
     <div id='calendarHardEvn'></div>
     <script>
+      let dayDate, oldDayDate, operator, oldOperator, busy;
       $(document).ready(function() {
-        $('intensity').removeClass('intensity');
         $('#calendarHardMor').fullCalendar({
           defaultView: 'basicWeek',
           hiddenDays: [0,6],
+          dayRender: function(date,cell){
+              console.log("dayRender just entried");
+              cell.css('background-color','#03a300');
+              busy = 1;
+              @foreach($tasksMor as $taskMor)
+                if(cell[0].dataset.date === "{{ $taskMor->date }}"){
+                  dayDate = "{{ $taskMor->date }}";
+                  operator = "{{ $taskMor->operator }}";
+                  if(oldDayDate === dayDate){
+                    if(oldOperator != operator)
+                      busy++;
+                  }
+                  if(busy===3){
+                    console.log("busy = 3");
+                    cell.css('background-color','#31ff2e');
+                  }
+                  if(busy===4){
+                    console.log("busy = 4");
+                    cell.css('background-color','#fffc2e');
+                  }
+                  if(busy>=5){
+                    console.log("busy : ", busy);
+                    cell.css('background-color','red');
+                  }
+                  oldOperator = operator;
+                  oldDayDate = dayDate;
+                }
+              @endforeach
+            }
         });
         $('#calendarHardEvn').fullCalendar({
           defaultView: 'basicWeek',
           hiddenDays: [0,6],
+          dayRender: function(date,cell){
+
+          }
         });
-        let dateActivity, dateCalendar, dom, i, myDom, workerBusy, operator, date, dateOperator, oldDateOperator, checkMore, calendar;
-        oldDateOperator = [ ];
-        @foreach($tasks as $task)
-          dateActivity = "{{ $task->date }}";
-          operator = "{{ $task->operator }}";
-          hour = "{{ $task->hour }}";
-          dateOperator = [ operator, dateActivity ];
-          if(hour==="0"){
-            calendar = "#calendarHardMor";
-            dom = $("#calendarHardMor > div.fc-view-container > div > table > tbody > tr > td > div > div > div > div.fc-bg > table > tbody > tr > td");
-          } else{
-            calendar = "#calendarHardEvn";
-            dom = $("#calendarHardEvn > div.fc-view-container > div > table > tbody > tr > td > div > div > div > div.fc-bg > table > tbody > tr > td");
-          }
-          for(i=0;i<dom.length;i++){
-            dateCalendar = dom[i].dataset.date;
-            $(calendar + " > div.fc-view-container > div > table > tbody > tr > td > div > div > div > div.fc-bg > table > tbody > tr > td:nth-child(" + (i+1) + ")").toggleClass("noOne");
-            if(dateActivity === dateCalendar) {
-              if(oldDateOperator[0]===dateOperator[0])
-                if(oldDateOperator[1]===dateOperator[1])
-                  checkMore = 1;
-              if(oldDateOperator[1] != dateOperator[1] || checkMore != 1){
-                var insertDom = function insertAtIndex(e) {
-                  let index = e+1;
-                  $(calendar + " > div.fc-view-container > div > table > tbody > tr > td > div > div > div > div.fc-bg > table > tbody > tr > td:nth-child(" + (index) + ")").append('<div class="hidden">great things</div>');
-                }
-                insertDom(i);
-                workerBusy = $(calendar + " > div.fc-view-container > div > table > tbody > tr > td > div > div > div > div.fc-bg > table > tbody > tr > td:nth-child(" + (i+1) + ")").children().length;
-                //TODO: sistemare calcolo per intensità giornata
-                if({{sizeof($workers)}} - workerBusy === 2)
-                $(calendar + " > div.fc-view-container > div > table > tbody > tr > td > div > div > div > div.fc-bg > table > tbody > tr > td:nth-child(" + (i+1) + ")").toggleClass("one");
-                if({{sizeof($workers)}} - workerBusy === 1)
-                $(calendar + " > div.fc-view-container > div > table > tbody > tr > td > div > div > div > div.fc-bg > table > tbody > tr > td:nth-child(" + (i+1) + ")").toggleClass("two");
-                if({{sizeof($workers)}} - workerBusy === 0)
-                $(calendar + " > div.fc-view-container > div > table > tbody > tr > td > div > div > div > div.fc-bg > table > tbody > tr > td:nth-child(" + (i+1) + ")").toggleClass("three");
-                oldDateOperator = [ operator, dateActivity ];
-              }
-              checkMore = 0;
-            }
-          }
-        @endforeach
       });
     </script>
   </body>

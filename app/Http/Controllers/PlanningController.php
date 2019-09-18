@@ -3,10 +3,12 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 
 use App\Planning as Planning;
-use App\Worker as Worker;
+use App\User as User;
+
 
 class PlanningController extends Controller
 {
@@ -18,9 +20,11 @@ class PlanningController extends Controller
     public function index()
     {
         $tasks = collect(Planning::all());
-        $workers = Worker::all();
+        $workers = User::all();
         $tasks = $tasks->sortBy('operator');
-        return view('planning/planning',compact('tasks','workers'));
+        $tasksMor = DB::table('plannings')->where('hour','0')->get();
+        $tasksAft = DB::table('plannings')->where('hour','1')->get();
+        return view('planning/planning',compact('tasks','workers','tasksMor','tasksAft'));
     }
 
     /**
@@ -30,7 +34,8 @@ class PlanningController extends Controller
      */
     public function create()
     {
-        return view('planning/add');
+        $users = User::all();
+        return view('planning/add',compact('users'));
     }
 
     /**
@@ -47,8 +52,8 @@ class PlanningController extends Controller
         $activity->date = $request->get('date');
         $activity->type = $request->get('type');
         $activity->hour = $request->get('hour');
-        $activity->state = $request->get('state');
-        $activity->save();
+        $worker = DB::table('users')->where('name','$activity->operator')->first();
+        echo $worker->suspended;
         return redirect('/planning');
     }
 
@@ -72,7 +77,8 @@ class PlanningController extends Controller
     public function edit($id)
     {
         $activity = Planning::find($id);
-        return view('planning/editplanning', compact('activity'));
+        $users = User::all();
+        return view('planning/editplanning', compact('activity','users'));
     }
 
     /**
@@ -84,13 +90,14 @@ class PlanningController extends Controller
      */
     public function update(Request $request, $id)
     {
+        $workers = User::all();
         $activity = Planning::find($id);
         $activity->activity = $request->get('activity');
         $activity->operator = $request->get('operator');
         $activity->date = $request->get('date');
         $activity->type = $request->get('type');
         $activity->hour = $request->get('hour');
-        $activity->state = $request->get('state');
+        $activity->suspended = $worker->suspended;
         $activity->save();
         return redirect('/planning');
     }
