@@ -65,7 +65,7 @@
                     <td>
                         <div class="form-group row">
                             <div class="col-sm-10">
-                                <input name="date" id="datepicker" autocomplete="off">
+                                <input name="date" id="datepicker" placeholder="{{ $activity->date }}" autocomplete="off">
                             </div>
                         </div>
                     </td>
@@ -74,7 +74,7 @@
                             <div class="col-sm-10">
                                 <select name="operator">
                                     @foreach($users as $user)
-                                        <option value="{{ $user->name }}">{{ $user->name }}</option>
+                                        <option value="{{ $user->name }}" <?php if($user->name == $activity->operator) echo "selected" ?> >{{ $user->name }}</option>
                                     @endforeach
                                 </select>
                             </div>

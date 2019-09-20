@@ -24,53 +24,48 @@
     @endif
 
     @foreach ($workers as $worker)
-    <span>TABELLA DI {{ $worker->name }}</span>
-    <div id='calendar{{ $worker->name }}'></div>
-    <script>
-      $(document).ready(function() {
-        // page is now ready, initialize the calendar...
-        $('#calendar{{ $worker->name }}').fullCalendar({
-          lang: 'it',
-          header: {
-              left: 'prev,next today',
-              center: 'title',
-              right: 'month,basicWeek,basicDay',
-          },
-          defaultView: 'basicWeek',
-          hiddenDays: [0,6],
-          eventMouseover : function(data, event, element) {
-            var content = '<h3>'+data.title+'</h3>' + 
-                '<p><b>Start:</b> '+data.start+'<br />' + 
-                (data.end && '<p><b>End:</b> '+data.end+'</p>' || '');
-
-            $(element).tooltip({
-            title: event.title,
-            container: "body"
-        });
-          },
-          // put your options and callbacks here
-          events: [
-            @foreach($tasks as $task)
-              @if ($worker->name === $task->operator)
-              {
-                  title : '{{ $task->operator }} >>> {{ $task->activity }}',
-                  start : '{{ $task->date }}',
-                  end : '{{ $task->enddate }}',
-                  url : '{{ action("PlanningController@edit", $task["id"]) }}',
-                  className : '{{ $task->type }}',
+      @if($worker->suspended != 1)
+        <span>TABELLA DI {{ $worker->name }}</span>
+        <div id='calendar{{ $worker->name }}'></div>
+        <script>
+          $(document).ready(function() {
+            // page is now ready, initialize the calendar...
+            $('#calendar{{ $worker->name }}').fullCalendar({
+              lang: 'it',
+              header: {
+                  left: 'prev,next today',
+                  center: 'title',
+                  right: 'month,basicWeek,basicDay',
               },
-              @endif
-            @endforeach
-          ]
-        });
-      });
-    </script>
+              defaultView: 'basicWeek',
+              hiddenDays: [0,6],
+              // put your options and callbacks here
+              events: [
+                @foreach($tasks as $task)
+                  @if ($worker->name === $task->operator)
+                  {
+                      title : '{{ $task->operator }} >>> {{ $task->activity }}',
+                      start : '{{ $task->date }}',
+                      end : '{{ $task->enddate }}',
+                      url : '{{ action("PlanningController@edit", $task["id"]) }}',
+                      className : '{{ $task->type }}',
+                  },
+                  @endif
+                @endforeach
+              ]
+            });
+          });
+        </script>
+      @endif
     @endforeach
 
     <div id='calendarHardMor'></div>
     <div id='calendarHardEvn'></div>
     <script>
-      let dayDate, oldDayDate, operator, oldOperator, busy;
+      let dayDate, oldDayDate, operator, oldOperator, busy, suspended, noAssi, countWorkers;
+      @php $countWorkers = sizeof($workers); @endphp
+      countWorkers = {{ $countWorkers }};
+      console.log("countWorkers: ", countWorkers);
       $(document).ready(function() {
         $('#calendarHardMor').fullCalendar({
           defaultView: 'basicWeek',
@@ -80,13 +75,16 @@
               cell.css('background-color','#03a300');
               busy = 1;
               @foreach($tasksMor as $taskMor)
-                if(cell[0].dataset.date === "{{ $taskMor->date }}"){
+                suspended = {{ $taskMor->suspended }};
+                noAssi = {{ $taskMor->no_assi }};
+                if(cell[0].dataset.date === "{{ $taskMor->date }}" && suspended != 1 && noAssi != 1){
                   dayDate = "{{ $taskMor->date }}";
                   operator = "{{ $taskMor->operator }}";
                   if(oldDayDate === dayDate){
                     if(oldOperator != operator)
                       busy++;
                   }
+
                   if(busy===3){
                     console.log("busy = 3");
                     cell.css('background-color','#31ff2e');

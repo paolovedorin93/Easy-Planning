@@ -24,6 +24,14 @@ class PlanningController extends Controller
         $tasks = $tasks->sortBy('operator');
         $tasksMor = DB::table('plannings')->where('hour','0')->get();
         $tasksAft = DB::table('plannings')->where('hour','1')->get();
+        $tasksMor = DB::table('plannings')
+                                    ->leftjoin('users','plannings.operator','=','users.name')
+                                    ->select('plannings.*','users.suspended','users.no_assi')
+                                    ->get();
+        $tasksAft = DB::table('plannings')
+                                    ->leftjoin('users','plannings.operator','=','users.name')
+                                    ->select('plannings.*','users.suspended','users.no_assi')
+                                    ->get();
         return view('planning/planning',compact('tasks','workers','tasksMor','tasksAft'));
     }
 
@@ -52,8 +60,7 @@ class PlanningController extends Controller
         $activity->date = $request->get('date');
         $activity->type = $request->get('type');
         $activity->hour = $request->get('hour');
-        $worker = DB::table('users')->where('name','$activity->operator')->first();
-        echo $worker->suspended;
+        $activity->save();
         return redirect('/planning');
     }
 
@@ -97,7 +104,6 @@ class PlanningController extends Controller
         $activity->date = $request->get('date');
         $activity->type = $request->get('type');
         $activity->hour = $request->get('hour');
-        $activity->suspended = $worker->suspended;
         $activity->save();
         return redirect('/planning');
     }
