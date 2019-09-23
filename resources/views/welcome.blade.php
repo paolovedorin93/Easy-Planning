@@ -9,6 +9,7 @@
         <!-- Fonts -->
         <link href="https://fonts.googleapis.com/css?family=Nunito:200,600" rel="stylesheet">
         <link href="public\css\aspect.css" rel="stylesheet">
+        <link href="public\js\function.js" rel="stylesheet">
 
         <!-- Styles -->
         <style>

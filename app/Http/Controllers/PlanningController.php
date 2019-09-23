@@ -27,10 +27,12 @@ class PlanningController extends Controller
         $tasksMor = DB::table('plannings')
                                     ->leftjoin('users','plannings.operator','=','users.name')
                                     ->select('plannings.*','users.suspended','users.no_assi')
+                                    ->where('hour','0')
                                     ->get();
         $tasksAft = DB::table('plannings')
                                     ->leftjoin('users','plannings.operator','=','users.name')
                                     ->select('plannings.*','users.suspended','users.no_assi')
+                                    ->where('hour','1')
                                     ->get();
         return view('planning/planning',compact('tasks','workers','tasksMor','tasksAft'));
     }

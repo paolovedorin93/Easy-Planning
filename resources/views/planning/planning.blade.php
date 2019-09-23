@@ -8,7 +8,9 @@
     <link href="../public/css/aspect.css" rel="stylesheet">
     <link type="javascript" src="../js/script.js" />
     <link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.1.0/fullcalendar.min.css' />
-
+    <link href='https://use.fontawesome.com/releases/v5.0.6/css/all.css' rel='stylesheet'>
+    <link href='https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css' rel='stylesheet' />
+    <link href="http://127.0.0.2/Easy-Planning/public/css/app.css" rel="stylesheet">
 
     <script src='../packages/core/main.js'></script>
     <script src='../packages/daygrid/main.js'></script>
@@ -18,10 +20,34 @@
     <script src='https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.1.0/fullcalendar.min.js'></script>
   </head>
   <body>
-
-    @if(Auth::user())
-    <div>Ciao {{@Auth::user()->name}}</div>
-    @endif
+    <nav class="navbar navbar-expand-md navbar-light bg-white shadow-sm">
+        <div class="container">
+            <a class="navbar-brand" href="{{ url('/') }}">
+                {{ config('app.name', 'Laravel') }}
+            </a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="{{ __('Toggle navigation') }}">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            @if(Auth::guest())
+              <div class="dropdown">
+                <a class="nav-link" href="{{ route('login') }}">{{ __('Login') }}</a>
+                <a class="nav-link" href="{{ route('register') }}">{{ __('Register') }}</a>
+              </div>
+            @else
+              <div class="dropdown">
+                <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
+                  {{ Auth::user()->name }} <span class="caret"></span>
+                </a>
+                <div class="myDiv">
+                  <a class="dropdown-item" href="{{ route('logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">{{ __('Logout') }}</a>
+                  <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
+                      @csrf
+                  </form>
+                </div>
+              </div>
+            @endif
+        </div>
+    </nav>
 
     @foreach ($workers as $worker)
       @if($worker->suspended != 1)
@@ -58,7 +84,10 @@
         </script>
       @endif
     @endforeach
-
+    <div class="divButtonHard">
+      <button class="fc-next-button fc-button fc-state-default fc-corner-left fc-state-hover" id="prevButton"><span class="fc-icon fc-icon-left-single-arrow"></span></button>
+      <button class="fc-next-button fc-button fc-state-default fc-corner-right fc-state-hover" id="nextButton"><span class="fc-icon fc-icon-right-single-arrow"></span></button>
+    </div>
     <div id='calendarHardMor'></div>
     <div id='calendarHardEvn'></div>
     <script>
@@ -107,9 +136,51 @@
           defaultView: 'basicWeek',
           hiddenDays: [0,6],
           dayRender: function(date,cell){
+            cell.css('background-color','#03a300');
+            busy = 1;
+            @foreach($tasksAft as $taskAft)
+              suspended = {{ $taskAft->suspended }};
+              noAssi = {{ $taskAft->no_assi }};
+              if(cell[0].dataset.date === "{{ $taskAft->date }}" && suspended != 1 && noAssi != 1){
+                dayDate = "{{ $taskAft->date }}";
+                operator = "{{ $taskAft->operator }}";
+                if(oldDayDate === dayDate){
+                  if(oldOperator != operator)
+                    busy++;
+                }
 
+                if(busy===3){
+                  console.log("busy = 3");
+                  cell.css('background-color','#31ff2e');
+                }
+                if(busy===4){
+                  console.log("busy = 4");
+                  cell.css('background-color','#fffc2e');
+                }
+                if(busy>=5){
+                  console.log("busy : ", busy);
+                  cell.css('background-color','red');
+                }
+                oldOperator = operator;
+                oldDayDate = dayDate;
+              }
+            @endforeach
           }
         });
+      });
+    </script>
+    <script>
+      $('#nextButton').click(function() {
+        $('#calendarHardMor, #calendarHardEvn').fullCalendar('next');
+      });
+      $('#prevButton').click(function() {
+        $('#calendarHardMor, #calendarHardEvn').fullCalendar('prev');
+      });
+    </script>
+    <script>
+      $(".dropdown").click(function(e){
+        console.log("CIAOCAOCIAO");
+        $(".myDiv").toggleClass('dropdown-menu dropdown-menu-right show');
       });
     </script>
   </body>
