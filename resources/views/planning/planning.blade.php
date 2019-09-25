@@ -21,69 +21,87 @@
   </head>
   <body>
     <nav class="navbar navbar-expand-md navbar-light bg-white shadow-sm">
-        <div class="container">
-            <a class="navbar-brand" href="{{ url('/') }}">
-                {{ config('app.name', 'Laravel') }}
-            </a>
-            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="{{ __('Toggle navigation') }}">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            @if(Auth::guest())
-              <div class="dropdown">
-                <a class="nav-link" href="{{ route('login') }}">{{ __('Login') }}</a>
-                <a class="nav-link" href="{{ route('register') }}">{{ __('Register') }}</a>
-              </div>
-            @else
-              <div class="dropdown">
-                <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
-                  {{ Auth::user()->name }} <span class="caret"></span>
-                </a>
-                <div class="myDiv">
-                  <a class="dropdown-item" href="{{ route('logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">{{ __('Logout') }}</a>
-                  <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
-                      @csrf
-                  </form>
-                </div>
-              </div>
-            @endif
+      <div class="container">
+        <div class="main" id="nav-icon1">
+            <span class="spanButton spanButtonOne"></span>
+            <span class="spanButton spanButtonTwo"></span>
+            <span class="spanButton spanButtonThree"></span>
+          <div class="userNav">
+            <a href="../public/planning/add">Home</a>
+          </div>
         </div>
+        <a class="navbar-brand" href="{{ url('/') }}">
+            {{ config('app.name', 'Laravel') }}
+        </a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="{{ __('Toggle navigation') }}">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        @if(Auth::guest())
+          <div class="dropdown myDropDown">
+            <a class="nav-link" href="{{ route('login') }}">{{ __('Login') }}</a>
+            <a class="nav-link" href="{{ route('register') }}">{{ __('Register') }}</a>
+          </div>
+        @else
+          <div class="dropdown myDropDown">
+            <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
+              {{ Auth::user()->name }} <span class="caret"></span>
+            </a>
+            <div class="myDiv">
+              <a class="dropdown-item" href="{{ route('logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">{{ __('Logout') }}</a>
+              <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
+                  @csrf
+              </form>
+            </div>
+          </div>
+        @endif
+      </div>
     </nav>
-
-    @foreach ($workers as $worker)
-      @if($worker->suspended != 1)
-        <span>TABELLA DI {{ $worker->name }}</span>
-        <div id='calendar{{ $worker->name }}'></div>
-        <script>
-          $(document).ready(function() {
-            // page is now ready, initialize the calendar...
-            $('#calendar{{ $worker->name }}').fullCalendar({
-              lang: 'it',
-              header: {
-                  left: 'prev,next today',
-                  center: 'title',
-                  right: 'month,basicWeek,basicDay',
-              },
-              defaultView: 'basicWeek',
-              hiddenDays: [0,6],
-              // put your options and callbacks here
-              events: [
-                @foreach($tasks as $task)
-                  @if ($worker->name === $task->operator)
-                  {
-                      title : '{{ $task->operator }} >>> {{ $task->activity }}',
-                      start : '{{ $task->date }}',
-                      end : '{{ $task->enddate }}',
-                      url : '{{ action("PlanningController@edit", $task["id"]) }}',
-                      className : '{{ $task->type }}',
-                  },
-                  @endif
-                @endforeach
-              ]
+    <div class="generalContainer">
+      @foreach ($workers as $worker)
+        @if($worker->suspended != 1)
+          <span>TABELLA DI {{ $worker->name }}</span>
+          <div class="tableUser" id='calendar{{ $worker->name }}'></div>
+          <div class="divButton">
+            <button class="expandTable buttonToExpande " onclick="let worker = '{{ $worker->name }}'; hide(worker)"><i class="fa fa-angle-down"></i></button>
+          </div>
+          <script>
+            function hide(worker){
+              $("#calendar"+worker).toggleClass('show');
+            }
+          </script>
+          <script>
+            $(document).ready(function() {
+              // page is now ready, initialize the calendar...
+              $('#calendar{{ $worker->name }}').fullCalendar({
+                lang: 'it',
+                header: {
+                    left: 'prev,next today',
+                    center: 'title',
+                    right: 'month,basicWeek,basicDay',
+                },
+                defaultView: 'basicWeek',
+                hiddenDays: [0,6],
+                // put your options and callbacks here
+                events: [
+                  @foreach($tasks as $task)
+                    @if ($worker->name === $task->operator)
+                    {
+                        title : '{{ $task->operator }} >>> {{ $task->activity }}',
+                        start : '{{ $task->date }}',
+                        end : '{{ $task->enddate }}',
+                        url : '{{ action("PlanningController@edit", $task["id"]) }}',
+                        className : '{{ $task->type }}',
+                    },
+                    @endif
+                  @endforeach
+                ]
+              });
+              $("#calendar{{ $worker->name }}").css('display','none');
             });
-          });
-        </script>
-      @endif
-    @endforeach
+          </script>
+        @endif
+      @endforeach
+    </div>
     <div class="divButtonHard">
       <button class="fc-next-button fc-button fc-state-default fc-corner-left fc-state-hover" id="prevButton"><span class="fc-icon fc-icon-left-single-arrow"></span></button>
       <button class="fc-next-button fc-button fc-state-default fc-corner-right fc-state-hover" id="nextButton"><span class="fc-icon fc-icon-right-single-arrow"></span></button>
@@ -177,10 +195,26 @@
         $('#calendarHardMor, #calendarHardEvn').fullCalendar('prev');
       });
     </script>
+    <!-- <script>
+      $('.expandableButton').click(function(){
+        if ($('.userNav').is(':hidden'))
+            $('.userNav').show('slide',{direction:'right'},1000);
+        else
+            $('.userNav').hide('slide',{direction:'right'},1000);
+      });
+    </script> -->
     <script>
-      $(".dropdown").click(function(e){
-        console.log("CIAOCAOCIAO");
-        $(".myDiv").toggleClass('dropdown-menu dropdown-menu-right show');
+      $('#nav-icon1').click(function(){
+        $('.userNav').toggleClass('show').toggleClass('horizontal');
+        $('.main').toggleClass('extend');
+      });
+
+    </script>
+    <script>
+      $(document).ready(function(){
+        $('#nav-icon1').click(function(){
+          $(this).toggleClass('open');
+        });
       });
     </script>
   </body>
