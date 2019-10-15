@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
+use Auth;
 
 use App\Planning as Planning;
 use App\User as User;
@@ -20,7 +21,13 @@ class PlanningController extends Controller
     public function index()
     {
         $tasks = collect(Planning::all());
-        $workers = User::all();
+        if(Auth::user()){
+            $userLogged = Auth::user()->name;
+            $workers = User::orderByRaw("name = '$userLogged' DESC")
+                                                                ->get();
+        } else {
+            $workers = User::all();
+        }
         $tasks = $tasks->sortBy('operator');
         $tasksMor = DB::table('plannings')->where('hour','0')->get();
         $tasksAft = DB::table('plannings')->where('hour','1')->get();

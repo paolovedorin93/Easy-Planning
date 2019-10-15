@@ -1,3 +1,12 @@
+.generalContainer,
+#calendarHardMor {
+    margin: 10px 10px 0 10px !important;
+}
+
+#calendarHardEvn {
+    margin: 0 10px 0 10px;
+}
+
 .fc-row.fc-week.fc-widget-content,
 .fc-scroller.fc-day-grid-container {
     height: 100px !important;
@@ -56,7 +65,7 @@
 }
 
 .divButtonHard {
-    margin: 20px 0 10px 0;
+    margin: 10px 10px 0 10px;
     float: left;
     width: 50%;
 }
@@ -169,17 +178,17 @@
 }
 
 .spanButtonOne {
-    left: 10px;
+    left: 6px;
     top: 16px;
 }
 
 .spanButtonTwo {
-    left: 10px;
+    left: 6px;
     top: 24px;
 }
 
 .spanButtonThree {
-    left: 10px;
+    left: 6px;
     top: 32px;
 }
 a {
@@ -195,12 +204,14 @@ a {
 .horizontal {
     list-style: none;
     position: absolute;
-    right: 200px;
-    top: 15px;
+    right: 60px;
+    font-size: 35px;
+    color: #d3531a;
 }
 
 .extend {
-    background-color: #AAA;
+    background-color: #8BC34A;
+    width: 300px;
 }
 
 /* X */
@@ -208,7 +219,7 @@ a {
   /* Icon 1 */
   
   #nav-icon1 {
-    top: 0;
+    bottom: 3%;
     margin: 4px 0 0 0;
     -webkit-transform: rotate(0deg);
     -moz-transform: rotate(0deg);
@@ -218,14 +229,12 @@ a {
     -moz-transition: .5s ease-in-out;
     -o-transition: .5s ease-in-out;
     transition: .5s ease-in-out;
-    cursor: pointer;
   }
   
   #nav-icon1 span {
     display: block;
     position: absolute;
     height: 5px;
-    width: 60%;
     background: #d3531a;
     border-radius: 9px;
     opacity: 1;
@@ -260,9 +269,8 @@ a {
   }
   
   #nav-icon1.open span:nth-child(2) {
-    opacity: 0;
-    left: -60px;
-  }
+    transform: translateY(0) rotate(-45deg);
+}
   
   #nav-icon1.open span:nth-child(3) {
     top: 18px;
@@ -272,3 +280,41 @@ a {
     transform: rotate(-135deg);
   }
 
+.connect {
+    color: #d3531a;
+    position: relative;
+    left: 8px;
+    font-weight: bold;
+    font-size: 33px;
+}
+
+a:hover{
+    color: #d3531a !important;
+}
+
+.buttonBottom {
+    position: fixed;
+    display: flex;
+    z-index: 9999999999999999999999999;
+}
+
+.openDrop{
+    display: block !important;
+}
+
+.bottomRightCorner {
+    position: relative;
+    left: -2px;
+    width: 17%;
+    background-color: #f8fafc;
+    border-radius: 44px;
+}
+
+.openCorner {
+    border-style: solid;
+    border-color: #8BC34A;
+}
+
+.bottomRightCorner {
+    cursor: pointer;
+}

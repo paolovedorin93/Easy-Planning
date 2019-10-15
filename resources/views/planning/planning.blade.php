@@ -22,14 +22,6 @@
   <body>
     <nav class="navbar navbar-expand-md navbar-light bg-white shadow-sm">
       <div class="container">
-        <div class="main" id="nav-icon1">
-            <span class="spanButton spanButtonOne"></span>
-            <span class="spanButton spanButtonTwo"></span>
-            <span class="spanButton spanButtonThree"></span>
-          <div class="userNav">
-            <a href="../public/planning/add">Home</a>
-          </div>
-        </div>
         <a class="navbar-brand" href="{{ url('/') }}">
             {{ config('app.name', 'Laravel') }}
         </a>
@@ -44,29 +36,47 @@
         @else
           <div class="dropdown myDropDown">
             <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
-              {{ Auth::user()->name }} <span class="caret"></span>
+                {{ Auth::user()->name }} <span class="caret"></span>
             </a>
-            <div class="myDiv">
-              <a class="dropdown-item" href="{{ route('logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">{{ __('Logout') }}</a>
-              <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
-                  @csrf
-              </form>
+
+            <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
+                <a class="dropdown-item" href="{{ route('logout') }}"
+                  onclick="event.preventDefault();
+                                document.getElementById('logout-form').submit();">
+                    {{ __('Logout') }}
+                </a>
+
+                <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
+                    @csrf
+                </form>
             </div>
           </div>
         @endif
       </div>
     </nav>
     <div class="generalContainer">
+      <div class="main buttonBottom" id="nav-icon1">
+        <div class="bottomRightCorner">
+          <span class="spanButton spanButtonOne"></span>
+          <span class="spanButton spanButtonTwo"></span>
+          <span class="spanButton spanButtonThree"></span>
+        </div>
+        <div class="userNav">
+          <a class="connect" href="../public/planning/add"><i class="fa fa-plus"></i></a>
+        </div>
+      </div>
       @foreach ($workers as $worker)
         @if($worker->suspended != 1)
           <span>TABELLA DI {{ $worker->name }}</span>
           <div class="tableUser" id='calendar{{ $worker->name }}'></div>
           <div class="divButton">
-            <button class="expandTable buttonToExpande " onclick="let worker = '{{ $worker->name }}'; hide(worker)"><i class="fa fa-angle-down"></i></button>
+            <button class="expandTable buttonToExpande " onclick="let worker = '{{ $worker->name }}'; hide(worker, this)"><i class="fa fa-angle-down"></i></button>
           </div>
           <script>
-            function hide(worker){
+            function hide(worker, e){
               $("#calendar"+worker).toggleClass('show');
+              console.log("e: ", e);
+              $(e.children).toggleClass('fa-angle-up');
             }
           </script>
           <script>
@@ -206,7 +216,9 @@
     <script>
       $('#nav-icon1').click(function(){
         $('.userNav').toggleClass('show').toggleClass('horizontal');
+        $('.bottomRightCorner').toggleClass('openCorner');
         $('.main').toggleClass('extend');
+
       });
 
     </script>
@@ -214,6 +226,9 @@
       $(document).ready(function(){
         $('#nav-icon1').click(function(){
           $(this).toggleClass('open');
+        });
+        $('.myDropDown').click(function(){
+          $('.dropdown-menu-right').toggleClass('openDrop');
         });
       });
     </script>
