@@ -149,6 +149,7 @@
 
 .divButton {
     border-top: 1px solid #444;
+    margin-bottom: 20px;
 }
 
 .main {
@@ -210,7 +211,7 @@ a {
 }
 
 .extend {
-    background-color: #8BC34A;
+    background-color: #ffeb3b;
     width: 300px;
 }
 
@@ -312,9 +313,11 @@ a:hover{
 
 .openCorner {
     border-style: solid;
-    border-color: #8BC34A;
+    border-color: #ffeb3b;
+    background-color: white !important;
 }
 
 .bottomRightCorner {
     cursor: pointer;
+    background-color: transparent;
 }

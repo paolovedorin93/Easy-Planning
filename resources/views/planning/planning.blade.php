@@ -30,8 +30,8 @@
         </button>
         @if(Auth::guest())
           <div class="dropdown myDropDown">
-            <a class="nav-link" href="{{ route('login') }}">{{ __('Login') }}</a>
-            <a class="nav-link" href="{{ route('register') }}">{{ __('Register') }}</a>
+            <a class="nav-link" href="{{ route('login') }}">Login</a>
+            <a class="nav-link" href="{{ route('register') }}">Registrati</a>
           </div>
         @else
           <div class="dropdown myDropDown">
@@ -71,12 +71,20 @@
           <div class="tableUser" id='calendar{{ $worker->name }}'></div>
           <div class="divButton">
             <button class="expandTable buttonToExpande " onclick="let worker = '{{ $worker->name }}'; hide(worker, this)"><i class="fa fa-angle-down"></i></button>
+            <button class="expandTable buttonToExpande " onclick="let worker = '{{ $worker->name }}'; hideAll(worker, this)"><i class="expendAll fa fa-angle-double-down"></i></button>
           </div>
           <script>
             function hide(worker, e){
               $("#calendar"+worker).toggleClass('show');
               console.log("e: ", e);
               $(e.children).toggleClass('fa-angle-up');
+            }
+          </script>
+          <script>
+            function hideAll(worker, e){
+              $(".tableUser").toggleClass('show');
+              console.log("e: ", e);
+              $(".expendAll").toggleClass('fa-angle-double-up');
             }
           </script>
           <script>
