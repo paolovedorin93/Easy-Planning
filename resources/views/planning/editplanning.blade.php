@@ -65,7 +65,7 @@
                     <td>
                         <div class="form-group row">
                             <div class="col-sm-10">
-                                <input name="date" id="datepicker" placeholder="{{ $activity->date }}" autocomplete="off">
+                                <input name="date" id="datepicker" value="{{ $activity->date }}" placeholder="{{ $activity->date }}" autocomplete="off">
                             </div>
                         </div>
                     </td>

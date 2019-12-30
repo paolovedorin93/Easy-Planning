@@ -75,6 +75,9 @@
                 <div class="links">
                     <a href="planning">Planning Assistenza</a>
                 </div>
+                <div class="links">
+                    <a href="auto">Planning Auto</a>
+                </div>
             </div>
         </div>
     </body>

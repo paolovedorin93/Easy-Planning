@@ -1,10 +1,10 @@
-;<?php
+<?php
 
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreatePlanningTable extends Migration
+class CreateActivitiesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,14 +13,9 @@ class CreatePlanningTable extends Migration
      */
     public function up()
     {
-        Schema::create('plannings', function (Blueprint $table) {
+        Schema::create('activities', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->string('operator');
-            $table->date('date');
-            $table->string('activity');
-            $table->string('type');
-            $table->tinyInteger('hour');
-            $table->string('comment');
+            $table->text('activities');
             $table->timestamps();
         });
     }
@@ -32,6 +27,6 @@ class CreatePlanningTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('plannings');
+        Schema::dropIfExists('activities');
     }
 }

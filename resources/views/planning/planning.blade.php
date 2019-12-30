@@ -40,6 +40,7 @@
             </a>
 
             <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
+                @if(Auth::user()->administrator)<a class="dropdown-item" href="workers">Gestione utenti</a>@endif
                 <a class="dropdown-item" href="{{ route('logout') }}"
                   onclick="event.preventDefault();
                                 document.getElementById('logout-form').submit();">
@@ -67,6 +68,7 @@
       </div>
       @foreach ($workers as $worker)
         @if($worker->suspended != 1)
+          <span>CIAOCIAOCAIO   {{ $worker->suspended }}   CAIOCAICOAIO</span>
           <span>TABELLA DI {{ $worker->name }}</span>
           <div class="tableUser" id='calendar{{ $worker->name }}'></div>
           <div class="divButton">
@@ -117,7 +119,7 @@
               $("#calendar{{ $worker->name }}").css('display','none');
             });
           </script>
-        @endif
+          @endif
       @endforeach
     </div>
     <div class="divButtonHard">
@@ -138,7 +140,7 @@
           dayRender: function(date,cell){
               console.log("dayRender just entried");
               cell.css('background-color','#03a300');
-              busy = 1;
+              busy = 0;
               @foreach($tasksMor as $taskMor)
                 suspended = {{ $taskMor->suspended }};
                 noAssi = {{ $taskMor->no_assi }};
@@ -149,7 +151,7 @@
                     if(oldOperator != operator)
                       busy++;
                   }
-
+                  console.log("busyyyyyyyyyyyyyyyyyy M: ", busy);
                   if(busy===3){
                     console.log("busy = 3");
                     cell.css('background-color','#31ff2e');
@@ -173,7 +175,7 @@
           hiddenDays: [0,6],
           dayRender: function(date,cell){
             cell.css('background-color','#03a300');
-            busy = 1;
+            busy = 0;
             @foreach($tasksAft as $taskAft)
               suspended = {{ $taskAft->suspended }};
               noAssi = {{ $taskAft->no_assi }};
@@ -184,7 +186,7 @@
                   if(oldOperator != operator)
                     busy++;
                 }
-
+                console.log("busyyyyyyyyyyyyyyyyyy A: ", busy);
                 if(busy===3){
                   console.log("busy = 3");
                   cell.css('background-color','#31ff2e');

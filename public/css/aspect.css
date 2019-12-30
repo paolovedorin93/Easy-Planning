@@ -211,8 +211,17 @@ a {
 }
 
 .extend {
-    background-color: #ffeb3b;
+    background-color: #03a300;
     width: 300px;
+     /* Sfumatura */
+     /* Sfumatura Safari */
+     /* Sfumatura Opera */
+     /* Sfumatura  Firefox */
+    background-color: #ff8100; /* non CSS3 browsers */
+    /* background: linear-gradient(to right, #f7f7f7, #b8b8b8); */ /* Sfumatura */
+    /* background: -webkit-linear-gradient(left, #CDDC39, #03a300); */ /* Sfumatura Safari */
+    background: -o-linear-gradient(right, #f7f7f7, #b8b8b8); /* Sfumatura Opera */
+    background: -moz-linear-gradient(right, #f7f7f7, #b8b8b8); /* Sfumatura Firefox */
 }
 
 /* X */
@@ -236,7 +245,7 @@ a {
     display: block;
     position: absolute;
     height: 5px;
-    background: #d3531a;
+    background: #ff8100;
     border-radius: 9px;
     opacity: 1;
     -webkit-transform: rotate(0deg);
@@ -282,15 +291,15 @@ a {
   }
 
 .connect {
-    color: #d3531a;
+    color: #f8fafc;
     position: relative;
     left: 8px;
     font-weight: bold;
     font-size: 33px;
 }
 
-a:hover{
-    color: #d3531a !important;
+a.connect:hover{
+    color: #fff !important;
 }
 
 .buttonBottom {
@@ -313,11 +322,29 @@ a:hover{
 
 .openCorner {
     border-style: solid;
-    border-color: #ffeb3b;
+    border-color: #ff8100;
     background-color: white !important;
 }
 
 .bottomRightCorner {
     cursor: pointer;
     background-color: transparent;
+}
+
+.inputWorker {
+    text-align: center;
+}
+
+.nameWorker {
+    text-align: right;
+}
+
+.full-height {
+    height: 100vh;
+}
+
+.flex-center {
+    align-items: center;
+    display: flex;
+    justify-content: center;
 }

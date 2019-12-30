@@ -2,12 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use App\User as Worker;
+use App\car;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 
-
-class WorkerController extends Controller
+class CarController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -16,8 +15,7 @@ class WorkerController extends Controller
      */
     public function index()
     {
-        $workers = Worker::all();
-        return view('worker/workers',compact('workers'));
+        //
     }
 
     /**
@@ -27,7 +25,7 @@ class WorkerController extends Controller
      */
     public function create()
     {
-        return view('worker/add');
+        //
     }
 
     /**
@@ -38,23 +36,16 @@ class WorkerController extends Controller
      */
     public function store(Request $request)
     {
-        $workers = new Worker;
-        $workers = Worker::all();
-        foreach ($workers as $worker) {
-            //$worker->admin = $request->get('admin');
-            $worker->suspended = $request->get('suspended');
-            $worker->save();
-        }
-        return redirect();
+        //
     }
 
     /**
      * Display the specified resource.
      *
-     * @param  \App\Worker  $worker
+     * @param  \App\car  $car
      * @return \Illuminate\Http\Response
      */
-    public function show(Worker $worker)
+    public function show(car $car)
     {
         //
     }
@@ -62,22 +53,22 @@ class WorkerController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\Worker  $worker
+     * @param  \App\car  $car
      * @return \Illuminate\Http\Response
      */
-    public function edit(Worker $worker)
+    public function edit(car $car)
     {
-        return view('worker/edit');
+        //
     }
 
     /**
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Worker  $worker
+     * @param  \App\car  $car
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Worker $worker)
+    public function update(Request $request, car $car)
     {
         //
     }
@@ -85,10 +76,10 @@ class WorkerController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Worker  $worker
+     * @param  \App\car  $car
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Worker $worker)
+    public function destroy(car $car)
     {
         //
     }

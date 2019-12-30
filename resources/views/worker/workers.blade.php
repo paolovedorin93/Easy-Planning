@@ -6,68 +6,37 @@
 
         <title>Laravel</title>
 
-        <!-- Fonts -->
+        <!-- Fonts & Style -->
         <link href="https://fonts.googleapis.com/css?family=Nunito:200,600" rel="stylesheet">
+        <link href='../packages/core/main.css' rel='stylesheet' />
+        <link href='../packages/daygrid/main.css' rel='stylesheet' />
+        <link href="../public/css/aspect.css" rel="stylesheet">
+        <link type="javascript" src="../js/script.js" />
+        <link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.1.0/fullcalendar.min.css' />
+        <link href='https://use.fontawesome.com/releases/v5.0.6/css/all.css' rel='stylesheet'>
+        <link href='https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css' rel='stylesheet' />
+        <link href="http://127.0.0.2/Easy-Planning/public/css/app.css" rel="stylesheet">
 
-        <!-- Styles -->
-        <style>
-            html, body {
-                background-color: #fff;
-                color: #636b6f;
-                font-family: 'Nunito', sans-serif;
-                font-weight: 200;
-                height: 100vh;
-                margin: 0;
-            }
-
-            .full-height {
-                height: 100vh;
-            }
-
-            .flex-center {
-                align-items: center;
-                display: flex;
-                justify-content: center;
-            }
-
-            .position-ref {
-                position: relative;
-            }
-
-            .top-right {
-                position: absolute;
-                right: 10px;
-                top: 18px;
-            }
-
-            .content {
-                text-align: center;
-            }
-
-            .title {
-                font-size: 84px;
-            }
-
-            .links > a {
-                color: #636b6f;
-                padding: 0 25px;
-                font-size: 13px;
-                font-weight: 600;
-                letter-spacing: .1rem;
-                text-decoration: none;
-                text-transform: uppercase;
-            }
-
-            .m-b-md {
-                margin-bottom: 30px;
-            }
-        </style>
     </head>
     <body>
         <div class="flex-center position-ref full-height">
-            @foreach($workers as $worker)
-                <p>{{ $worker['name'] }}</p>
-            @endforeach
+            <table>
+                <th>
+                    <td>Amministratore</td>
+                    <td>Sospeso</td>
+                </th>
+                <form method="post" action="{{ route('post') }}">
+                    {{ csrf_field() }}
+                    @foreach($workers as $worker)
+                        <tr class="contentTable">
+                            <td class="nameWorker">{{ $worker['name'] }}</td>
+                            <td class="inputWorker"><input type="checkbox" value="{{ $worker->admin }}" name="admin"></td>
+                            <td class="inputWorker"><input type="checkbox" value="{{ $worker->suspended }}" name="suspended"></td>
+                        </tr>
+                    @endforeach
+                    <button type="submit" class="btn btn-info">save</button>
+                </form>
+            </table>
         </div>
     </body>
 </html>
