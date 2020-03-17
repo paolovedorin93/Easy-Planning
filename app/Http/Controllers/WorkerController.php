@@ -27,7 +27,7 @@ class WorkerController extends Controller
      */
     public function create()
     {
-        return view('worker/add');
+        //return view('worker/add');
     }
 
     /**
@@ -38,14 +38,7 @@ class WorkerController extends Controller
      */
     public function store(Request $request)
     {
-        $workers = new Worker;
-        $workers = Worker::all();
-        foreach ($workers as $worker) {
-            //$worker->admin = $request->get('admin');
-            $worker->suspended = $request->get('suspended');
-            $worker->save();
-        }
-        return redirect();
+        //
     }
 
     /**
@@ -77,9 +70,18 @@ class WorkerController extends Controller
      * @param  \App\Worker  $worker
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Worker $worker)
+    public function update(Request $request)
     {
-        //
+        $users = Worker::all();
+        foreach($users as $user){
+            // $array=[
+            //     $user->no_assi = $request->get('no_assi')
+            // ];
+            //$user->save();
+            $user->no_assi = $request->has('no_assi.' . $user->id);
+            $user->save();
+        }
+        return redirect('/workers');
     }
 
     /**

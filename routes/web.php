@@ -30,4 +30,4 @@ Route::any('/planning/added',['as'=>'new_activity','uses'=>'PlanningController@s
 //Route::resource('planning','PlanningController'); --> NON FUNZIONA IL RESTO DELLE FUNZIONI
 
 Route::get('/workers', 'WorkerController@index')->name('worker');
-Route::any('/workers/edited', 'WorkerController@store')->name('worker');
+Route::any('/workers/asded', ['as'=>'updating','uses'=>'WorkerController@update']);

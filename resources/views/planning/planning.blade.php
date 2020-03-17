@@ -68,7 +68,6 @@
       </div>
       @foreach ($workers as $worker)
         @if($worker->suspended != 1)
-          <span>CIAOCIAOCAIO   {{ $worker->suspended }}   CAIOCAICOAIO</span>
           <span>TABELLA DI {{ $worker->name }}</span>
           <div class="tableUser" id='calendar{{ $worker->name }}'></div>
           <div class="divButton">

@@ -23,10 +23,11 @@ class PlanningController extends Controller
         $tasks = collect(Planning::all());
         if(Auth::user()){
             $userLogged = Auth::user()->name;
-            $workers = User::orderByRaw("name = '$userLogged' DESC")
-                                                                ->get();
+            $workers = User::where('no_assi','0')
+                                ->orderByRaw("name = '$userLogged' DESC")
+                                ->get();
         } else {
-            $workers = User::all();
+            $workers = DB::table('users')->where('no_assi','0')->get();
         }
         $tasks = $tasks->sortBy('operator');
         $tasksMor = DB::table('plannings')->where('hour','0')->get();

@@ -22,19 +22,27 @@
         <div class="flex-center position-ref full-height">
             <table>
                 <th>
-                    <td>Amministratore</td>
                     <td>Sospeso</td>
+                    <td>No Assistenza</td>
                 </th>
-                <form method="post" action="{{ route('post') }}">
-                    {{ csrf_field() }}
+                <form method="post" action="{{ action('WorkerController@update') }}">
+                    {{csrf_field()}}
                     @foreach($workers as $worker)
+                        <?php
+                            $suspended = $worker->suspended;
+                            $no_assi = $worker->no_assi;
+                        ?>
                         <tr class="contentTable">
                             <td class="nameWorker">{{ $worker['name'] }}</td>
-                            <td class="inputWorker"><input type="checkbox" value="{{ $worker->admin }}" name="admin"></td>
-                            <td class="inputWorker"><input type="checkbox" value="{{ $worker->suspended }}" name="suspended"></td>
+                            <td class="inputWorker"><input id="workerSuspended" type="checkbox" value="{{ $suspended }}" name="suspended[{{$worker->id}}]" @if($suspended) checked  @endif></td>
+                            <td class="inputWorker"><input id="workerNoAssi" type="checkbox" value="{{ $no_assi }}" name="no_assi[{{$worker->id}}]" @if($no_assi) checked  @endif></td>
                         </tr>
                     @endforeach
-                    <button type="submit" class="btn btn-info">save</button>
+                    <th>
+                        <td></td>
+                        <td><button type="submit" class="btn btn-info">save</button></td>
+                        <td></td>
+                    </th>
                 </form>
             </table>
         </div>
