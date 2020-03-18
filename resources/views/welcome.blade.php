@@ -8,7 +8,7 @@
 
         <!-- Fonts -->
         <link href="https://fonts.googleapis.com/css?family=Nunito:200,600" rel="stylesheet">
-        <link href="public\css\aspect.css" rel="stylesheet">
+        <link href="../public/css/aspect.css" rel="stylesheet">
         <link href="public\js\function.js" rel="stylesheet">
 
         <!-- Styles -->
@@ -63,6 +63,7 @@
             .m-b-md {
                 margin-bottom: 30px;
             }
+
         </style>
     </head>
     <body>
@@ -73,10 +74,14 @@
                 </div>
 
                 <div class="links">
-                    <a href="planning">Planning Assistenza</a>
+                    <a class="linkPlanning" href="planning">Planning Assistenza</a>
                 </div>
                 <div class="links">
                     <a href="auto">Planning Auto</a>
+                </div>
+                <div class="links home">
+                    <a class="nav-link login" href="{{ route('login') }}">Login</a>
+                    <a class="nav-link register" href="{{ route('register') }}">Registrati</a>
                 </div>
             </div>
         </div>

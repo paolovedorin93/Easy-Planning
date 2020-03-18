@@ -348,3 +348,40 @@ a.connect:hover{
     display: flex;
     justify-content: center;
 }
+
+td.label {
+    text-align:center;
+}
+
+.inputWorker {
+    width:100px;
+}
+
+.save {
+    margin-left: 50%;
+    margin-top: 30px;
+}
+
+.centeredText {
+    text-align: center;
+    margin-top: 20%;
+    font-weight: bold;
+    font-size: 25px;
+}
+
+.links.home {
+    margin-top: 25px;
+    display:flex;
+}
+
+.links.home > .login {
+    font-size: 18px !important;
+    width: 50%;
+    order: 1;
+}
+
+.links.home > .register {
+    font-size: 18px !important;
+    width: 50%;
+    order: 1;
+}

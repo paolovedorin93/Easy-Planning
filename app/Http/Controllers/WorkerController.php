@@ -74,11 +74,9 @@ class WorkerController extends Controller
     {
         $users = Worker::all();
         foreach($users as $user){
-            // $array=[
-            //     $user->no_assi = $request->get('no_assi')
-            // ];
-            //$user->save();
             $user->no_assi = $request->has('no_assi.' . $user->id);
+            $user->suspended = $request->has('suspended.' . $user->id);
+            $user->admin = $request->has('admin.' . $user->id);
             $user->save();
         }
         return redirect('/workers');
