@@ -4,12 +4,11 @@
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
 
-        <title>Laravel</title>
+        <title>Planning Exe Progetti</title>
 
         <!-- Fonts -->
         <link href="https://fonts.googleapis.com/css?family=Nunito:200,600" rel="stylesheet">
         <link href="../public/css/aspect.css" rel="stylesheet">
-        <link href="public\js\function.js" rel="stylesheet">
 
         <!-- Styles -->
         <style>
@@ -79,10 +78,17 @@
                 <div class="links">
                     <a href="auto">Planning Auto</a>
                 </div>
+                @if(Auth::guest())
                 <div class="links home">
                     <a class="nav-link login" href="{{ route('login') }}">Login</a>
                     <a class="nav-link register" href="{{ route('register') }}">Registrati</a>
                 </div>
+                @endif
+                @if(Auth::user()->admin==1)
+                <div class="links">
+                    <a class="linkWorkers" href="workers">Gestione utenti</a>
+                </div>
+                @endif
             </div>
         </div>
     </body>

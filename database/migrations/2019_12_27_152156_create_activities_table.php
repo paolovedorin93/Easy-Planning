@@ -15,7 +15,8 @@ class CreateActivitiesTable extends Migration
     {
         Schema::create('activities', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->text('activities');
+            $table->text('type');
+            $table->char('color', 6);
             $table->timestamps();
         });
     }

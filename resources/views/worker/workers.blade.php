@@ -4,7 +4,7 @@
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
 
-        <title>Laravel</title>
+        <title>Planning Exe Progetti | Utenti</title>
 
         <!-- Fonts & Style -->
         <link href="https://fonts.googleapis.com/css?family=Nunito:200,600" rel="stylesheet">
@@ -64,8 +64,8 @@
                 <table>
                     <th>
                         <td class="label">Sospeso</td>
-                        <td class="label">No Assistenza</td>
                         <td class="label">Amministratore</td>
+                        <td class="label lastWorker">No Assistenza</td>
                     </th>
                         {{csrf_field()}}
                         @foreach($workers as $worker)
@@ -77,8 +77,8 @@
                             <tr class="contentTable">
                                 <td class="nameWorker">{{ $worker['name'] }}</td>
                                 <td class="inputWorker"><input id="workerSuspended" type="checkbox" value="{{ $suspended }}" name="suspended[{{$worker->id}}]" @if($suspended) checked  @endif></td>
-                                <td class="inputWorker"><input id="workerNoAssi" type="checkbox" value="{{ $no_assi }}" name="no_assi[{{$worker->id}}]" @if($no_assi) checked  @endif></td>
                                 <td class="inputWorker"><input id="workerNoAssi" type="checkbox" value="{{ $admin }}" name="admin[{{$worker->id}}]" @if($admin) checked  @endif></td>
+                                <td class="inputWorker lastWorker"><input id="workerNoAssi" type="checkbox" value="{{ $no_assi }}" name="no_assi[{{$worker->id}}]" @if($no_assi) checked  @endif></td>
                             </tr>
                         @endforeach
                 </table>
@@ -88,14 +88,6 @@
             </form>
         </div>
         @endif
-        <script>
-            $('#nav-icon1').click(function(){
-                $('.userNav').toggleClass('show').toggleClass('horizontal');
-                $('.bottomRightCorner').toggleClass('openCorner');
-                $('.main').toggleClass('extend');
-
-            });
-        </script>
         <script>
             $(document).ready(function(){
                 $('#nav-icon1').click(function(){

@@ -3,6 +3,8 @@
   <head>
     <meta charset='utf-8' />
 
+    <title>Planning Exe Progetti | Attività</title>
+
     <link href='../packages/core/main.css' rel='stylesheet' />
     <link href='../packages/daygrid/main.css' rel='stylesheet' />
     <link href="../public/css/aspect.css" rel="stylesheet">

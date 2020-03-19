@@ -329,6 +329,10 @@ a.connect:hover{
 .bottomRightCorner {
     cursor: pointer;
     background-color: transparent;
+    width: 50px;
+    border-style: solid;
+    border-color: #ff8100;
+    background-color: white !important;
 }
 
 .inputWorker {
@@ -384,4 +388,26 @@ td.label {
     font-size: 18px !important;
     width: 50%;
     order: 1;
+}
+
+.linkWorkers {
+    margin-top: 18px;
+    font-size: 18px !important;
+}
+
+.lastWorker {
+    position: relative;
+    left: 50px;
+}
+
+.openDropdown {
+    display: block !important;
+}
+
+.addActivity {
+    text-align: center !important;
+}
+
+.addActivityTable {
+    margin-top: 50px;
 }

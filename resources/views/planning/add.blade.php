@@ -3,10 +3,16 @@
   <head>
     <meta charset='utf-8' />
 
-    <link type="javascript" src="../js/script.js" />
+    <link type="javascript" src="/Easy-Planning/public/js/script.js" />
+    <link href="/Easy-Planning/public/css/aspect.css" rel="stylesheet">
+    <link href='/Easy-Planning/packages/core/main.css' rel='stylesheet' />
+    <link href='/Easy-Planning/packages/daygrid/main.css' rel='stylesheet' />
 
     
     <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+    <link href='https://use.fontawesome.com/releases/v5.0.6/css/all.css' rel='stylesheet'>
+    <link href='https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css' rel='stylesheet' />
+    <link href="http://127.0.0.2/Easy-Planning/public/css/app.css" rel="stylesheet">
 
     <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
     <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
@@ -26,57 +32,80 @@
     
   </head>
   <body>
+    <nav class="navbar navbar-expand-md navbar-light bg-white shadow-sm">
+        <div class="container">
+            <a class="navbar-brand" href="{{ url('/') }}">
+                {{ config('app.name', 'Laravel') }}
+            </a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="{{ __('Toggle navigation') }}">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            @if(Auth::guest())
+            <div class="dropdown myDropDown">
+                <a class="nav-link" href="{{ route('login') }}">Login</a>
+                <a class="nav-link" href="{{ route('register') }}">Registrati</a>
+            </div>
+            @else
+            <div class="dropdown myDropDown">
+                <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
+                    {{ Auth::user()->name }} <span class="caret"></span>
+                </a>
+
+                <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
+                    @if(Auth::user()->administrator)<a class="dropdown-item" href="workers">Gestione utenti</a>@endif
+                    <a class="dropdown-item" href="{{ route('logout') }}"
+                    onclick="event.preventDefault();
+                                    document.getElementById('logout-form').submit();">
+                        {{ __('Logout') }}
+                    </a>
+
+                    <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
+                        @csrf
+                    </form>
+                </div>
+            </div>
+            @endif
+        </div>
+    </nav>
     <form method="post" action="{{ action('PlanningController@store') }}">
         {{ csrf_field() }}
-        <table class="table table-striped">
+        <table class="table table-striped addActivityTable">
             <thead>
-                <tr>
+                <tr class="addActivity">
                     <th>Descrizione attività</th>
                     <th>Tipo</th>
                     <th>Periodo</th>
                     <th>Data</th>
                     <th>Operator</th>
+                    <th></th>
                 </tr>
             </thead>
             <tbody>
-                <tr align="center">
+                <tr class="addActivity">
                     <td>
-                        <div class="col-sm-10">
-                            <textarea name="activity" rows="2" cols="40" required></textarea>
+                        <textarea name="activity" rows="2" cols="40" required></textarea>
+                    </td>
+                    <td>
+                        <input name="type" rows="2" cols="40" required>
+                    </td>
+                    <td>
+                        <div class="content">
+                            <input type="checkbox" name="hour" value="0"><span>&nbsp;&nbsp;&nbsp;Mattino</span>
+                        </div>
+                        <div class="content">
+                            <input type="checkbox" name="hour" value="1"><span>&nbsp;&nbsp;&nbsp;Pomeriggio</span>
                         </div>
                     </td>
                     <td>
-                        <div class="form-group row">
-                            <div class="col-sm-10">
-                                <input name="type" rows="2" cols="40" required>
-                            </div>
-                        </div>
+                        <input name="date" id="datepicker" autocomplete="off">
                     </td>
                     <td>
-                        <div class="form-group row">
-                            <div class="col-sm-10">
-                                <input type="checkbox" name="hour" value="0"><span>Mattino</span>
-                                <input type="checkbox" name="hour" value="1"><span>Pomeriggio</span>
-                            </div>
-                        </div>
-                    </td>
-                    <td>
-                        <div class="form-group row">
-                            <div class="col-sm-10">
-                                <input name="date" id="datepicker" autocomplete="off">
-                            </div>
-                        </div>
-                    </td>
-                    <td>
-                        <div class="form-group row">
-                            <div class="col-sm-10">
-                                <select name="operator">
-                                    @foreach($users as $user)
-                                        <option value="{{ $user->name }}">{{ $user->name }}</option>
-                                    @endforeach
-                                </select>
-                            </div>
-                        </div>
+                        <select name="operator">
+                            <option value="" selected></option>
+                            @foreach($users as $user)
+                                <option value="{{ $user->name }}">{{ $user->name }}</option>
+                            @endforeach
+                        </select>
                     </td>
                     <td id="button">
                         <div class="form-group row">
@@ -87,5 +116,15 @@
             </tbody>
         </table>
     </form>
+    <script>
+      $(document).ready(function(){
+        $('#nav-icon1').click(function(){
+          $(this).toggleClass('open');
+        });
+        $('.myDropDown').click(function(){
+          $('.dropdown-menu-right').toggleClass('openDrop');
+        });
+      });
+    </script>
   </body>
 </html>
