@@ -26,6 +26,7 @@ Route::get('planning/{id}/delete', 'PlanningController@delete');
 Route::any('/planning/{id}/edited',['as'=>'new_activity','uses'=>'PlanningController@update']);
 Route::get('/planning/add',['as'=>'new_activity','uses'=>'PlanningController@create']);
 Route::any('/planning/added',['as'=>'new_activity','uses'=>'PlanningController@store']);
+Route::any('/planning/added',['as'=>'new_activity','uses'=>'PlanningController@storeActivity']);
 
 //Route::resource('planning','PlanningController'); --> NON FUNZIONA IL RESTO DELLE FUNZIONI
 

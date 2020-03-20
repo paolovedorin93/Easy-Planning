@@ -6,9 +6,11 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use Auth;
+use Redirect;
 
 use App\Planning as Planning;
 use App\User as User;
+use App\Activity as Activity;
 
 
 class PlanningController extends Controller
@@ -74,6 +76,15 @@ class PlanningController extends Controller
         return redirect('/planning');
     }
 
+    public function storeActivity(Request $request)
+    {
+        $type = new Activity;
+        $type->type = $request->get('type');
+        $type->color = $request->get('color');
+        $type->save();
+        return Redirect::back()->with('Messaggio: ','Operazione completata');
+    }
+
     /**
      * Display the specified resource.
      *
@@ -95,7 +106,8 @@ class PlanningController extends Controller
     {
         $activity = Planning::find($id);
         $users = User::all();
-        return view('planning/editplanning', compact('activity','users'));
+        $types = Activity::all();
+        return view('planning/editplanning', compact('activity','users', 'types'));
     }
 
     /**

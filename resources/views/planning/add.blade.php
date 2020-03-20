@@ -126,5 +126,15 @@
         });
       });
     </script>
+    <script>
+      $(document).ready(function(){
+        $('#nav-icon1').click(function(){
+          $(this).toggleClass('open');
+        });
+        $('.myDropDown').click(function(){
+          $('.dropdown-menu-right').toggleClass('openDrop');
+        });
+      });
+    </script>
   </body>
 </html>

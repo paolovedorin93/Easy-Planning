@@ -32,6 +32,7 @@
 
   </head>
   <body>
+  
     <nav class="navbar navbar-expand-md navbar-light bg-white shadow-sm">
         <div class="container">
             <a class="navbar-brand" href="{{ url('/') }}">
@@ -52,6 +53,7 @@
                 </a>
 
                 <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
+                    
                     @if(Auth::user()->administrator)<a class="dropdown-item" href="workers">Gestione utenti</a>@endif
                     <a class="dropdown-item" href="{{ route('logout') }}"
                     onclick="event.preventDefault();
@@ -86,7 +88,14 @@
                         <textarea name="activity" rows="2" cols="40" placeholder="" required>{{ $activity->activity }}</textarea>
                     </td>
                     <td>
-                        <input name="type" rows="2" cols="40" value="{{ $activity->type }}" required>
+                        <select>
+                            @foreach($types as $type)
+                                <option value="{{ $type->type }}">{{ $type->type }}</option>
+                            @endforeach
+                            <option>Aggiungi...</option>
+                        </select>
+                        <!-- <input name="type" rows="2" cols="40" value="{{ $activity->type }}" required> -->
+                        
                     </td>
                     <td>
                         <div class="content hourDiv">
@@ -115,6 +124,14 @@
             </tbody>
         </table>
     </form>
+    <div class="addActivityDiv">
+        <form method="post" action="{{ action('PlanningController@storeActivity') }}">
+            {{ csrf_field() }}
+            <input name="type" required>
+            <input name="color" type="color" required>
+            <button id="elimina" type="submit" class="btn btn-primary"><i class="fa fa-plus fa-lg">&nbsp;&nbsp;&nbsp;</i>Aggiungi</button>
+        </form>
+    </div>
   </body>
 </html>
 <script>
@@ -126,4 +143,14 @@
             return false;
         }
     }
+</script>
+<script>
+    $(document).ready(function(){
+        $('#nav-icon1').click(function(){
+            $(this).toggleClass('open');
+        });
+        $('.myDropDown').click(function(){
+            $('.dropdown-menu-right').toggleClass('openDrop');
+        });
+    });
 </script>
