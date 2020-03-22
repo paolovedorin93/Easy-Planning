@@ -29,7 +29,9 @@ class PlanningController extends Controller
                                 ->orderByRaw("name = '$userLogged' DESC")
                                 ->get();
         } else {
-            $workers = DB::table('users')->where('no_assi','0')->get();
+            $workers = User::where('no_assi','0')
+                                ->orderby('name','asc')
+                                ->get();
         }
         $tasks = $tasks->sortBy('operator');
         $tasksMor = DB::table('plannings')->where('hour','0')->get();
@@ -55,7 +57,8 @@ class PlanningController extends Controller
     public function create()
     {
         $users = User::all();
-        return view('planning/add',compact('users'));
+        $types = Activity::all();
+        return view('planning/add',compact('users','types'));
     }
 
     /**
@@ -81,6 +84,7 @@ class PlanningController extends Controller
         $type = new Activity;
         $type->type = $request->get('type');
         $type->color = $request->get('color');
+        $type->inv_hex = $request->get('inv_hex');
         $type->save();
         return Redirect::back()->with('Messaggio: ','Operazione completata');
     }

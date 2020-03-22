@@ -67,6 +67,7 @@
             @endif
         </div>
     </nav>
+    <h3 class="headTitle">CREA NUOVA ATTIVITÀ</h3>
     <form method="post" action="{{ action('PlanningController@store') }}">
         {{ csrf_field() }}
         <table class="table table-striped addActivityTable">
@@ -86,7 +87,12 @@
                         <textarea name="activity" rows="2" cols="40" required></textarea>
                     </td>
                     <td>
-                        <input name="type" rows="2" cols="40" required>
+                        <select name="type" class="activitySelect" onchange="openDiv();">
+                            @foreach($types as $type)
+                            <option value="{{ $type->type }}" style="background-color: {{ $type->color }}; color: {{ $type->inv_hex }};">{{ $type->type }}</option>
+                            @endforeach
+                            <option value="Add" class="addActivity">Aggiungi...</option>
+                        </select>
                     </td>
                     <td>
                         <div class="content">
@@ -116,25 +122,63 @@
             </tbody>
         </table>
     </form>
-    <script>
-      $(document).ready(function(){
-        $('#nav-icon1').click(function(){
-          $(this).toggleClass('open');
-        });
-        $('.myDropDown').click(function(){
-          $('.dropdown-menu-right').toggleClass('openDrop');
-        });
-      });
-    </script>
-    <script>
-      $(document).ready(function(){
-        $('#nav-icon1').click(function(){
-          $(this).toggleClass('open');
-        });
-        $('.myDropDown').click(function(){
-          $('.dropdown-menu-right').toggleClass('openDrop');
-        });
-      });
-    </script>
+    <div class="addActivityDiv addActivityDivClose">
+        <form method="post" action="{{ action('PlanningController@storeActivity') }}">
+            {{ csrf_field() }}
+            <div class="content divContent">
+                <input name="type" required="" placeholder="Aggiungi tipo attività...">
+                <input id="hex" name="color" type="color" required>
+                <input id="invHex" name="inv_hex" style="display: none;">
+                <button id="addType" type="submit" class="btn btn-primary"><i class="fa fa-plus fa-lg">&nbsp;&nbsp;&nbsp;</i>Aggiungi</button>
+            </div>
+        </form>
+    </div>
   </body>
 </html>
+<script>
+    function checkRequired(){
+        var checkedboxes = $('.hourDiv :checkbox:checked').length;
+
+        if (checkedboxes === 0){
+            alert('Selezionare periodo di attività');
+            return false;
+        }
+    }
+</script>
+<script>
+    $(document).ready(function(){
+        $('#nav-icon1').click(function(){
+            $(this).toggleClass('open');
+        });
+        $('.myDropDown').click(function(){
+            $('.dropdown-menu-right').toggleClass('openDrop');
+        });
+    });
+</script>
+<script>
+    function openDiv(){
+        let variable = document.getElementsByClassName("activitySelect")[0];
+        let inside = 0;
+        if(variable.value === "Add" && inside!=1){
+            $(".addActivityDiv").toggleClass('addActivityDivClose');
+            inside++;
+        }
+        else{
+            $(".addActivityDiv").toggleClass('addActivityDivClose');
+            inside--;
+        }
+    }
+</script>
+<script>
+    function invertHex(hex) {
+        return (Number(`0x1${hex}`) ^ 0xFFFFFF).toString(16).substr(1).toUpperCase();
+    }
+</script>
+<script>
+    $(document).ready(function(){
+        $("#addType").click(function(){
+            let invColor = invertHex(document.getElementById("hex").value.substr(1));
+            document.getElementById("invHex").value = "#"+invColor;
+        });
+    });
+</script>

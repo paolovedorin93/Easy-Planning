@@ -42,38 +42,39 @@
                 <span class="navbar-toggler-icon"></span>
             </button>
             @if(Auth::guest())
-            <div class="dropdown myDropDown">
-                <a class="nav-link" href="{{ route('login') }}">Login</a>
-                <a class="nav-link" href="{{ route('register') }}">Registrati</a>
-            </div>
+                <div class="dropdown myDropDown">
+                    <a class="nav-link" href="{{ route('login') }}">Login</a>
+                    <a class="nav-link" href="{{ route('register') }}">Registrati</a>
+                </div>
             @else
-            <div class="dropdown myDropDown">
-                <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
-                    {{ Auth::user()->name }} <span class="caret"></span>
-                </a>
-
-                <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
-                    
-                    @if(Auth::user()->administrator)<a class="dropdown-item" href="workers">Gestione utenti</a>@endif
-                    <a class="dropdown-item" href="{{ route('logout') }}"
-                    onclick="event.preventDefault();
-                                    document.getElementById('logout-form').submit();">
-                        {{ __('Logout') }}
+                <div class="dropdown myDropDown">
+                    <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
+                        {{ Auth::user()->name }} <span class="caret"></span>
                     </a>
 
-                    <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
-                        @csrf
-                    </form>
+                    <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
+                        
+                        @if(Auth::user()->administrator)<a class="dropdown-item" href="workers">Gestione utenti</a>@endif
+                        <a class="dropdown-item" href="{{ route('logout') }}"
+                        onclick="event.preventDefault();
+                                        document.getElementById('logout-form').submit();">
+                            {{ __('Logout') }}
+                        </a>
+
+                        <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
+                            @csrf
+                        </form>
+                    </div>
                 </div>
-            </div>
             @endif
         </div>
     </nav>
+    <h3 class="headTitle">MODIFICA ATTIVITÀ</h3>
     <form method="post" action="{{ action('PlanningController@update', [$activity['id']]) }}" onsubmit='return checkRequired()'>
         {{ csrf_field() }}
-        <table class="table table-striped addActivityTable">
+        <table class="table table-striped editActivityTable">
             <thead>
-                <tr class="addActivity">
+                <tr class="editActivity">
                     <th>Descrizione attività</th>
                     <th>Tipo</th>
                     <th>Periodo</th>
@@ -83,19 +84,17 @@
                 </tr>
             </thead>
             <tbody>
-                <tr class="addActivity">
+                <tr class="editActivity">
                     <td>
                         <textarea name="activity" rows="2" cols="40" placeholder="" required>{{ $activity->activity }}</textarea>
                     </td>
                     <td>
-                        <select>
+                        <select name="type" class="activitySelect" onchange="openDiv();">
                             @foreach($types as $type)
-                                <option value="{{ $type->type }}">{{ $type->type }}</option>
+                            <option value="{{ $type->type }}" style="background-color: {{ $type->color }}; color: {{ $type->inv_hex }};">{{ $type->type }}</option>
                             @endforeach
-                            <option>Aggiungi...</option>
-                        </select>
-                        <!-- <input name="type" rows="2" cols="40" value="{{ $activity->type }}" required> -->
-                        
+                            <option value="Add" class="addActivity">Aggiungi...</option>
+                        </select>                        
                     </td>
                     <td>
                         <div class="content hourDiv">
@@ -124,12 +123,15 @@
             </tbody>
         </table>
     </form>
-    <div class="addActivityDiv">
+    <div class="addActivityDiv addActivityDivClose">
         <form method="post" action="{{ action('PlanningController@storeActivity') }}">
             {{ csrf_field() }}
-            <input name="type" required>
-            <input name="color" type="color" required>
-            <button id="elimina" type="submit" class="btn btn-primary"><i class="fa fa-plus fa-lg">&nbsp;&nbsp;&nbsp;</i>Aggiungi</button>
+            <div class="content divContent">
+                <input name="type" required="" placeholder="Aggiungi tipo attività...">
+                <input id="hex" name="color" type="color" required>
+                <input id="invHex" name="inv_hex" style="display: none;">
+                <button id="addType" type="submit" class="btn btn-primary"><i class="fa fa-plus fa-lg">&nbsp;&nbsp;&nbsp;</i>Aggiungi</button>
+            </div>
         </form>
     </div>
   </body>
@@ -151,6 +153,33 @@
         });
         $('.myDropDown').click(function(){
             $('.dropdown-menu-right').toggleClass('openDrop');
+        });
+    });
+</script>
+<script>
+    function openDiv(){
+        let variable = document.getElementsByClassName("activitySelect")[0];
+        let inside = 0;
+        if(variable.value === "Add" && inside!=1){
+            $(".addActivityDiv").toggleClass('addActivityDivClose');
+            inside++;
+        }
+        else{
+            $(".addActivityDiv").toggleClass('addActivityDivClose');
+            inside--;
+        }
+    }
+</script>
+<script>
+    function invertHex(hex) {
+        return (Number(`0x1${hex}`) ^ 0xFFFFFF).toString(16).substr(1).toUpperCase();
+    }
+</script>
+<script>
+    $(document).ready(function(){
+        $("#addType").click(function(){
+            let invColor = invertHex(document.getElementById("hex").value.substr(1));
+            document.getElementById("invHex").value = "#"+invColor;
         });
     });
 </script>

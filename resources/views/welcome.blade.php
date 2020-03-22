@@ -84,10 +84,12 @@
                     <a class="nav-link register" href="{{ route('register') }}">Registrati</a>
                 </div>
                 @endif
-                @if(Auth::user()->admin==1)
-                <div class="links">
-                    <a class="linkWorkers" href="workers">Gestione utenti</a>
-                </div>
+                @if(Auth::user())
+                    @if(Auth::user()->admin==1)
+                        <div class="links">
+                            <a class="linkWorkers" href="workers">Gestione utenti</a>
+                        </div>
+                    @endif
                 @endif
             </div>
         </div>
