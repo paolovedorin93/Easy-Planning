@@ -8,7 +8,7 @@
     <link href='/Easy-Planning/packages/core/main.css' rel='stylesheet' />
     <link href='/Easy-Planning/packages/daygrid/main.css' rel='stylesheet' />
 
-
+    
     <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
     <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" rel="stylesheet">
     <link href='https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css' rel='stylesheet' />
@@ -24,15 +24,14 @@
             dateFormat: "yy-mm-dd",
             dayNamesMin: [ "Dom", "Lun", "Mar", "Mer", "Gio", "Ven", "Sab" ],
             monthNames: [ "Gennaio","Febbraio","Marzo","Aprile","Maggio","Giugno",
-                        "Luglio","Agosto","Settembre","Ottobre","Novembre","Dicembre" ],
+                          "Luglio","Agosto","Settembre","Ottobre","Novembre","Dicembre" ],
             firstday: 1
         });
     } );
     </script>
-
+    
   </head>
   <body>
-  
     <nav class="navbar navbar-expand-md navbar-light bg-white shadow-sm">
         <div class="container">
             <a class="navbar-brand" href="{{ url('/') }}">
@@ -42,36 +41,35 @@
                 <span class="navbar-toggler-icon"></span>
             </button>
             @if(Auth::guest())
-                <div class="dropdown myDropDown">
-                    <a class="nav-link" href="{{ route('login') }}">Login</a>
-                    <a class="nav-link" href="{{ route('register') }}">Registrati</a>
-                </div>
+            <div class="dropdown myDropDown">
+                <a class="nav-link" href="{{ route('login') }}">Login</a>
+                <a class="nav-link" href="{{ route('register') }}">Registrati</a>
+            </div>
             @else
-                <div class="dropdown myDropDown">
-                    <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
-                        {{ Auth::user()->name }} <span class="caret"></span>
+            <div class="dropdown myDropDown">
+                <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
+                    {{ Auth::user()->name }} <span class="caret"></span>
+                </a>
+
+                <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
+                    @if(Auth::user()->administrator)<a class="dropdown-item" href="workers">Gestione utenti</a>@endif
+                    <a class="dropdown-item" href="{{ route('logout') }}"
+                    onclick="event.preventDefault();
+                                    document.getElementById('logout-form').submit();">
+                        {{ __('Logout') }}
                     </a>
 
-                    <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
-                        
-                        @if(Auth::user()->administrator)<a class="dropdown-item" href="workers">Gestione utenti</a>@endif
-                        <a class="dropdown-item" href="{{ route('logout') }}"
-                        onclick="event.preventDefault();
-                                        document.getElementById('logout-form').submit();">
-                            {{ __('Logout') }}
-                        </a>
-
-                        <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
-                            @csrf
-                        </form>
-                    </div>
+                    <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
+                        @csrf
+                    </form>
                 </div>
+            </div>
             @endif
         </div>
     </nav>
-    <h3 class="headTitle">MODIFICA ATTIVITÀ</h3>
-    @if(Auth::user())
-        <form method="post" action="{{ action('PlanningController@update', [$activity['id']]) }}" onsubmit='return checkRequired()'>
+    <h3 class="headTitle">CREA NUOVE ATTIVITÀ SETTIMANALI</h3>
+    @if(Auth::user()->admin)
+        <form method="post" onsubmit='return checkRequired()'>
             {{ csrf_field() }}
             <table class="table table-striped editActivityTable">
                 <thead>
@@ -87,43 +85,43 @@
                 <tbody>
                     <tr class="editActivity stopped">
                         <td>
-                            <textarea name="activity" rows="2" cols="40" placeholder="" required disabled>{{ $activity->activity }}</textarea>
+                            <textarea name="activity" rows="2" cols="40" required></textarea>
                         </td>
                         <td>
-                            <select name="type" class="activitySelect" onchange="openDiv();" disabled>
+                            <select name="type" class="activitySelect" onchange="openDiv();">
                                 @foreach($types as $type)
-                                    <option value="{{ $type->type }}" @if($type->type == $activity->type) selected @endif style="background-color: {{ $type->color }}; color: {{ $type->inv_hex }}; font-weight: bold;">{{ $type->type }}</option>
+                                    <option value="{{ $type->type }}" style="background-color: {{ $type->color }}; color: {{ $type->inv_hex }};">{{ $type->type }}</option>
                                 @endforeach
                                 <option value="Add" class="addActivity">Aggiungi...</option>
-                            </select>                        
+                            </select>                       
                         </td>
                         <td>
-                            <div class="content hourDiv">
-                                <input id="mattino" type="checkbox" name="hour" value="0" onclick="checkBox('pomeriggio')" disabled @if(!$activity->hour) checked @endif><span>&nbsp;&nbsp;&nbsp;Mattino</span>
+                            <div class="content">
+                                <input type="checkbox" name="hour" value="0"><span>&nbsp;&nbsp;&nbsp;Mattino</span>
                             </div>
-                            <div class="content hourDiv">
-                                <input id="pomeriggio" type="checkbox" name="hour" value="1" onclick="checkBox('mattino')" disabled @if($activity->hour) checked @endif><span>&nbsp;&nbsp;&nbsp;Pomeriggio</span>
+                            <div class="content">
+                                <input type="checkbox" name="hour" value="1"><span>&nbsp;&nbsp;&nbsp;Pomeriggio</span>
                             </div>
                         </td>
                         <td>
-                            <input name="date" id="datepicker" autocomplete="off" value="{{$activity->date}}" disabled>
+                            <input name="date" id="datepicker" autocomplete="off">
+                            <input name="particular" value="1" style="display: none;">
                         </td>
                         <td>
-                            <select name="operator" disabled>
+                            <select name="operator">
                                 @foreach($users as $user)
-                                    <option value="{{ $user->name }}" @if($activity->operator == $user->name) selected @endif>{{ $user->name }}</option>
+                                    <option value="{{ $user->name }}">{{ $user->name }}</option>
                                 @endforeach
                             </select>
                         </td>
                         <td id="button">
-                            <button id="conferma" type="submit" class="btn btn-success aggiungi buttonShadow" disabled><i class="fa fa-check fa-lg" aria-hidden="true"></i></button>
-                            <button id="modifica" type="button" class="btn btn-primary modifica buttonShadow"><i class="fa fa-pencil fa-lg" aria-hidden="true"></i></button>
+                            <button id="conferma" type="submit" class="btn btn-success aggiungi buttonShadow"><i class="fa fa-check fa-lg" aria-hidden="true"></i>&nbsp;&nbsp;&nbsp;Conferma</button>
         </form> 
                             <br>                    
-                            <a id="elimina" class="btn btn-danger elimina buttonShadow" href='{{ action("PlanningController@destroy", $activity["id"]) }}' disabled><i class="fa fa-trash-o" aria-hidden="true"></i>&nbsp;&nbsp;&nbsp;Elimina</a>
+                            <a id="elimina" class="btn btn-danger elimina eliminaBig buttonShadow" onclick="return window.history.back();"><i class="fa fa-chevron-left" aria-hidden="true"></i>&nbsp;&nbsp;&nbsp;Indietro</a>
                         </td>
                     </tr>
-                </tbody>
+                </tbody>    
             </table>
         <div class="addActivityDiv addActivityDivClose">
             <form method="post" action="{{ action('PlanningController@storeActivity') }}">
@@ -137,7 +135,7 @@
             </form>
         </div>
     @else
-        <h3 class="headTitle container centeredText"><strong>Devi effettuare l'accesso per poter modificare un'attività</strong></h3>
+        <h3 class="headTitle container centeredText"><strong>Devi effettuare l'accesso per poter inserire un'attività</strong></h3>
     @endif
   </body>
 </html>

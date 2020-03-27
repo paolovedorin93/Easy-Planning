@@ -14,7 +14,13 @@
                         </div>
                     @endif
 
-                    You are logged in!
+                    Accesso avvenuto, ciao <strong>{{ Auth::user()->name }}</strong>
+                </div>
+                <div class="card-body">
+                    <a>Planning</a><br>
+                    <a>Planning auto</a>
+                </div>
+                <div class="card-body">
                 </div>
             </div>
         </div>

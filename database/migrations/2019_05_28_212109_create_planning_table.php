@@ -21,6 +21,8 @@ class CreatePlanningTable extends Migration
             $table->string('type');
             $table->tinyInteger('hour');
             $table->string('comment');
+            $table->string('made');
+            $table->time('time');
             $table->timestamps();
         });
     }

@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use Auth;
 use Redirect;
+use Carbon;
 
 use App\Planning as Planning;
 use App\User as User;
@@ -23,6 +24,7 @@ class PlanningController extends Controller
     public function index()
     {
         $tasks = collect(Planning::all());
+        $types = Activity::all();
         if(Auth::user()){
             $userLogged = Auth::user()->name;
             $workers = User::where('no_assi','0')
@@ -46,7 +48,17 @@ class PlanningController extends Controller
                                     ->select('plannings.*','users.suspended','users.no_assi')
                                     ->where('hour','1')
                                     ->get();
-        return view('planning/planning',compact('tasks','workers','tasksMor','tasksAft'));
+        return view('planning/planning',compact('tasks','types','workers','tasksMor','tasksAft'));
+    }
+
+    /**
+     * Display view for weekly activity
+     */
+    public function indexWeekly()
+    {
+        $users = User::all();
+        $types = Activity::all();
+        return view('planning/addWeekly', compact('users', 'types'));
     }
 
     /**
@@ -75,10 +87,14 @@ class PlanningController extends Controller
         $activity->date = $request->get('date');
         $activity->type = $request->get('type');
         $activity->hour = $request->get('hour');
+        $activity->made = Auth::user()->name;
         $activity->save();
         return redirect('/planning');
     }
 
+    /**
+     * Store new Activity
+     */
     public function storeActivity(Request $request)
     {
         $type = new Activity;
@@ -87,6 +103,14 @@ class PlanningController extends Controller
         $type->inv_hex = $request->get('inv_hex');
         $type->save();
         return Redirect::back()->with('Messaggio: ','Operazione completata');
+    }
+
+    /**
+     * Store default activty
+     */
+    public function storeDefaultActivity(Request $request)
+    {
+        
     }
 
     /**
@@ -130,6 +154,7 @@ class PlanningController extends Controller
         $activity->date = $request->get('date');
         $activity->type = $request->get('type');
         $activity->hour = $request->get('hour');
+        $activity->made = Auth::user()->name;
         $activity->save();
         return redirect('/planning');
     }
@@ -140,8 +165,10 @@ class PlanningController extends Controller
      * @param  \App\Planning  $planning
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Planning $planning)
+    public function destroy($id)
     {
-        //
+        $activity = Planning::find($id);
+        $activity->delete();
+        return redirect('planning');
     }
 }

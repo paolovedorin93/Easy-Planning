@@ -22,11 +22,13 @@ Route::get('/home', 'HomeController@index')->name('home');
 Route::get('/planning', 'PlanningController@index')->name('planning');
 Route::get('/planning/add', 'PlanningController@create')->name('planning');
 Route::get('planning/{id}/edit', 'PlanningController@edit')->name('activity');
-Route::get('planning/{id}/delete', 'PlanningController@delete');
+//Route::get('planning/{id}/delete', 'PlanningController@delete');
 Route::any('/planning/{id}/edited',['as'=>'new_activity','uses'=>'PlanningController@update']);
 Route::get('/planning/add',['as'=>'new_activity','uses'=>'PlanningController@create']);
 Route::any('/planning/added',['as'=>'new_activity','uses'=>'PlanningController@store']);
 Route::any('/planning/addedActivity',['as'=>'new_activity','uses'=>'PlanningController@storeActivity']);
+Route::any('/planning/{id}/deleted', ['as'=>'del_activity','uses'=>'PlanningController@destroy']);
+Route::get('/planning/addWeekly', 'PlanningController@indexWeekly')->name('planningWeekly');
 
 //Route::resource('planning','PlanningController'); --> NON FUNZIONA IL RESTO DELLE FUNZIONI
 

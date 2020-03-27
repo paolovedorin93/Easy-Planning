@@ -7,13 +7,12 @@
 
     <link href='../packages/core/main.css' rel='stylesheet' />
     <link href='../packages/daygrid/main.css' rel='stylesheet' />
-    <link href="../public/css/aspect.css" rel="stylesheet">
     <link type="javascript" src="../js/script.js" />
     <link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.1.0/fullcalendar.min.css' />
     <link href='https://use.fontawesome.com/releases/v5.0.6/css/all.css' rel='stylesheet'>
     <link href='https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css' rel='stylesheet' />
     <link href="http://127.0.0.2/Easy-Planning/public/css/app.css" rel="stylesheet">
-
+    <link href="../public/css/aspect.css" rel="stylesheet">
     <script src='../packages/core/main.js'></script>
     <script src='../packages/daygrid/main.js'></script>
     <script src="http://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
@@ -57,17 +56,25 @@
         @endif
       </div>
     </nav>
+    <!-- <button type="button" class="next">>>>>>>>></button>
+    <button type="button" class="prev"><<<<<<<<</button>
+    <button type="button" class="today">Oggi</button> -->
     <div class="generalContainer">
-      <div class="main buttonBottom" id="nav-icon1">
-        <div class="bottomRightCorner">
-          <span class="spanButton spanButtonOne"></span>
-          <span class="spanButton spanButtonTwo"></span>
-          <span class="spanButton spanButtonThree"></span>
+      @if(Auth::user())
+        <div class="main buttonBottom" id="nav-icon1">
+          <div class="bottomRightCorner">
+            <span class="spanButton spanButtonOne"></span>
+            <span class="spanButton spanButtonTwo"></span>
+            <span class="spanButton spanButtonThree"></span>
+          </div>
+          <div class="userNav">
+            @if(Auth::user())
+              <a class="connect"  id="seven" href="../public/planning/addWeekly"><i class="fa fa-plus"></i>7</a>
+            @endif
+            <a class="connect" href="../public/planning/add"><i class="fa fa-plus"></i></a>
+          </div>
         </div>
-        <div class="userNav">
-          <a class="connect" href="../public/planning/add"><i class="fa fa-plus"></i></a>
-        </div>
-      </div>
+      @endif
       @foreach ($workers as $worker)
         @if($worker->suspended != 1)
           <span>TABELLA DI {{ $worker->name }}</span>
@@ -94,11 +101,11 @@
             $(document).ready(function() {
               // page is now ready, initialize the calendar...
               $('#calendar{{ $worker->name }}').fullCalendar({
+                height: 200,
                 lang: 'it',
-                header: {
-                    left: 'prev,next today',
-                    center: 'title',
-                    right: 'month,basicWeek,basicDay',
+                header: false,
+                eventRender: function (event, element) {
+                  element.find('.fc-title').html('<i>'+event.title+'</i>');
                 },
                 defaultView: 'basicWeek',
                 hiddenDays: [0,6],
@@ -112,10 +119,12 @@
                         end : '{{ $task->enddate }}',
                         url : '{{ action("PlanningController@edit", $task["id"]) }}',
                         className : '{{ $task->type }}',
+                        color : '@foreach($types as $type) @if($type->type === $task->type) {{ $type->color }} @endif @endforeach',
                     },
                     @endif
                   @endforeach
-                ]
+                ],
+                textEscape : false,
               });
               $("#calendar{{ $worker->name }}").css('display','none');
             });
@@ -123,36 +132,33 @@
           @endif
       @endforeach
     </div>
-    <div class="divButtonHard">
-      <button class="fc-next-button fc-button fc-state-default fc-corner-left fc-state-hover" id="prevButton"><span class="fc-icon fc-icon-left-single-arrow"></span></button>
-      <button class="fc-next-button fc-button fc-state-default fc-corner-right fc-state-hover" id="nextButton"><span class="fc-icon fc-icon-right-single-arrow"></span></button>
-    </div>
     <div id='calendarHardMor'></div>
     <div id='calendarHardEvn'></div>
     <script>
       let dayDate, oldDayDate, operator, oldOperator, busy, suspended, noAssi, countWorkers;
       @php $countWorkers = sizeof($workers); @endphp
       countWorkers = {{ $countWorkers }};
-      console.log("countWorkers: ", countWorkers);
       $(document).ready(function() {
         $('#calendarHardMor').fullCalendar({
           defaultView: 'basicWeek',
           hiddenDays: [0,6],
+          header: false,
           dayRender: function(date,cell){
-              console.log("dayRender just entried");
               cell.css('background-color','#03a300');
               busy = 0;
+              oldDayDate = "";
               @foreach($tasksMor as $taskMor)
                 suspended = {{ $taskMor->suspended }};
                 noAssi = {{ $taskMor->no_assi }};
                 if(cell[0].dataset.date === "{{ $taskMor->date }}" && suspended != 1 && noAssi != 1){
                   dayDate = "{{ $taskMor->date }}";
                   operator = "{{ $taskMor->operator }}";
-                  if(oldDayDate === dayDate){
+                  if(oldDayDate === "")
+                    busy++;
+                  if(oldDayDate === dayDate){  //old date è vuoto il primo giro!
                     if(oldOperator != operator)
                       busy++;
                   }
-                  console.log("busyyyyyyyyyyyyyyyyyy M: ", busy);
                   if(busy===3){
                     console.log("busy = 3");
                     cell.css('background-color','#31ff2e');
@@ -168,12 +174,14 @@
                   oldOperator = operator;
                   oldDayDate = dayDate;
                 }
+                console.log("END ------------- FOREACH ------------- END")
               @endforeach
             }
         });
         $('#calendarHardEvn').fullCalendar({
           defaultView: 'basicWeek',
           hiddenDays: [0,6],
+          header: false,
           dayRender: function(date,cell){
             cell.css('background-color','#03a300');
             busy = 0;
@@ -181,13 +189,15 @@
               suspended = {{ $taskAft->suspended }};
               noAssi = {{ $taskAft->no_assi }};
               if(cell[0].dataset.date === "{{ $taskAft->date }}" && suspended != 1 && noAssi != 1){
+                if(oldDayDate === "")
+                    busy++;
                 dayDate = "{{ $taskAft->date }}";
                 operator = "{{ $taskAft->operator }}";
                 if(oldDayDate === dayDate){
                   if(oldOperator != operator)
                     busy++;
                 }
-                console.log("busyyyyyyyyyyyyyyyyyy A: ", busy);
+                console.log("busy A: ", busy);
                 if(busy===3){
                   console.log("busy = 3");
                   cell.css('background-color','#31ff2e');
@@ -241,6 +251,20 @@
         $('.myDropDown').click(function(){
           $('.dropdown-menu-right').toggleClass('openDrop');
         });
+      });
+    </script>
+    <script>
+      $(".next").click(function(){
+        $(".tableUser").fullCalendar('next');
+        $("#calendarHardMor, #calendarHardEvn").fullCalendar('next');
+      });
+      $(".prev").click(function(){
+        $(".tableUser").fullCalendar('prev');
+        $("#calendarHardMor, #calendarHardEvn").fullCalendar('prev');
+      });
+      $(".today").click(function(){
+        $(".tableUser").fullCalendar('today');
+        $("#calendarHardMor, #calendarHardEvn").fullCalendar('today');
       });
     </script>
   </body>

@@ -10,7 +10,7 @@
 
     
     <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
-    <link href='https://use.fontawesome.com/releases/v5.0.6/css/all.css' rel='stylesheet'>
+    <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" rel="stylesheet">
     <link href='https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css' rel='stylesheet' />
     <link href="http://127.0.0.2/Easy-Planning/public/css/app.css" rel="stylesheet">
 
@@ -68,71 +68,81 @@
         </div>
     </nav>
     <h3 class="headTitle">CREA NUOVA ATTIVITÀ</h3>
-    <form method="post" action="{{ action('PlanningController@store') }}">
-        {{ csrf_field() }}
-        <table class="table table-striped addActivityTable">
-            <thead>
-                <tr class="addActivity">
-                    <th>Descrizione attività</th>
-                    <th>Tipo</th>
-                    <th>Periodo</th>
-                    <th>Data</th>
-                    <th>Operator</th>
-                    <th></th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr class="addActivity">
-                    <td>
-                        <textarea name="activity" rows="2" cols="40" required></textarea>
-                    </td>
-                    <td>
-                        <select name="type" class="activitySelect" onchange="openDiv();">
-                            @foreach($types as $type)
-                            <option value="{{ $type->type }}" style="background-color: {{ $type->color }}; color: {{ $type->inv_hex }};">{{ $type->type }}</option>
-                            @endforeach
-                            <option value="Add" class="addActivity">Aggiungi...</option>
-                        </select>
-                    </td>
-                    <td>
-                        <div class="content">
-                            <input type="checkbox" name="hour" value="0"><span>&nbsp;&nbsp;&nbsp;Mattino</span>
-                        </div>
-                        <div class="content">
-                            <input type="checkbox" name="hour" value="1"><span>&nbsp;&nbsp;&nbsp;Pomeriggio</span>
-                        </div>
-                    </td>
-                    <td>
-                        <input name="date" id="datepicker" autocomplete="off">
-                    </td>
-                    <td>
-                        <select name="operator">
-                            <option value="" selected></option>
-                            @foreach($users as $user)
-                                <option value="{{ $user->name }}">{{ $user->name }}</option>
-                            @endforeach
-                        </select>
-                    </td>
-                    <td id="button">
-                        <div class="form-group row">
-                            <button id="elimina" type="submit" class="btn btn-primary"><i class="fa fa-plus fa-lg">&nbsp;&nbsp;&nbsp;</i>Aggiungi</button>
-                        </div>
-                    </td>
-                </tr>
-            </tbody>
-        </table>
-    </form>
-    <div class="addActivityDiv addActivityDivClose">
-        <form method="post" action="{{ action('PlanningController@storeActivity') }}">
+    @if(Auth::user())
+        <form method="post" action="{{ action('PlanningController@store') }}">
             {{ csrf_field() }}
-            <div class="content divContent">
-                <input name="type" required="" placeholder="Aggiungi tipo attività...">
-                <input id="hex" name="color" type="color" required>
-                <input id="invHex" name="inv_hex" style="display: none;">
-                <button id="addType" type="submit" class="btn btn-primary"><i class="fa fa-plus fa-lg">&nbsp;&nbsp;&nbsp;</i>Aggiungi</button>
-            </div>
+            <table class="table table-striped addActivityTable">
+                <thead>
+                    <tr class="addActivity">
+                        <th>Descrizione attività</th>
+                        <th>Tipo</th>
+                        <th>Periodo</th>
+                        <th>Data</th>
+                        <th>Operatore</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr class="addActivity">
+                        <td>
+                            <textarea name="activity" rows="2" cols="40" required></textarea>
+                        </td>
+                        <td>
+                            <select name="type" class="activitySelect" onchange="openDiv();">
+                                @foreach($types as $type)
+                                <option value="{{ $type->type }}" style="background-color: {{ $type->color }}; color: {{ $type->inv_hex }};">{{ $type->type }}</option>
+                                @endforeach
+                                <option value="Add" class="addActivity">Aggiungi...</option>
+                            </select>
+                        </td>
+                        <td>
+                            <div class="content">
+                                <input type="checkbox" name="hour" value="0"><span>&nbsp;&nbsp;&nbsp;Mattino</span>
+                            </div>
+                            <div class="content">
+                                <input type="checkbox" name="hour" value="1"><span>&nbsp;&nbsp;&nbsp;Pomeriggio</span>
+                            </div>
+                        </td>
+                        <td>
+                            <input name="date" id="datepicker" autocomplete="off">
+                        </td>
+                        <!-- <td class="input-group clockpicker">
+                            <input type="text" class="form-control" name="time" value="">
+                            <span class="input-group-addon">
+                                <span class="glyphicon glyphicon-time"></span>
+                            </span>
+                        </td> -->
+                        <td>
+                            <select name="operator">
+                                <option value="" selected></option>
+                                @foreach($users as $user)
+                                    <option value="{{ $user->name }}">{{ $user->name }}</option>
+                                @endforeach
+                            </select>
+                        </td>
+                        <td id="button">
+                            <button id="conferma" type="submit" class="btn btn-success aggiungi buttonShadow"><i class="fa fa-check fa-lg" aria-hidden="true"></i>&nbsp;&nbsp;&nbsp;Conferma</button>
         </form>
-    </div>
+                            <br>
+                            <a id="elimina" class="btn btn-danger elimina eliminaBig buttonShadow" onclick="return window.history.back();"><i class="fa fa-chevron-left" aria-hidden="true"></i>&nbsp;&nbsp;&nbsp;Indietro</a>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        <div class="addActivityDiv addActivityDivClose">
+            <form method="post" action="{{ action('PlanningController@storeActivity') }}">
+                {{ csrf_field() }}
+                <div class="content divContent">
+                    <input name="type" required="" placeholder="Aggiungi tipo attività...">
+                    <input id="hex" name="color" type="color" required>
+                    <input id="invHex" name="inv_hex" style="display: none;">
+                    <button id="addType" type="submit" class="btn btn-primary buttonShadow"><i class="fa fa-plus fa-lg">&nbsp;&nbsp;&nbsp;</i>Aggiungi</button>
+                </div>
+            </form>
+        </div>
+    @else
+        <h3 class="headTitle container centeredText"><strong>Devi effettuare l'accesso per poter inserire un'attività</strong></h3>
+    @endif
   </body>
 </html>
 <script>
@@ -181,4 +191,9 @@
             document.getElementById("invHex").value = "#"+invColor;
         });
     });
+</script>
+<script>
+    function checkBox(notChecked) {
+        $("#"+notChecked).prop('checked', false);
+    }
 </script>

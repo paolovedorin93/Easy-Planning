@@ -4,6 +4,22 @@
     font-weight: bold;
 }
 
+.userNav.show.horizontal {
+    animation: cssAnimation 0s 0.5s forwards;
+    opacity: 0;
+    display: flex !important;
+}
+  
+@keyframes cssAnimation {
+    to { 
+        opacity: 1; 
+    }
+}
+
+.buttonShadow {
+    box-shadow: 2px 3px 6px 0px rgba(0, 0, 0, 0.4) !important;
+}
+
 .generalContainer,
 #calendarHardMor {
     margin: 10px 10px 0 10px !important;
@@ -15,7 +31,7 @@
 
 .fc-row.fc-week.fc-widget-content,
 .fc-scroller.fc-day-grid-container {
-    height: 100px !important;
+    height: 65px !important;
 }
 
 .interno {
@@ -237,14 +253,14 @@ a {
     #nav-icon1 {
     bottom: 3%;
     margin: 4px 0 0 0;
-    -webkit-transform: rotate(0deg);
+    /* -webkit-transform: rotate(0deg); */
     -moz-transform: rotate(0deg);
     -o-transform: rotate(0deg);
     transform: rotate(0deg);
-    -webkit-transition: .5s ease-in-out;
+    -webkit-transition: .5s cubic-bezier(1, -0.18, 0.45, 0.94);
     -moz-transition: .5s ease-in-out;
     -o-transition: .5s ease-in-out;
-    transition: .5s ease-in-out;
+    /* transition: .5s ease-in-out; */
     }
     
     #nav-icon1 span {
@@ -299,7 +315,7 @@ a {
 .connect {
     color: #f8fafc;
     position: relative;
-    left: 8px;
+    /* left: 8px; */
     font-weight: bold;
     font-size: 33px;
 }
@@ -440,4 +456,40 @@ td.label {
     border-top-color: #adadad;
     border-top-style: solid;
     border-top-width: thin;
+}
+
+a#elimina {
+    margin-top: 5px;
+    color: #fff;
+}
+
+.eliminaBig {
+    width: 119.36px;
+    position: relative;
+    right: 1px;
+}
+
+.eliminaBig > i {
+    position: relative;
+    right: 8px;
+}
+
+button#conferma {
+    margin-right: 4px;
+}
+
+.generalContainer > .tableUser:not(:nth-child(3)) > div > div > table > thead {
+    display: none;
+}
+
+.fc-basic-view .fc-body .fc-row {
+    min-height: 2em !important;
+}
+
+.calendarHardMor {
+    margin-top: 15px;
+}
+
+.generalContainer {
+    margin-bottom: 50px !important;
 }
