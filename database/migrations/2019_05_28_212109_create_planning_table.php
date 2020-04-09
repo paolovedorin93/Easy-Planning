@@ -16,13 +16,13 @@ class CreatePlanningTable extends Migration
         Schema::create('plannings', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->string('operator');
-            $table->date('date');
+            $table->date('date')->nullable();
             $table->string('activity');
             $table->string('type');
-            $table->tinyInteger('hour');
-            $table->string('comment');
-            $table->string('made');
-            $table->time('time');
+            $table->tinyInteger('hour', 1);
+            $table->string('edit');
+            $table->tinyInteger('particular', 1);
+            $table->time('time'); //where to save clock time
             $table->timestamps();
         });
     }

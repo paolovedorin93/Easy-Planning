@@ -106,6 +106,8 @@
                             </div>
                         </td>
                         <td>
+                            <input name="particular" value="0" style="display: none;">
+                            <input name="repetition" value="0" style="display: none;">
                             <input name="date" id="datepicker" autocomplete="off" value="{{$activity->date}}" disabled>
                         </td>
                         <td>

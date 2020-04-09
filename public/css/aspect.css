@@ -1,3 +1,17 @@
+#mainNav {
+    bottom: 45px;
+    -webkit-transition: .25s ease-in-out;
+    -moz-transition: .25s ease-in-out;
+    -o-transition: .25s ease-in-out;
+    transition: .25s ease-in-out;
+    z-index: 10;
+}
+
+.down {
+    bottom: 0 !important;
+    background-color: #fffd !important;
+}
+
 .headTitle {
     margin: 20px 20px 0 20px;
     color: #3490dc;
@@ -20,34 +34,22 @@
     box-shadow: 2px 3px 6px 0px rgba(0, 0, 0, 0.4) !important;
 }
 
-.generalContainer,
-#calendarHardMor {
-    margin: 10px 10px 0 10px !important;
+.generalContainer {
+    margin: 0 10px 0 10px !important;
+    bottom: 25px;
+    position: relative;
 }
 
+#calendarHardMor,
 #calendarHardEvn {
+    bottom: 25px;
+    position: relative;
     margin: 0 10px 0 10px;
 }
 
 .fc-row.fc-week.fc-widget-content,
 .fc-scroller.fc-day-grid-container {
     height: 65px !important;
-}
-
-.interno {
-    background-color: red !important;
-    border-color: red !important;
-}
-
-.confermato {
-    background-color: green !important;
-    border-color: green !important;
-}
-
-.attesa {
-    background-color: brown !important;
-    border-color: brown !important;
-    color: #fff !important;
 }
 
 #calendarHardEvn .fc-toolbar.fc-header-toolbar {
@@ -182,6 +184,14 @@
     border-radius: 48px;
 }
 
+.main2 {
+    position: absolute;
+    right: 38px;
+    width: 50px;
+    height: 50px;
+    border-radius: 48px;
+}
+
 .expandableButton {
     width: 100%;
     height: 100%;
@@ -214,6 +224,7 @@
     left: 6px;
     top: 32px;
 }
+
 a {
     color: #000;
     cursor:pointer;
@@ -245,15 +256,13 @@ a {
     background: -o-linear-gradient(right, #f7f7f7, #b8b8b8); /* Sfumatura Opera */
     background: -moz-linear-gradient(right, #f7f7f7, #b8b8b8); /* Sfumatura Firefox */
 }
-
-/* X */
     
-    /* Icon 1 */
-    
-    #nav-icon1 {
+#nav-icon1 {
     bottom: 3%;
     margin: 4px 0 0 0;
-    /* -webkit-transform: rotate(0deg); */
+    /* width: 165px; */
+    /* height: auto; */
+    bottom: 16px;
     -moz-transform: rotate(0deg);
     -o-transform: rotate(0deg);
     transform: rotate(0deg);
@@ -261,9 +270,17 @@ a {
     -moz-transition: .5s ease-in-out;
     -o-transition: .5s ease-in-out;
     /* transition: .5s ease-in-out; */
-    }
+}
+
+#nav-icon2 {
+    bottom: 3%;
+    margin: 4px 0 0 0;
+    width: 165px;
+    height: auto;
+    bottom: 16px;
+}
     
-    #nav-icon1 span {
+#nav-icon1 span {
     display: block;
     position: absolute;
     height: 5px;
@@ -278,39 +295,39 @@ a {
     -moz-transition: .25s ease-in-out;
     -o-transition: .25s ease-in-out;
     transition: .25s ease-in-out;
-    }
+}
     
-    #nav-icon1 span:nth-child(1) {
+#nav-icon1 span:nth-child(1) {
     top: 10px;
-    }
+}
     
-    #nav-icon1 span:nth-child(2) {
+#nav-icon1 span:nth-child(2) {
     top: 18px;
-    }
+}
     
-    #nav-icon1 span:nth-child(3) {
+#nav-icon1 span:nth-child(3) {
     top: 26px;
-    }
+}
     
-    #nav-icon1.open span:nth-child(1) {
+#nav-icon1.open span:nth-child(1) {
     top: 18px;
     -webkit-transform: rotate(135deg);
     -moz-transform: rotate(135deg);
     -o-transform: rotate(135deg);
     transform: rotate(135deg);
-    }
+}
     
-    #nav-icon1.open span:nth-child(2) {
+#nav-icon1.open span:nth-child(2) {
     transform: translateY(0) rotate(-45deg);
 }
     
-    #nav-icon1.open span:nth-child(3) {
+#nav-icon1.open span:nth-child(3) {
     top: 18px;
     -webkit-transform: rotate(-135deg);
     -moz-transform: rotate(-135deg);
     -o-transform: rotate(-135deg);
     transform: rotate(-135deg);
-    }
+}
 
 .connect {
     color: #f8fafc;
@@ -330,6 +347,12 @@ a.connect:hover{
     z-index: 9999999999999999999999999;
 }
 
+.buttonBottom2 {
+    position: fixed;
+    display: flex;
+    z-index: 9999999999999999999999999;
+}
+
 .openDrop{
     display: block !important;
 }
@@ -340,6 +363,39 @@ a.connect:hover{
     width: 17%;
     background-color: #f8fafc;
     border-radius: 44px;
+    cursor: pointer;
+    background-color: transparent;
+    width: 50px;
+    border-style: solid;
+    border-color: #ff8100;
+    background-color: white !important;
+}
+
+.bottomRightCorner2 {
+    width: 17%;
+    background-color: #f8fafc;
+    border-radius: 44px;
+    cursor: pointer;
+    background-color: transparent;
+    width: 165px;
+    border-style: solid;
+    border-color: #ff8100;
+    background-color: white !important;
+    -webkit-transition: .25s ease-in-out;
+    -moz-transition: .25s ease-in-out;
+    -o-transition: .25s ease-in-out;
+    transition: .25s ease-in-out;
+}
+
+.bottomRightCorner2.extend2.open2:hover {
+    background-color: #38c172 !important;
+    -webkit-transition: .25s ease-in-out;
+    -moz-transition: .25s ease-in-out;
+    -o-transition: .25s ease-in-out;
+    color: white;
+    border-color: #42A5F5;
+    transition: .25s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    box-shadow: 4px 3px 6px 0px #888;
 }
 
 .openCorner {
@@ -348,10 +404,7 @@ a.connect:hover{
     background-color: white !important;
 }
 
-.bottomRightCorner {
-    cursor: pointer;
-    background-color: transparent;
-    width: 50px;
+.openCorner2 {
     border-style: solid;
     border-color: #ff8100;
     background-color: white !important;
@@ -478,8 +531,26 @@ button#conferma {
     margin-right: 4px;
 }
 
-.generalContainer > .tableUser:not(:nth-child(3)) > div > div > table > thead {
-    display: none;
+button#confermaWeekly {
+    margin-right: 4px;
+    background-color: transparent;
+    border-color: transparent;
+    color: white;
+    font-weight: bold;
+    position: relative;
+    bottom: 6px;
+    cursor: pointer;
+}
+
+button#confermaWeekly:focus {
+    outline: none;
+}
+
+i#confermaWeeklyI {
+    font-size: 20px;
+    position: relative;
+    bottom: 5px;
+    left: 1px;
 }
 
 .fc-basic-view .fc-body .fc-row {
@@ -492,4 +563,59 @@ button#conferma {
 
 .generalContainer {
     margin-bottom: 50px !important;
+}
+
+#genWeekly {
+    text-align: center;
+    font-weight: bold;
+    position: relative;
+    background-color: transparent;
+    border-color: transparent;
+    cursor: pointer;
+}
+
+button#genWeekly:hover {
+    color: white;
+    -webkit-transition: all 0.5s ease-in-out;
+    -moz-transition: all 0.5s ease-in-out;
+    -o-transition: all 0.5s ease-in-out;
+    transition: all 0.2s ease-in-out;
+}
+
+.fc-toolbar {
+    position: absolute;
+    right: 0;
+    top: -13px;
+}
+
+.fc-center {
+    width: 300px;
+    text-align: center;
+}
+
+.fc-center > h2 {
+    width: 300px;
+}
+
+.fc-Vai-button {
+    margin: 0 5px 0 20px !important;
+    border-radius: 4px !important;
+}
+
+.fc-Pros-button {
+    border-top-right-radius: 4px !important;
+    border-bottom-right-radius: 4px !important;
+}
+
+#goToDate {
+    height: 29px;
+    position: relative;
+    top: 1px;
+}
+
+.fc-Prev-button,
+.fc-Pros-button,
+.fc-Vai-button:focus {
+    -webkit-box-shadow: none !important;
+    box-shadow: none !important;
 }

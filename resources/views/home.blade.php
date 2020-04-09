@@ -14,11 +14,11 @@
                         </div>
                     @endif
 
-                    Accesso avvenuto, ciao <strong>{{ Auth::user()->name }}</strong>
+                    Accesso effettuato, ciao <strong>{{ Auth::user()->name }}</strong>
                 </div>
                 <div class="card-body">
-                    <a>Planning</a><br>
-                    <a>Planning auto</a>
+                    <a href="planning">Planning</a><br>
+                    <a href="risorse">Planning risorse</a>
                 </div>
                 <div class="card-body">
                 </div>

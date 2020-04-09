@@ -21,7 +21,7 @@
     <script src='https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.1.0/fullcalendar.min.js'></script>
   </head>
   <body>
-    <nav class="navbar navbar-expand-md navbar-light bg-white shadow-sm">
+    <nav class="navbar navbar-expand-md navbar-light bg-white shadow-sm" id="mainNav">
       <div class="container">
         <a class="navbar-brand" href="{{ url('/') }}">
             {{ config('app.name', 'Laravel') }}
@@ -56,9 +56,38 @@
         @endif
       </div>
     </nav>
-    <!-- <button type="button" class="next">>>>>>>>></button>
-    <button type="button" class="prev"><<<<<<<<</button>
-    <button type="button" class="today">Oggi</button> -->
+    @if(Auth::user())
+      <style>
+        .generalContainer > .tableUser:not(:nth-child(3)) > div > div > div {
+          display: none;
+        }
+        .generalContainer > .tableUser:not(:nth-child(3)) > div.fc-view-container > div > table > thead {
+          display: none;
+        }
+        .generalContainer > .tableUser:not(:nth-child(3)) > div.fc-toolbar.fc-header-toolbar > div.fc-center {
+          display: none;
+        }
+        #calendarHardMor > div > div > table > thead {
+          display: none;
+        }
+      </style>
+    @endif
+    @if(Auth::guest())
+      <style>
+        .generalContainer > .tableUser:not(:nth-child(2)) > div > div > div {
+          display: none;
+        }
+        .generalContainer > .tableUser:not(:nth-child(2)) > div.fc-view-container > div > table > thead {
+          display: none;
+        }
+        .generalContainer > .tableUser:not(:nth-child(2)) > div.fc-toolbar.fc-header-toolbar > div.fc-center {
+          display: none;
+        }
+        #calendarHardMor > div > div > table > thead {
+          display: none;
+        }
+      </style>
+    @endif
     <div class="generalContainer">
       @if(Auth::user())
         <div class="main buttonBottom" id="nav-icon1">
@@ -68,8 +97,13 @@
             <span class="spanButton spanButtonThree"></span>
           </div>
           <div class="userNav">
-            @if(Auth::user())
-              <a class="connect"  id="seven" href="../public/planning/addWeekly"><i class="fa fa-plus"></i>7</a>
+            @if(Auth::user()->admin)
+              <form method="POST" action="{{ action('PlanningController@indexWeekly') }}">
+                {{ csrf_field() }}
+                <input  id="startDate" class="hidden" value="" name="startDate">
+                <input  id="endDate" class="hidden" value="" name="endDate">
+                <button id="confermaWeekly" type="submit"><i class="fa fa-plus" id="confermaWeeklyI"></i>7</button>
+              </form>
             @endif
             <a class="connect" href="../public/planning/add"><i class="fa fa-plus"></i></a>
           </div>
@@ -77,7 +111,7 @@
       @endif
       @foreach ($workers as $worker)
         @if($worker->suspended != 1)
-          <span>TABELLA DI {{ $worker->name }}</span>
+          <strong style="text-transform: capitalize;">{{ $worker->name }}</strong>
           <div class="tableUser" id='calendar{{ $worker->name }}'></div>
           <div class="divButton">
             <button class="expandTable buttonToExpande " onclick="let worker = '{{ $worker->name }}'; hide(worker, this)"><i class="fa fa-angle-down"></i></button>
@@ -85,15 +119,13 @@
           </div>
           <script>
             function hide(worker, e){
-              $("#calendar"+worker).toggleClass('show');
-              console.log("e: ", e);
+              $("#calendar"+worker).toggleClass('hidden');
               $(e.children).toggleClass('fa-angle-up');
             }
           </script>
           <script>
             function hideAll(worker, e){
-              $(".tableUser").toggleClass('show');
-              console.log("e: ", e);
+              $(".tableUser").toggleClass('hidden');
               $(".expendAll").toggleClass('fa-angle-double-up');
             }
           </script>
@@ -103,9 +135,46 @@
               $('#calendar{{ $worker->name }}').fullCalendar({
                 height: 200,
                 lang: 'it',
-                header: false,
+                header: {
+                  left: '',
+                  center: 'title',
+                  right: 'Prec,Pros,Vai'
+                },
                 eventRender: function (event, element) {
                   element.find('.fc-title').html('<i>'+event.title+'</i>');
+                },
+                customButtons: {
+                  Vai: {
+                    text: 'Vai a data',
+                    click: function() {
+                      let date = $('#goToDate').val();
+                      $('.tableUser, #calendarHardMor, #calendarHardEvn').fullCalendar('gotoDate', date);
+                    }
+                  },
+                  Prec: {
+                    text: 'Prec',
+                    click: function() {
+                      $('.tableUser').fullCalendar('prev');
+                      $("#calendarHardMor").fullCalendar('prev');
+                      $("#calendarHardEvn").fullCalendar('prev');
+                      let startDate = $('#calendarPaolo').fullCalendar('getView').start.format('YYYY-MM-DD');
+                      let endDate = $('#calendarPaolo').fullCalendar('getView').end.format('YYYY-MM-DD');
+                      $("#startDate").attr('value',startDate);
+                      $("#endDate").attr('value',endDate);
+                    }
+                  },
+                  Pros: {
+                    text: 'Pros',
+                    click: function() {
+                      $('.tableUser').fullCalendar('next');
+                      $("#calendarHardMor").fullCalendar('next');
+                      $("#calendarHardEvn").fullCalendar('next');
+                      let startDate = $('#calendarPaolo').fullCalendar('getView').start.format('YYYY-MM-DD');
+                      let endDate = $('#calendarPaolo').fullCalendar('getView').end.format('YYYY-MM-DD');
+                      $("#startDate").attr('value',startDate);
+                      $("#endDate").attr('value',endDate);
+                    }
+                  }
                 },
                 defaultView: 'basicWeek',
                 hiddenDays: [0,6],
@@ -116,7 +185,7 @@
                     {
                         title : '{{ $task->operator }} >>> {{ $task->activity }}',
                         start : '{{ $task->date }}',
-                        end : '{{ $task->enddate }}',
+                        end : '{{ $task->date }}',
                         url : '{{ action("PlanningController@edit", $task["id"]) }}',
                         className : '{{ $task->type }}',
                         color : '@foreach($types as $type) @if($type->type === $task->type) {{ $type->color }} @endif @endforeach',
@@ -124,9 +193,7 @@
                     @endif
                   @endforeach
                 ],
-                textEscape : false,
               });
-              $("#calendar{{ $worker->name }}").css('display','none');
             });
           </script>
           @endif
@@ -239,7 +306,6 @@
         $('.userNav').toggleClass('show').toggleClass('horizontal');
         $('.bottomRightCorner').toggleClass('openCorner');
         $('.main').toggleClass('extend');
-
       });
 
     </script>
@@ -251,6 +317,7 @@
         $('.myDropDown').click(function(){
           $('.dropdown-menu-right').toggleClass('openDrop');
         });
+        $(".fc-button-group").append('<input name="date" id="goToDate" placeholder="aaaa/mm/gg" />');
       });
     </script>
     <script>
@@ -265,6 +332,21 @@
       $(".today").click(function(){
         $(".tableUser").fullCalendar('today');
         $("#calendarHardMor, #calendarHardEvn").fullCalendar('today');
+      });
+    </script>
+    <script>
+      $("#mainNav").mouseenter(function(){
+        $(this).addClass('down');
+      }).mouseleave(function(){
+        $(this).removeClass('down');
+      });
+    </script>
+    <script>
+      $(document).ready(function() {
+        let startDate = $('#calendarPaolo').fullCalendar('getView').start.format('YYYY-MM-DD');
+        let endDate = $('#calendarPaolo').fullCalendar('getView').end.format('YYYY-MM-DD');
+        $("#startDate").attr('value',startDate);
+        $("#endDate").attr('value',endDate);
       });
     </script>
   </body>

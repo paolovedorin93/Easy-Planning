@@ -19,6 +19,10 @@ Auth::routes();
 
 Route::get('/home', 'HomeController@index')->name('home');
 
+Route::get('/risorse', function() {
+    return view('soon');
+});
+
 Route::get('/planning', 'PlanningController@index')->name('planning');
 Route::get('/planning/add', 'PlanningController@create')->name('planning');
 Route::get('planning/{id}/edit', 'PlanningController@edit')->name('activity');
@@ -28,7 +32,8 @@ Route::get('/planning/add',['as'=>'new_activity','uses'=>'PlanningController@cre
 Route::any('/planning/added',['as'=>'new_activity','uses'=>'PlanningController@store']);
 Route::any('/planning/addedActivity',['as'=>'new_activity','uses'=>'PlanningController@storeActivity']);
 Route::any('/planning/{id}/deleted', ['as'=>'del_activity','uses'=>'PlanningController@destroy']);
-Route::get('/planning/addWeekly', 'PlanningController@indexWeekly')->name('planningWeekly');
+Route::any('/planning/addWeekly', ['as'=>'indexWeekly','uses'=>'PlanningController@indexWeekly']);
+Route::any('/planning/storedWeekly', ['as'=>'storeWeekly','uses'=>'PlanningController@storeWeeklyActivity']);
 
 //Route::resource('planning','PlanningController'); --> NON FUNZIONA IL RESTO DELLE FUNZIONI
 
