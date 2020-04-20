@@ -4,9 +4,9 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 
-class Planning extends Model
+class Tbgene extends Model
 {
     protected $fillable = [
-        'operator', 'activity', 'state', 'green', 'yellow', 'red',
+        'green', 'yellow', 'red',
     ];
 }

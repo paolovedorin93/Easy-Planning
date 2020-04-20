@@ -3,7 +3,7 @@
   <head>
     <meta charset='utf-8' />
 
-    <title>Planning Exe Progetti | Attività</title>
+    <title>Planning Exe Progetti | Calendario</title>
 
     <link href='../packages/core/main.css' rel='stylesheet' />
     <link href='../packages/daygrid/main.css' rel='stylesheet' />
@@ -88,6 +88,18 @@
         }
       </style>
     @endif
+    @if (session('alert'))
+        <div class="alert alert-danger alertBox">
+            <button type="button" class="close" data-dismiss="alert">×</button>
+            {{ session('alert') }}
+        </div>
+    @endif
+    @if (session('messaggio'))
+        <div class="alert alert-success alertBox">
+            <button type="button" class="close" data-dismiss="alert">×</button>
+            {{ session('messaggio') }}
+        </div>
+    @endif
     <div class="generalContainer">
       @if(Auth::user())
         <div class="main buttonBottom" id="nav-icon1">
@@ -141,7 +153,12 @@
                   right: 'Prec,Pros,Vai'
                 },
                 eventRender: function (event, element) {
-                  element.find('.fc-title').html('<i>'+event.title+'</i>');
+                  if(event.hour == "0") {
+                    element.find('.fc-title').html('<div class="activity">'+event.title+'</div><div class="hour">M</div>');
+                  }
+                  else {
+                    element.find('.fc-title').html('<div class="activity">'+event.title+'</div><div class="hour">P</div>');
+                  }
                 },
                 customButtons: {
                   Vai: {
@@ -149,6 +166,10 @@
                     click: function() {
                       let date = $('#goToDate').val();
                       $('.tableUser, #calendarHardMor, #calendarHardEvn').fullCalendar('gotoDate', date);
+                      let startDate = $('#calendarPaolo').fullCalendar('getView').start.format('YYYY-MM-DD');
+                      let endDate = $('#calendarPaolo').fullCalendar('getView').end.format('YYYY-MM-DD');
+                      $("#startDate").attr('value',startDate);
+                      $("#endDate").attr('value',endDate);
                     }
                   },
                   Prec: {
@@ -179,16 +200,18 @@
                 defaultView: 'basicWeek',
                 hiddenDays: [0,6],
                 // put your options and callbacks here
+                eventOrder: "hour",
                 events: [
                   @foreach($tasks as $task)
                     @if ($worker->name === $task->operator)
                     {
-                        title : '{{ $task->operator }} >>> {{ $task->activity }}',
+                        title : '$task->time {{ $task->activity }}',
                         start : '{{ $task->date }}',
                         end : '{{ $task->date }}',
                         url : '{{ action("PlanningController@edit", $task["id"]) }}',
                         className : '{{ $task->type }}',
                         color : '@foreach($types as $type) @if($type->type === $task->type) {{ $type->color }} @endif @endforeach',
+                        hour : '{{ $task->hour }}'
                     },
                     @endif
                   @endforeach
@@ -226,22 +249,21 @@
                     if(oldOperator != operator)
                       busy++;
                   }
-                  if(busy===3){
-                    console.log("busy = 3");
+                  if(busy==={{$intensityLight->number}}){
+                    console.log("busyLight = ",{{$intensityLight->number}});
                     cell.css('background-color','#31ff2e');
                   }
-                  if(busy===4){
-                    console.log("busy = 4");
+                  if(busy==={{$intensityMedium->number}}){
+                    console.log("busyMedium = ",{{$intensityMedium->number}});
                     cell.css('background-color','#fffc2e');
                   }
-                  if(busy>=5){
-                    console.log("busy : ", busy);
+                  if(busy>={{$intensityHard->number}}){
+                    console.log("busyHard : ", {{$intensityHard->number}});
                     cell.css('background-color','red');
                   }
                   oldOperator = operator;
                   oldDayDate = dayDate;
                 }
-                console.log("END ------------- FOREACH ------------- END")
               @endforeach
             }
         });
@@ -264,17 +286,16 @@
                   if(oldOperator != operator)
                     busy++;
                 }
-                console.log("busy A: ", busy);
-                if(busy===3){
-                  console.log("busy = 3");
+                if(busy==={{$intensityLight->number}}){
+                  console.log("busyLight = ",{{$intensityLight->number}});
                   cell.css('background-color','#31ff2e');
                 }
-                if(busy===4){
-                  console.log("busy = 4");
+                if(busy==={{$intensityMedium->number}}){
+                  console.log("busyMedium = ",{{$intensityMedium->number}});
                   cell.css('background-color','#fffc2e');
                 }
-                if(busy>=5){
-                  console.log("busy : ", busy);
+                if(busy>={{$intensityHard->number}}){
+                  console.log("busyHard : ", {{$intensityHard->number}});
                   cell.css('background-color','red');
                 }
                 oldOperator = operator;
@@ -347,6 +368,11 @@
         let endDate = $('#calendarPaolo').fullCalendar('getView').end.format('YYYY-MM-DD');
         $("#startDate").attr('value',startDate);
         $("#endDate").attr('value',endDate);
+      });
+    </script>
+    <script>
+      $(".close").click(function(){
+          $('.alert').css('display','none');
       });
     </script>
   </body>

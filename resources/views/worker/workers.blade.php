@@ -21,71 +21,74 @@
 
     </head>
     <body>
-        <nav class="navbar navbar-expand-md navbar-light bg-white shadow-sm">
-        <div class="container">
-            <a class="navbar-brand" href="{{ url('/') }}">
-                {{ config('app.name', 'Laravel') }}
-            </a>
-            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="{{ __('Toggle navigation') }}">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            @if(Auth::guest())
-            <div class="dropdown myDropDown">
-                <a class="nav-link" href="{{ route('login') }}">Login</a>
-                <a class="nav-link" href="{{ route('register') }}">Registrati</a>
-            </div>
-            @else
-            <div class="dropdown myDropDown">
-                <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
-                    {{ Auth::user()->name }} <span class="caret"></span>
-                </a>
-
-                <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
-                    @if(Auth::user()->administrator)<a class="dropdown-item" href="workers">Gestione utenti</a>@endif
-                    <a class="dropdown-item" href="{{ route('logout') }}"
-                    onclick="event.preventDefault();
-                                    document.getElementById('logout-form').submit();">
-                        {{ __('Logout') }}
-                    </a>
-
-                    <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
-                        @csrf
-                    </form>
-                </div>
-            </div>
-            @endif
-        </div>
-        </nav>
+        @include('include.nav')
         @if(Auth::guest() || Auth::user()->admin==0)
         <div class="container centeredText">Non hai diritti di amministratore per poter modificare le impostazioni utenti</div>
         @else
         <div class="flex-center position-ref full-height">
-            <form method="post" action="{{ action('WorkerController@update') }}">
-                <table>
-                    <th>
-                        <td class="label">Sospeso</td>
-                        <td class="label">Amministratore</td>
-                        <td class="label lastWorker">No Assistenza</td>
-                    </th>
-                        {{csrf_field()}}
-                        @foreach($workers as $worker)
-                            <?php
-                                $suspended = $worker->suspended;
-                                $no_assi = $worker->no_assi;
-                                $admin = $worker->admin;
-                            ?>
-                            <tr class="contentTable">
-                                <td class="nameWorker">{{ $worker['name'] }}</td>
-                                <td class="inputWorker"><input id="workerSuspended" type="checkbox" value="{{ $suspended }}" name="suspended[{{$worker->id}}]" @if($suspended) checked  @endif></td>
-                                <td class="inputWorker"><input id="workerNoAssi" type="checkbox" value="{{ $admin }}" name="admin[{{$worker->id}}]" @if($admin) checked  @endif></td>
-                                <td class="inputWorker lastWorker"><input id="workerNoAssi" type="checkbox" value="{{ $no_assi }}" name="no_assi[{{$worker->id}}]" @if($no_assi) checked  @endif></td>
-                            </tr>
-                        @endforeach
-                </table>
-                <div class="content save">
-                    <button type="submit" class="btn btn-info">save</button>
-                </div>
-            </form>
+            <div id="firstWorkerForm">
+                <span class="spanWorker">Qui è possibile modificare le abilitazioni degli utenti</span>
+                <form method="post" action="{{ action('WorkerController@update') }}">
+                    <table>
+                        <th>
+                            <td class="label">Sospeso</td>
+                            <td class="label">Amministratore</td>
+                            <td class="label lastWorker">No Assistenza</td>
+                        </th>
+                            {{csrf_field()}}
+                            @foreach($workers as $worker)
+                                <?php
+                                    $suspended = $worker->suspended;
+                                    $no_assi = $worker->no_assi;
+                                    $admin = $worker->admin;
+                                ?>
+                                <tr class="contentTable">
+                                    <td class="nameWorker">{{ $worker['name'] }}</td>
+                                    <td class="inputWorker"><input id="workerSuspended" type="checkbox" value="{{ $suspended }}" name="suspended[{{$worker->id}}]" @if($suspended) checked  @endif></td>
+                                    <td class="inputWorker"><input id="workerNoAssi" type="checkbox" value="{{ $admin }}" name="admin[{{$worker->id}}]" @if($admin) checked  @endif></td>
+                                    <td class="inputWorker lastWorker"><input id="workerNoAssi" type="checkbox" value="{{ $no_assi }}" name="no_assi[{{$worker->id}}]" @if($no_assi) checked  @endif></td>
+                                </tr>
+                            @endforeach
+                    </table>
+                    <div class="content save">
+                        <button type="submit" class="btn btn-info">save</button>
+                    </div>
+                </form>
+            </div>
+            <div id="secondWorkerForm">
+                <span class="spanWorker">Qui è possibile modificare la gestione dell'intensità lavoro</span>
+                <form class="formSecondWorker" method="post" action="{{ action('PlanningController@updateIntensity') }}">
+                    {{csrf_field()}}
+                    <?php $count = 1; ?>
+                    @foreach($intensities as $intensity)
+                        @if($count==1)
+                            <div class="divLight">
+                                <span>Numero utenti occupati per colore</span><span class="spanColorWorkerLight"><strong> Verde chiaro</strong></span>
+                                <input name="green" type="number" value="{{ $intensity->number }}">
+                            </div>
+                        @endif
+                        @if($count==2)
+                            <div class="divMedium">
+                                <span>Numero utenti occupati per colore</span><span class="spanColorWorkerMedium"><strong> Giallo</strong></span>
+                                <input name="yellow" type="number" value="{{ $intensity->number }}">
+                            </div>
+                        @endif
+                        @if($count==3)
+                            <div class="divHard">
+                                <span>Numero utenti occupati per colore</span><span class="spanColorWorkerHard"><strong> Rosso</strong></span>
+                                <input name="red" type="number" value="{{ $intensity->number }}">
+                            </div>
+                        @endif
+                        <?php 
+                            $count++;
+                        ?>
+                    @endforeach
+                    <div class="content save secondFormSave">
+                        <button type="submit" class="btn btn-info">save</button>
+                    </div>
+                </form>
+                <a class="backTo" href="../public/planning">Torna al planning</a>
+            </div>
         </div>
         @endif
         <script>

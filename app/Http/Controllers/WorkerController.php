@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\User as Worker;
+use App\Tbgene as Intensity;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 
@@ -17,7 +18,9 @@ class WorkerController extends Controller
     public function index()
     {
         $workers = Worker::all();
-        return view('worker/workers',compact('workers'));
+        $intensities = Intensity::where('type','1')
+                                            ->get();
+        return view('worker/workers',compact('workers','intensities'));
     }
 
     /**

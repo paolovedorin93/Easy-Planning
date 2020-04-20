@@ -17,6 +17,7 @@ class CreatePlanningTable extends Migration
             $table->bigIncrements('id');
             $table->string('operator');
             $table->date('date')->nullable();
+            $table->date('startDate')->nullable();
             $table->string('activity');
             $table->string('type');
             $table->tinyInteger('hour', 1);

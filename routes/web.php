@@ -34,6 +34,8 @@ Route::any('/planning/addedActivity',['as'=>'new_activity','uses'=>'PlanningCont
 Route::any('/planning/{id}/deleted', ['as'=>'del_activity','uses'=>'PlanningController@destroy']);
 Route::any('/planning/addWeekly', ['as'=>'indexWeekly','uses'=>'PlanningController@indexWeekly']);
 Route::any('/planning/storedWeekly', ['as'=>'storeWeekly','uses'=>'PlanningController@storeWeeklyActivity']);
+Route::any('/planning/storedIntensity', ['as'=>'storeIntense','uses'=>'PlanningController@updateIntensity']);
+Route::get('/planning/ferie', 'PlanningController@indexVacation');
 
 //Route::resource('planning','PlanningController'); --> NON FUNZIONA IL RESTO DELLE FUNZIONI
 

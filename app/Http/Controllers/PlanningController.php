@@ -7,13 +7,14 @@ use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use Auth;
 use Redirect;
-use Carbon;
+use Carbon\Carbon;
 use DateTime;
 use View;
 
 use App\Planning as Planning;
 use App\User as User;
 use App\Activity as Activity;
+use App\Tbgene as Intensity;
 
 
 class PlanningController extends Controller
@@ -28,6 +29,17 @@ class PlanningController extends Controller
         $tasks = Planning::where('date','<>','')
                                 ->get();
         $types = Activity::all();
+        $intensityLight = Intensity::where('type','1')
+                                    ->orderBy('number','asc')
+                                    ->limit(1)
+                                    ->first();
+        $intensityHard = Intensity::where('type','1')
+                                    ->orderBy('number','desc')
+                                    ->limit(1)
+                                    ->first();
+        $intensityMedium = Intensity::where('type','1')
+                                    ->skip(1)
+                                    ->first();
         if(Auth::user()){
             $userLogged = Auth::user()->name;
             $workers = User::where('no_assi','0')
@@ -57,7 +69,13 @@ class PlanningController extends Controller
                                         ['activity','<>','Assistenza']
                                     ])
                                     ->get();
-        return view('planning/planning',compact('tasks','types','workers','tasksMor','tasksAft'));
+        return view('planning/planning',compact('tasks','types','workers','tasksMor','tasksAft','intensityLight','intensityMedium','intensityHard'));
+    //    echo "INTENSITY LIGHT" .$intensityLight;
+    //    echo "<pre>";
+    //    echo "INTENSITY MEDIUM" .$intensityMedium;
+    //    echo "<pre>";
+    //    echo "INTENSITY HARD" .$intensityHard;
+    //    return "FINE";
     }
 
     /**
@@ -69,10 +87,30 @@ class PlanningController extends Controller
         $types = Activity::all();
         $startDate = $request->get('startDate');
         $endDate = $request->get('endDate');
-        $particularActs = DB::table('plannings')
-                                    ->where('particular','1')
-                                    ->get();
+        // $particularActs = DB::table('plannings')
+        //                             ->where('particular','1')
+        //                             ->get();
+        $particularActs = Planning::where('particular','1')
+                                            ->orderBy('operator','ASC')
+                                            ->orderBy('created_at','DESC')
+                                            ->get();
         return view('planning/addWeekly', compact('users', 'types', 'particularActs','startDate','endDate'));
+    }
+
+    /**
+     * Show view where to add vacation
+     */
+    public function indexVacation()
+    {
+        $users = User::all();
+        $today = Carbon::now()->toDateString();
+        $vacations = DB::table('plannings')
+                                    ->where([
+                                        ['activity','permesso'],
+                                        ['activity','ferie']
+                                    ])
+                                    ->get();
+        return view('planning/addVacation', compact('users','today','vacations'));
     }
 
     /**
@@ -113,7 +151,7 @@ class PlanningController extends Controller
             return redirect()->back()->with('Messaggio: ','Operazione completata');
         }
         else
-            return redirect('/planning');
+            return redirect('/planning')->with('Messaggio: ','Operazione completata');
     }
 
     /**
@@ -124,7 +162,6 @@ class PlanningController extends Controller
         $type = new Activity;
         $type->type = $request->get('type');
         $type->color = $request->get('color');
-        $type->inv_hex = $request->get('inv_hex');
         $type->save();
         return Redirect::back()->with('Messaggio: ','Operazione completata');
     }
@@ -139,38 +176,104 @@ class PlanningController extends Controller
         $newDate = "";
         $startDate = $request->get('startDate');
         if($startDate == "")
-            return redirect()->back()->with('alert','Nessuna data di inizio. Torna al menu principale.');
-        foreach($workers as $worker)
+            return redirect('/planning')->with('alert','Nessuna data di inizio. Ripetere operazione.');
+        foreach($workers as $worker) //worker
         {
-            // if($worker->particular == 1){
-            //     $activities = DB::table('plannings')
-            //                                 ->where([
-            //                                     ['particular','1'],
-            //                                     ['operator',$worker->name] 
-            //                                 ])
-            //                                 ->get();
-            // }
+            $repetition = 1;
             $finalDate = new DateTime($request->get('endDate'));
             $changeDate = new DateTime($request->get('startDate'));
-            while($changeDate != $finalDate)
+            while($changeDate != $finalDate) //day
             {
-                for($x=0;$x<2;$x++)
+                for($x=0;$x<2;$x++) //period
                 {
-                    $activity = new Planning;
-                    $activity->activity = "Assistenza";
-                    $activity->operator = $worker->name;
-                    $activity->date = $changeDate;
-                    $activity->type = "programmato";
-                    $activity->hour = $x;
-                    $activity->edit = Auth::user()->name;
-                    $activity->particular = "0";
-                    $activity->repetition = "0";
-                    $activity->save();
+                    $activities = DB::table('plannings')
+                                                    ->where([
+                                                        ['particular','1'],
+                                                        ['operator',$worker->name],
+                                                        ['repetition',$repetition],
+                                                        ['hour',$x]
+                                                    ])
+                                                    ->get();
+                    if($worker->particular == 1 && !$activities->isEmpty())
+                    {
+                        foreach($activities as $act)
+                        {
+                            $activity = new Planning;
+                            $activity->activity = $act->activity;
+                            $activity->operator = $worker->name;
+                            $activity->date = $changeDate;
+                            $activity->type = $act->type;
+                            $activity->hour = $x;
+                            $activity->edit = Auth::user()->name;
+                            $activity->particular = "0";
+                            $activity->repetition = "0";
+                            $activity->save();
+                        }
+                    }
+                    else 
+                    {
+                        $activity = new Planning;
+                        $activity->activity = "Assistenza";
+                        $activity->operator = $worker->name;
+                        $activity->date = $changeDate;
+                        $activity->type = "programmato";
+                        $activity->hour = $x;
+                        $activity->edit = Auth::user()->name;
+                        $activity->particular = "0";
+                        $activity->repetition = "0";
+                        $activity->save();
+                    }
                 }
                 $changeDate->modify('+1 day');
+                $repetition++;
             }
         }
-        return redirect('/planning');
+        return redirect('/planning')->with('Messaggio: ','Operazione completata');
+    }
+
+    /**
+     * Store vacation
+     */
+    public function storeVacation(Request $request)
+    {
+        // $duration = $request->get('duration');
+        // if($duration == "hours")
+        // {
+        //     //to do a normal save
+        // }
+        // else 
+        // {
+        //     $startDate = new DateTime($request->get('startDate'));
+        //     $endDate = new DateTime($request->get('endDate'));
+        //     while($startDate <= $endDate) 
+        //     {
+        //         for($x=0;$x<2;$x++)
+        //         {
+        //             $plannings = DB::table('plannings')
+        //                                         ->where([
+        //                                             ['date',$startDate],
+        //                                             ['period',$x],
+        //                                             ['operator', $request->get('operator')]
+        //                                         ])
+        //                                         ->get();
+        //             if(mysql_row_rows($plannings)>=2)
+        //             {
+        //                 return redirect('/planning')->with('alert: ',"C'è stato un problema con le attività per il periodo selezionato. Controllare e riprovare.");
+        //             }
+        //             if(($plannings->activity == "Assistenza" || $plannings->activity == "assistenza") && $plannings->type=="programmato")
+        //             {
+        //                 //edit of specific activity
+        //                 $activity = Planning::find($plannings->id);
+        //                 $activity->activity = $request->get('activity'); //scritta -> ferie-permesso
+        //                 $activity->type = $request->get('type'); //tipo -> ferie-permesso
+        //             }
+        //             else
+        //             {
+        //                 return redirect('/planning')->with('alert: ',"C'è stato un problema con le attività per il periodo selezionato. Controllare e riprovare.");
+        //             }
+        //         }
+        //     }
+        // }
     }
 
     /**
@@ -199,6 +302,31 @@ class PlanningController extends Controller
     }
 
     /**
+     * Edit number of busy users to change color calendarHard
+     */
+    public function updateIntensity(Request $request)
+    {
+        $count = 0;
+        $intensities = Intensity::where('type','1')
+                                        ->orderBy('id','asc')
+                                        ->get();
+        foreach($intensities as $intensity)
+        {
+            $count++;
+            if($count==1)
+                $color = 'green';
+            elseif($count==2)
+                $color = 'yellow';
+            else
+                $color = 'red';
+            $intense = Intensity::find($intensity->id);
+            $intense->number = $request->get($color);
+            $intense->save();
+        }
+        return redirect('/workers');
+    }
+
+    /**
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
@@ -218,10 +346,7 @@ class PlanningController extends Controller
         $activity->repetition = $request->get('repetition');
         $activity->edit = Auth::user()->name;
         $activity->save();
-        if($activity->repetition > 0)
-            return redirect()->back()->with('Messaggio: ','Operazione completata');
-        else
-            return redirect('/planning');
+        return redirect()->back()->with('messaggio','Operazione completata');
     }
 
     /**
@@ -246,12 +371,12 @@ class PlanningController extends Controller
                                     ->where('name',$user)
                                     ->update(['particular'=>0]);
             }
-            return redirect()->back()->with('messaggio','Operazione completata');
+            return redirect()->back()->with('messaggio','Operazione completata con successo');
         }
         else
         {
             $activity->delete();
-            return redirect('/planning');
+            return redirect('/planning')->with('messaggio','Operazione completata con successo');
         }
     }
 }

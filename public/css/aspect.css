@@ -1,3 +1,11 @@
+html {
+    height: 100%;
+}
+
+body {
+    min-height: 100%;
+}
+
 #mainNav {
     bottom: 45px;
     -webkit-transition: .25s ease-in-out;
@@ -18,10 +26,28 @@
     font-weight: bold;
 }
 
+.headLittleTitle {
+    margin: 20px 20px 7px 30px;
+    color: #3490dc;
+    font-weight: bold;
+}
+
+.description {
+    margin: 10px 20px 0 40px;
+}
+
+.margin {
+    margin-left: 20px;
+}
+
 .userNav.show.horizontal {
     animation: cssAnimation 0s 0.5s forwards;
     opacity: 0;
     display: flex !important;
+}
+
+.tableUser > div.fc-view-container > div > table >tbody {
+    text-shadow: #000 0px 0px 3px;
 }
   
 @keyframes cssAnimation {
@@ -29,6 +55,8 @@
         opacity: 1; 
     }
 }
+
+
 
 .buttonShadow {
     box-shadow: 2px 3px 6px 0px rgba(0, 0, 0, 0.4) !important;
@@ -419,7 +447,11 @@ a.connect:hover{
 }
 
 .full-height {
-    height: 100vh;
+    height: 94vh;
+}
+
+.inputWorker > input {
+    cursor: pointer;
 }
 
 .flex-center {
@@ -491,6 +523,10 @@ td.label {
     margin-bottom: 0 !important;
 }
 
+.editActivityWeeklyTable {
+    margin: 40px 0 100px 0 !important;
+}
+
 .divContent {
     position: relative;
     padding-top: 5px;
@@ -511,9 +547,26 @@ td.label {
     border-top-width: thin;
 }
 
-a#elimina {
+a#elimina,
+a#indietro {
     margin-top: 5px;
     color: #fff;
+    padding-right: 16px;
+}
+
+.i {
+    font-size: 18px;
+}
+
+.editI {
+    position: relative;
+    top: 3px;
+    left: 1px;
+}
+
+.edit {
+    width: 42px !important;
+    height: 40px !important;
 }
 
 .eliminaBig {
@@ -528,7 +581,7 @@ a#elimina {
 }
 
 button#conferma {
-    margin-right: 4px;
+    margin-right: 2px;
 }
 
 button#confermaWeekly {
@@ -618,4 +671,98 @@ button#genWeekly:hover {
 .fc-Vai-button:focus {
     -webkit-box-shadow: none !important;
     box-shadow: none !important;
+}
+
+.fc-title {
+    display: flex;
+}
+
+.activity {
+    order: 0;
+    width: 95%;
+    text-overflow: ellipsis;
+    overflow: hidden;
+}
+
+.hour {    
+    order: 1;
+    right: 0;
+    width: 5%;
+    position: absolute;
+    text-align: center;
+}
+
+button#genWeekly:focus {
+    outline: none !important;
+}
+
+.alertBox {
+    position: absolute !important;
+    z-index: 99;
+    bottom: 0;
+    left: 25px;
+    width: 20%;
+}
+
+#firstWorkerForm {
+    position: relative;
+    right: 150px;
+}
+
+.formSecondWorker {
+    text-align: right;
+}
+
+#secondWorkerForm {
+    position: relative;
+    left: 150px;
+    height: 290px;
+}
+
+.spanColorWorkerLight {
+    text-shadow: #000 0px 0px 3px;
+    color: #31ff2e;
+}
+
+.spanColorWorkerMedium {
+    text-shadow: #000 0px 0px 2px;
+    color: #fffc2e;
+}
+
+.spanColorWorkerHard {
+    text-shadow: #000 0px 0px 2px;
+    color: #f00;
+}
+
+.formSecondWorker > div {
+    margin-bottom: 30px;
+}
+
+.secondFormSave {
+    margin-top: 38px !important;
+}
+
+.divLight {
+    margin-top: 45px;
+}
+
+.formSecondWorker > div > input {
+    text-align: center;
+}
+
+.backTo {
+    position: relative;
+    right: 150px;
+    top: 50px;
+    width: 115px;
+}
+
+.activityLastEdit {
+    text-align: right !important;
+    margin-right: 15px;
+}
+
+.hiddenDate,
+.hiddenHour {
+    display: none;
 }
