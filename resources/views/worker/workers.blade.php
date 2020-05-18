@@ -29,26 +29,26 @@
             <div id="firstWorkerForm">
                 <span class="spanWorker">Qui è possibile modificare le abilitazioni degli utenti</span>
                 <form method="post" action="{{ action('WorkerController@update') }}">
+                    {{csrf_field()}}
                     <table>
                         <th>
                             <td class="label">Sospeso</td>
                             <td class="label">Amministratore</td>
                             <td class="label lastWorker">No Assistenza</td>
-                        </th>
-                            {{csrf_field()}}
-                            @foreach($workers as $worker)
-                                <?php
-                                    $suspended = $worker->suspended;
-                                    $no_assi = $worker->no_assi;
-                                    $admin = $worker->admin;
-                                ?>
-                                <tr class="contentTable">
-                                    <td class="nameWorker">{{ $worker['name'] }}</td>
-                                    <td class="inputWorker"><input id="workerSuspended" type="checkbox" value="{{ $suspended }}" name="suspended[{{$worker->id}}]" @if($suspended) checked  @endif></td>
-                                    <td class="inputWorker"><input id="workerNoAssi" type="checkbox" value="{{ $admin }}" name="admin[{{$worker->id}}]" @if($admin) checked  @endif></td>
-                                    <td class="inputWorker lastWorker"><input id="workerNoAssi" type="checkbox" value="{{ $no_assi }}" name="no_assi[{{$worker->id}}]" @if($no_assi) checked  @endif></td>
-                                </tr>
-                            @endforeach
+                        </th>   
+                        @foreach($workers as $worker)
+                            <?php
+                                $suspended = $worker->suspended;
+                                $no_assi = $worker->no_assi;
+                                $admin = $worker->admin;
+                            ?>
+                            <tr class="contentTable">
+                                <td class="nameWorker">{{ $worker['name'] }}</td>
+                                <td class="inputWorker"><input id="workerSuspended" type="checkbox" value="{{ $suspended }}" name="suspended[{{$worker->id}}]" @if($suspended) checked  @endif></td>
+                                <td class="inputWorker"><input id="workerNoAssi" type="checkbox" value="{{ $admin }}" name="admin[{{$worker->id}}]" @if($admin) checked  @endif></td>
+                                <td class="inputWorker lastWorker"><input id="workerNoAssi" type="checkbox" value="{{ $no_assi }}" name="no_assi[{{$worker->id}}]" @if($no_assi) checked  @endif></td>
+                            </tr>
+                        @endforeach
                     </table>
                     <div class="content save">
                         <button type="submit" class="btn btn-info">save</button>
@@ -89,6 +89,16 @@
                 </form>
                 <a class="backTo" href="../public/planning">Torna al planning</a>
             </div>
+        </div>
+        <div class="flex-center position-ref full-height">
+            <form method="post" action="{{ action('PlanningController@storeActivity') }}">
+                {{ csrf_field() }}
+                <div class="content divContent">
+                    <input name="type" placeholder="Aggiungi tipo attività..." onkeyup="return forceLower(this); " required>
+                    <input id="hex" name="color" type="color" required>
+                    <button id="addType" type="submit" class="btn btn-primary aggiungi buttonShadow"><i class="fa fa-plus fa-lg"></i>&nbsp;&nbsp;&nbsp;Aggiungi</button>
+                </div>
+            </form>
         </div>
         @endif
         <script>

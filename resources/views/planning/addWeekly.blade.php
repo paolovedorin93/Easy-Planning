@@ -66,7 +66,7 @@
                                 <select name="type" class="activitySelect" onchange="openDiv();">
                                     <option value=""></option>
                                     @foreach($types as $type)
-                                        <option value="{{ $type->type }}" style="background-color: {{ $type->color }}; color: {{ $type->inv_hex }};">{{ $type->type }}</option>
+                                        <option value="{{ $type->type }}" style="background-color: {{ $type->color }}; color: #000;">{{ $type->type }}</option>
                                     @endforeach
                                     <option value="Add" class="addActivity">Aggiungi...</option>
                                 </select>                       
@@ -101,7 +101,7 @@
                             <td id="button">
                                 <button id="conferma" type="submit" class="btn btn-success aggiungi buttonShadow"><i class="fa fa-check fa-lg" aria-hidden="true"></i>&nbsp;&nbsp;&nbsp;Conferma</button>
                                 <br>                    
-                                <a id="elimina" class="btn btn-danger elimina eliminaBig buttonShadow" href="/Easy-Planning/public/planning"><i class="fa fa-chevron-left" aria-hidden="true"></i>&nbsp;&nbsp;&nbsp;Indietro</a>
+                                <a id="elimina" class="btn btn-danger elimina eliminaBig buttonShadow" href="{{ action('PlanningController@index') }}"><i class="fa fa-chevron-left" aria-hidden="true"></i>&nbsp;&nbsp;&nbsp;Indietro</a>
                             </td>
                         </tr>
                     </tbody>    
@@ -144,7 +144,7 @@
                                 <td>
                                     <select name="type" class="activitySelect" onchange="openDiv();" disabled>
                                         @foreach($types as $type)
-                                            <option value="{{ $type->type }}" @if($type->type == $particularAct->type) selected @endif style="background-color: {{ $type->color }}; color: {{ $type->inv_hex }}; font-weight: bold;">{{ $type->type }}</option>
+                                            <option value="{{ $type->type }}" @if($type->type == $particularAct->type) selected @endif style="background-color: {{ $type->color }}; color: #000; font-weight: bold;">{{ $type->type }}</option>
                                         @endforeach
                                         <option value="Add" class="addActivity">Aggiungi...</option>
                                     </select>                        
@@ -277,8 +277,14 @@
     });
 </script>
 <script>
+    let startDate = new Date('{{ $startDate }}');
+    let endDate = new Date('{{ $endDate }}');
+    let startDateToAdd = startDate.toLocaleString('it-IT');
+    startDateToAdd = startDateToAdd.toString().substring(0,startDateToAdd.length - 10);
+    let endDateToAdd = endDate.toLocaleString('it-IT');
+    endDateToAdd = endDateToAdd.toString().substring(0,endDateToAdd.length - 10);
     $("#genWeekly").on('click',function(){
-        if(confirm("Generare attività per la settimana {{$startDate}} - {{$endDate}} ?"))
+        if(confirm("Generare attività per la settimana " + startDateToAdd + " - " + endDateToAdd + " ?"))
             return true;
         else
             return false;

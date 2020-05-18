@@ -36,6 +36,7 @@ Route::any('/planning/addWeekly', ['as'=>'indexWeekly','uses'=>'PlanningControll
 Route::any('/planning/storedWeekly', ['as'=>'storeWeekly','uses'=>'PlanningController@storeWeeklyActivity']);
 Route::any('/planning/storedIntensity', ['as'=>'storeIntense','uses'=>'PlanningController@updateIntensity']);
 Route::get('/planning/ferie', 'PlanningController@indexVacation');
+Route::any('/planning/storedComment',['as'=>'new_comment','uses'=>'PlanningController@storeComment']);
 
 //Route::resource('planning','PlanningController'); --> NON FUNZIONA IL RESTO DELLE FUNZIONI
 

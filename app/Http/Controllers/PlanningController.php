@@ -15,6 +15,7 @@ use App\Planning as Planning;
 use App\User as User;
 use App\Activity as Activity;
 use App\Tbgene as Intensity;
+use App\Comments as Comment;
 
 
 class PlanningController extends Controller
@@ -210,13 +211,13 @@ class PlanningController extends Controller
                             $activity->save();
                         }
                     }
-                    else 
+                    else
                     {
                         $activity = new Planning;
                         $activity->activity = "Assistenza";
                         $activity->operator = $worker->name;
                         $activity->date = $changeDate;
-                        $activity->type = "programmato";
+                        $activity->type = "assistenza";
                         $activity->hour = $x;
                         $activity->edit = Auth::user()->name;
                         $activity->particular = "0";
@@ -236,44 +237,52 @@ class PlanningController extends Controller
      */
     public function storeVacation(Request $request)
     {
-        // $duration = $request->get('duration');
+        $duration = $request->get('duration');
         // if($duration == "hours")
         // {
         //     //to do a normal save
         // }
-        // else 
+        // else
         // {
-        //     $startDate = new DateTime($request->get('startDate'));
-        //     $endDate = new DateTime($request->get('endDate'));
-        //     while($startDate <= $endDate) 
-        //     {
-        //         for($x=0;$x<2;$x++)
-        //         {
-        //             $plannings = DB::table('plannings')
-        //                                         ->where([
-        //                                             ['date',$startDate],
-        //                                             ['period',$x],
-        //                                             ['operator', $request->get('operator')]
-        //                                         ])
-        //                                         ->get();
-        //             if(mysql_row_rows($plannings)>=2)
-        //             {
-        //                 return redirect('/planning')->with('alert: ',"C'è stato un problema con le attività per il periodo selezionato. Controllare e riprovare.");
-        //             }
-        //             if(($plannings->activity == "Assistenza" || $plannings->activity == "assistenza") && $plannings->type=="programmato")
-        //             {
-        //                 //edit of specific activity
-        //                 $activity = Planning::find($plannings->id);
-        //                 $activity->activity = $request->get('activity'); //scritta -> ferie-permesso
-        //                 $activity->type = $request->get('type'); //tipo -> ferie-permesso
-        //             }
-        //             else
-        //             {
-        //                 return redirect('/planning')->with('alert: ',"C'è stato un problema con le attività per il periodo selezionato. Controllare e riprovare.");
-        //             }
-        //         }
-        //     }
-        // }
+            $startDate = new DateTime($request->get('startDate'));
+            $endDate = new DateTime($request->get('endDate'));
+            $plannings = DB::table('plannings')
+                                                ->where([
+                                                    ['period',$x],
+                                                    ['operator', $request->get('operator')]
+                                                ])
+                                                ->whereBetween('date',$startDate,'endDate',$endDate)
+                                                ->get();
+            // while($startDate <= $endDate)
+            // {
+            //     for($x=0;$x<2;$x++)
+            //     {
+            //         $activity = new Planning;
+            //         $activity->activity = $request->get('activity');
+            //         $activity->type = $request->get('type');
+            //         $activity->date = $startDate;
+            //         $activity->operator = $request->get('operator');
+            //         $activity->particular = $request->get('particular');
+            //         $activity->repetition = $request->get('repetition');
+            //         $activity->save();
+            //     }
+            // }
+            echo $plannings;
+            return "CIAO";
+        //}
+    }
+
+    /**
+     * Store comments for activity
+     */
+    public function storeComment(Request $request)
+    {
+        $comment = new Comment;
+        $comment->operator = $request->get('operator');
+        $comment->comment = $request->get('comment');
+        $comment->idActivity = $request->get('idActivity');
+        $comment->save();
+        return redirect()->back()->with('Messaggio: ','Commento inserito');
     }
 
     /**
@@ -298,7 +307,9 @@ class PlanningController extends Controller
         $activity = Planning::find($id);
         $users = User::all();
         $types = Activity::all();
-        return view('planning/editplanning', compact('activity','users', 'types'));
+        $comments = Comment::where('idActivity', $id)
+                                ->get();
+        return view('planning/editplanning', compact('activity','users', 'types', 'comments'));
     }
 
     /**

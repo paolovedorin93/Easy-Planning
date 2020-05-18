@@ -165,11 +165,13 @@
                     text: 'Vai a data',
                     click: function() {
                       let date = $('#goToDate').val();
-                      $('.tableUser, #calendarHardMor, #calendarHardEvn').fullCalendar('gotoDate', date);
-                      let startDate = $('#calendarPaolo').fullCalendar('getView').start.format('YYYY-MM-DD');
-                      let endDate = $('#calendarPaolo').fullCalendar('getView').end.format('YYYY-MM-DD');
-                      $("#startDate").attr('value',startDate);
-                      $("#endDate").attr('value',endDate);
+                      if(date!=""){
+                        $('.tableUser, #calendarHardMor, #calendarHardEvn').fullCalendar('gotoDate', date);
+                        let startDate = $('#calendarPaolo').fullCalendar('getView').start.format('YYYY-MM-DD');
+                        let endDate = $('#calendarPaolo').fullCalendar('getView').end.format('YYYY-MM-DD');
+                        $("#startDate").attr('value',startDate);
+                        $("#endDate").attr('value',endDate);
+                      }
                     }
                   },
                   Prec: {
@@ -201,11 +203,12 @@
                 hiddenDays: [0,6],
                 // put your options and callbacks here
                 eventOrder: "hour",
+                eventTextColor: "#000 !important",
                 events: [
                   @foreach($tasks as $task)
                     @if ($worker->name === $task->operator)
                     {
-                        title : '$task->time {{ $task->activity }}',
+                        title : '{{ $task->activity }}',
                         start : '{{ $task->date }}',
                         end : '{{ $task->date }}',
                         url : '{{ action("PlanningController@edit", $task["id"]) }}',

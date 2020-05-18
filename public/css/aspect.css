@@ -15,6 +15,11 @@ body {
     z-index: 10;
 }
 
+a.fc-day-grid-event {
+    font-weight: bold;
+    border-color: #CCC !important;
+}
+
 .down {
     bottom: 0 !important;
     background-color: #fffd !important;
@@ -47,7 +52,7 @@ body {
 }
 
 .tableUser > div.fc-view-container > div > table >tbody {
-    text-shadow: #000 0px 0px 3px;
+    /* text-shadow: #000 0px 0px 3px; */
 }
   
 @keyframes cssAnimation {
@@ -765,4 +770,21 @@ button#genWeekly:focus {
 .hiddenDate,
 .hiddenHour {
     display: none;
+}
+
+.tableComments {
+    width: 70%;
+    margin: 0 auto;
+}
+
+.tareaComments {
+    width: 100%;
+}
+
+.addComm {
+    float: right;
+}
+
+.containerComment {
+    margin-top: 50px;
 }

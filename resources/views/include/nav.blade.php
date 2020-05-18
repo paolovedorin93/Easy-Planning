@@ -16,9 +16,8 @@
             <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
                 {{ Auth::user()->name }} <span class="caret"></span>
             </a>
-
             <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
-                @if(Auth::user()->admin == 1)<a class="dropdown-item" href="workers">Gestione utenti</a>@endif
+                @if(Auth::user()->admin == 1)<a class="dropdown-item" href="{{ action('WorkerController@index') }}">Gestione utenti</a>@endif
                 <a class="dropdown-item" href="{{ route('logout') }}"
                 onclick="event.preventDefault();
                                 document.getElementById('logout-form').submit();">

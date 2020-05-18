@@ -361,6 +361,7 @@ class ComposerStaticInitcad6e21d406d7440ca70df1ef69a9fbe
 
     public static $classMap = array (
         'App\\Activity' => __DIR__ . '/../..' . '/app/Activity.php',
+        'App\\Comments' => __DIR__ . '/../..' . '/app/Comments.php',
         'App\\Console\\Kernel' => __DIR__ . '/../..' . '/app/Console/Kernel.php',
         'App\\Exceptions\\Handler' => __DIR__ . '/../..' . '/app/Exceptions/Handler.php',
         'App\\Http\\Controllers\\ActivityController' => __DIR__ . '/../..' . '/app/Http/Controllers/ActivityController.php',
@@ -388,6 +389,7 @@ class ComposerStaticInitcad6e21d406d7440ca70df1ef69a9fbe
         'App\\Providers\\BroadcastServiceProvider' => __DIR__ . '/../..' . '/app/Providers/BroadcastServiceProvider.php',
         'App\\Providers\\EventServiceProvider' => __DIR__ . '/../..' . '/app/Providers/EventServiceProvider.php',
         'App\\Providers\\RouteServiceProvider' => __DIR__ . '/../..' . '/app/Providers/RouteServiceProvider.php',
+        'App\\Tbgene' => __DIR__ . '/../..' . '/app/Tbgene.php',
         'App\\User' => __DIR__ . '/../..' . '/app/User.php',
         'App\\car' => __DIR__ . '/../..' . '/app/car.php',
         'BeyondCode\\DumpServer\\DumpServerCommand' => __DIR__ . '/..' . '/beyondcode/laravel-dump-server/src/DumpServerCommand.php',

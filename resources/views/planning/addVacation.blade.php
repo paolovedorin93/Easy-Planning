@@ -115,7 +115,7 @@
                             <button id="conferma" type="submit" class="btn btn-success aggiungi buttonShadow" onclick="return showMessage();"><i class="fa fa-check fa-lg" aria-hidden="true"></i>&nbsp;&nbsp;&nbsp;Conferma</button>
         </form>
                             <br>
-                            <a id="elimina" class="btn btn-danger elimina eliminaBig buttonShadow" href="/Easy-Planning/public/planning"><i class="fa fa-chevron-left" aria-hidden="true"></i>&nbsp;&nbsp;&nbsp;Indietro</a>
+                            <a id="elimina" class="btn btn-danger elimina eliminaBig buttonShadow" href="{{ action('PlanningController@index') }}"><i class="fa fa-chevron-left" aria-hidden="true"></i>&nbsp;&nbsp;&nbsp;Indietro</a>
                         </td>
                     </tr>
                 </tbody>
@@ -195,7 +195,7 @@
                                         <button id="conferma" type="submit" class="btn btn-success aggiungi buttonShadow"><i class="fa fa-check fa-lg" aria-hidden="true"></i>&nbsp;&nbsp;&nbsp;Conferma</button>
                     </form>
                                         <br>
-                                        <a id="elimina" class="btn btn-danger elimina eliminaBig buttonShadow" href="/Easy-Planning/public/planning"><i class="fa fa-chevron-left" aria-hidden="true"></i>&nbsp;&nbsp;&nbsp;Indietro</a>
+                                        <a id="elimina" class="btn btn-danger elimina eliminaBig buttonShadow" href="{{ action('PlanningController@index') }}"><i class="fa fa-chevron-left" aria-hidden="true"></i>&nbsp;&nbsp;&nbsp;Indietro</a>
                                     </td>
                                 </tr>
                             </tbody>
@@ -212,6 +212,16 @@
     @endif
   </body>
 </html>
+<script>
+    function checkRequired(){
+        var checkedboxes = $('.hourDiv :checkbox:checked').length;
+
+        if (checkedboxes === 0){
+            alert('Selezionare periodo di attività');
+            return false;
+        }
+    }
+</script>
 <script>
     $(document).ready(function(){
         $('#nav-icon1').click(function(){
@@ -235,19 +245,32 @@
             inside--;
         }
     }
-    function addValue(elem){
-        let value = elem.value;
-        $('#activityHidden').attr('value',value);
+</script>
+<script>
+    function invertHex(hex) {
+        return (Number(`0x1${hex}`) ^ 0xFFFFFF).toString(16).substr(1).toUpperCase();
     }
-    function showMessage(){
-        if(confirm('La procedura di creazione è IRREVERSIBILE. Confermi la procedura di creazione?'))
-        {
-            return true;
-        } else
-        {
-            return false;
+</script>
+<script>
+    $(document).ready(function(){
+        $("#addType").click(function(){
+            let invColor = invertHex(document.getElementById("hex").value.substr(1));
+            document.getElementById("invHex").value = "#"+invColor;
+        });
+    });
+</script>
+<script>
+    function checkBox(notChecked) {
+        $("#"+notChecked).prop('checked', false);
+    }
+</script>
+<script>
+    $('textarea').keypress(function(event) {
+        if (event.keyCode == 13) {
+            event.preventDefault();
+            alert('INVIO non consentito.');
         }
-    }
+    });
 </script>
 <script>
     let insideHours = 0;
@@ -274,6 +297,23 @@
             $('thead > tr > .dates').removeClass('hiddenDate');
             $('tbody > tr > .datesTd').removeClass('hiddenDate');
             insideDates = 1;
+        }
+    }
+</script>
+<script>
+    function addValue(elem){
+        let value = elem.value;
+        $('#activityHidden').attr('value',value);
+    }
+</script>
+<script>
+    function showMessage(){
+        if(confirm('La procedura di creazione è IRREVERSIBILE. Confermi la procedura di creazione?'))
+        {
+            return true;
+        } else
+        {
+            return false;
         }
     }
 </script>

@@ -46,11 +46,10 @@
                             <textarea name="activity" rows="2" cols="40" placeholder="" required disabled>{{ $activity->activity }}</textarea>
                         </td>
                         <td>
-                            <select name="type" class="activitySelect" onchange="openDiv();" required disabled>
+                            <select name="type" class="activitySelect" required disabled>
                                 @foreach($types as $type)
-                                    <option value="{{ $type->type }}" @if($type->type == $activity->type) selected @endif style="background-color: {{ $type->color }}; color: {{ $type->inv_hex }}; font-weight: bold;">{{ $type->type }}</option>
+                                    <option value="{{ $type->type }}" @if($type->type == $activity->type) selected @endif style="background-color: {{ $type->color }}; color: #000;; font-weight: bold;">{{ $type->type }}</option>
                                 @endforeach
-                                <option value="Add" class="addActivity">Aggiungi...</option>
                             </select>                        
                         </td>
                         <td>
@@ -84,24 +83,49 @@
                     </tr>
                 </tbody>
             </table>
-        <div class="addActivityDiv addActivityDivClose">
-            <form method="post" action="{{ action('PlanningController@storeActivity') }}">
-                {{ csrf_field() }}
-                <div class="content divContent">
-                    <input name="type" placeholder="Aggiungi tipo attività..." onkeyup="return forceLower(this); " required>
-                    <input id="hex" name="color" type="color" required>
-                    <button id="addType" type="submit" class="btn btn-primary aggiungi buttonShadow"><i class="fa fa-plus fa-lg"></i>&nbsp;&nbsp;&nbsp;Aggiungi</button>
-                </div>
-            </form>
-        </div>
         <p class="activityLastEdit">Ultima Modifica: {{ $activity->edit }} il </p>
         <script>
             let date = new Date('{{ $activity->updated_at }}');
             let dateToAdd = date.toLocaleString('it-IT');
             dateToAdd = dateToAdd.toString().substring(0,dateToAdd.length - 10)
-            console.log(dateToAdd.toString().substring(0,dateToAdd.length - 10));
             $(".activityLastEdit").append(dateToAdd);
         </script>
+        <h3 class="headTitle">Commenti</h3>
+        <div class="container containerComment">
+            <table class="tableComments">
+                @foreach($comments as $comment)
+                    <tr>
+                        <td class="generalData{{ $comment->id }}">{{ $comment->operator }}<br></td>
+                        <td>
+                            <textarea class="tareaComments" cols="50" rows="3" value="{{ $comment->comment }}">{{ $comment->comment }}</textarea>
+                        </td>
+                        <script>
+                            date = new Date('{{ $comment->updated_at }}');
+                            dateToAdd = date.toLocaleString('it-IT');
+                            dateToAdd = dateToAdd.toString().substring(0,dateToAdd.length - 10)
+                            $(".generalData{{ $comment->id }}").append(dateToAdd);
+                        </script>
+                    </tr>
+                @endforeach
+                    <tr>
+                        <td></td>
+                        <td>
+                            <form action="{{ action('PlanningController@storeComment') }}">
+                                <textarea class="tareaComments" name="comment" id="" cols="50" rows="3"></textarea>
+                                <input value="{{ $activity->id }}" name="idActivity" hidden>
+                                <input value="{{ Auth::user()->name }}" name="operator" hidden>
+                                <button id="conferma" type="submit" class="btn btn-success aggiungi addComm buttonShadow"><i class="fa fa-check fa-lg" aria-hidden="true"></i>&nbsp;&nbsp;&nbsp;Inserisci</button>
+                            </form>
+                        </td>
+                    </tr>
+            </table>
+        </div>
+        @if (session('Messaggio'))
+            <div class="alert alert-success alertBox">
+                <button type="button" class="close" data-dismiss="alert">×</button>
+                {{ session('Messaggio') }}
+            </div>
+        @endif
     @else
         <h3 class="headTitle container centeredText"><strong>Devi effettuare l'accesso per poter modificare un'attività</strong></h3>
     @endif
