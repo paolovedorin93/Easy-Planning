@@ -43,8 +43,7 @@ class PlanningController extends Controller
                                     ->first();
         if(Auth::user()){
             $userLogged = Auth::user()->name;
-            $workers = User::where('no_assi','0')
-                                ->orderByRaw("name = '$userLogged' DESC")
+            $workers = User::orderByRaw("name = '$userLogged' DESC")
                                 ->get();
         } else {
             $workers = User::where('no_assi','0')
@@ -151,8 +150,10 @@ class PlanningController extends Controller
                                 ->update(['particular'=>1]);
             return redirect()->back()->with('Messaggio: ','Operazione completata');
         }
-        else
-            return redirect('/planning')->with('Messaggio: ','Operazione completata');
+        else{
+            return redirect()->to('/planning')->with(['date' => $request->get('date')]);
+        }
+            
     }
 
     /**
@@ -172,7 +173,9 @@ class PlanningController extends Controller
      */
     public function storeWeeklyActivity(Request $request)
     {
-        $workers = User::all();
+        $workers =  DB::table('users')
+                                ->where('no_assi','0')
+                                ->get();
         $changeDate = "";
         $newDate = "";
         $startDate = $request->get('startDate');
@@ -229,7 +232,8 @@ class PlanningController extends Controller
                 $repetition++;
             }
         }
-        return redirect('/planning')->with('Messaggio: ','Operazione completata');
+        //return redirect('/planning')->with('Messaggio: ','Operazione completata');
+        return redirect()->to('/planning')->with(['date' => $request->get('startDate')]);
     }
 
     /**
@@ -361,6 +365,17 @@ class PlanningController extends Controller
     }
 
     /**
+     * Update comments activity
+     */
+    public function updateComment(Request $request, $id)
+    {
+        $comment = Comment::find($id);
+        $comment->comment = $request->get('comment');
+        $comment->save();
+        return redirect()->back()->with('messaggio','Operazione completata');
+    }
+
+    /**
      * Remove the specified resource from storage.
      *
      * @param  \App\Planning  $planning
@@ -374,7 +389,10 @@ class PlanningController extends Controller
         {
             $activity->delete();
             $activities = DB::table('plannings')
-                                        ->where('operator',$user)
+                                        ->where([
+                                            ['operator',$user],
+                                            ['particular','<>','0']
+                                        ])
                                         ->get();
             if($activities->isEmpty())
             {
@@ -382,12 +400,23 @@ class PlanningController extends Controller
                                     ->where('name',$user)
                                     ->update(['particular'=>0]);
             }
-            return redirect()->back()->with('messaggio','Operazione completata con successo');
+            return redirect()->back()->with('messaggio','Operazione completata');
         }
         else
         {
             $activity->delete();
-            return redirect('/planning')->with('messaggio','Operazione completata con successo');
+            return redirect('/planning')->with('messaggio','Operazione completata');
         }
     }
+
+    /**
+     * Remove comments
+     */
+    public function destroyComment($id)
+    {
+        $comment = Comment::find($id);
+        $comment->delete();
+        return redirect()->back()->with('messaggio','Operazione completata');
+    }
+
 }

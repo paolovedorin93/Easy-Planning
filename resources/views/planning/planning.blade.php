@@ -117,7 +117,7 @@
                 <button id="confermaWeekly" type="submit"><i class="fa fa-plus" id="confermaWeeklyI"></i>7</button>
               </form>
             @endif
-            <a class="connect" href="../public/planning/add"><i class="fa fa-plus"></i></a>
+            <a class="connect" href="{{ action('PlanningController@create') }}"><i class="fa fa-plus"></i></a>
           </div>
         </div>
       @endif
@@ -317,14 +317,6 @@
         $('#calendarHardMor, #calendarHardEvn').fullCalendar('prev');
       });
     </script>
-    <!-- <script>
-      $('.expandableButton').click(function(){
-        if ($('.userNav').is(':hidden'))
-            $('.userNav').show('slide',{direction:'right'},1000);
-        else
-            $('.userNav').hide('slide',{direction:'right'},1000);
-      });
-    </script> -->
     <script>
       $('#nav-icon1').click(function(){
         $('.userNav').toggleClass('show').toggleClass('horizontal');
@@ -377,6 +369,15 @@
       $(".close").click(function(){
           $('.alert').css('display','none');
       });
+    </script>
+    <script>
+      <?php $date = Session::get('date'); ?>
+      const exec = () => {
+        let date = "{{ $date }}";
+        if(date!="")
+          $('.tableUser, #calendarHardMor, #calendarHardEvn').fullCalendar('gotoDate', date);
+      } 
+      window.onload= exec;
     </script>
   </body>
 </html>

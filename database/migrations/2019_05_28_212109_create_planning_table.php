@@ -19,7 +19,7 @@ class CreatePlanningTable extends Migration
             $table->date('date')->nullable();
             $table->date('startDate')->nullable();
             $table->string('activity');
-            $table->string('type');
+            $table->string('type', 50);
             $table->tinyInteger('hour', 1);
             $table->string('edit');
             $table->tinyInteger('particular', 1);

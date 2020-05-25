@@ -6,6 +6,11 @@ body {
     min-height: 100%;
 }
 
+textarea {
+    border-radius: 9px;
+    padding-left: 15px;
+}
+
 #mainNav {
     bottom: 45px;
     -webkit-transition: .25s ease-in-out;
@@ -110,7 +115,7 @@ a.fc-day-grid-event {
 }
 
 .hidden {
-    display: none;
+    display: none !important;
 }
 
 .fc-icon {
@@ -580,9 +585,17 @@ a#indietro {
     right: 1px;
 }
 
+.eliminaMed {
+    padding-right: 23px !important;
+}
+
 .eliminaBig > i {
     position: relative;
     right: 8px;
+}
+
+.tdButton {
+    padding-left: 10px;
 }
 
 button#conferma {
@@ -711,7 +724,7 @@ button#genWeekly:focus {
 
 #firstWorkerForm {
     position: relative;
-    right: 150px;
+    right: 235px;
 }
 
 .formSecondWorker {
@@ -720,7 +733,7 @@ button#genWeekly:focus {
 
 #secondWorkerForm {
     position: relative;
-    left: 150px;
+    left: 7px;
     height: 290px;
 }
 
@@ -757,9 +770,8 @@ button#genWeekly:focus {
 
 .backTo {
     position: relative;
-    right: 150px;
-    top: 50px;
-    width: 115px;
+    top: 150px;
+    text-align: center;
 }
 
 .activityLastEdit {
@@ -785,6 +797,30 @@ button#genWeekly:focus {
     float: right;
 }
 
+#editComm,
+#modificaComm {
+    width: 112px;
+}
+
 .containerComment {
     margin-top: 50px;
+}
+
+.color {
+    height: 50px; 
+    width: 80px;
+}
+
+.labelActivity {
+    padding-left: 25px;
+    padding-right: 25px;
+    text-align: center;
+    border: 1px solid #BBB;
+    border-left: transparent;
+}
+
+div#thirdWorkerForm {
+    order: 3;
+    position: relative;
+    left: 200px;
 }

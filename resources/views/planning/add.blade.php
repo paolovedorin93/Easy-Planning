@@ -82,16 +82,6 @@
                     </tr>
                 </tbody>
             </table>
-        <div class="addActivityDiv addActivityDivClose">
-            <form method="post" action="{{ action('PlanningController@storeActivity') }}">
-                {{ csrf_field() }}
-                <div class="content divContent">
-                    <input name="type" required="" placeholder="Aggiungi tipo attività..." onkeyup="return forceLower(this); ">
-                    <input id="hex" name="color" type="color" required>
-                    <button id="addType" type="submit" class="btn btn-primary buttonShadow"><i class="fa fa-plus fa-lg">&nbsp;&nbsp;&nbsp;</i>Aggiungi</button>
-                </div>
-            </form>
-        </div>
     @else
         <h3 class="headTitle container centeredText"><strong>Devi effettuare l'accesso per poter inserire un'attività</strong></h3>
     @endif

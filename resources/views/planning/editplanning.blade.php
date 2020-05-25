@@ -78,7 +78,7 @@
         </form> 
                             <br>                    
                             <a id="elimina" class="btn btn-danger elimina buttonShadow edit" href='{{ action("PlanningController@destroy", $activity["id"]) }}' disabled><i class="fa fa-trash-o editI i" aria-hidden="true"></i></a>
-                            <a id="indietro" class="btn btn-danger buttonShadow edit" href='/Easy-Planning/public/planning' style="margin-left: 2px;" disabled><i class="fa fa-chevron-left editI i" aria-hidden="true"></i></a>
+                            <a id="indietro" class="btn btn-danger buttonShadow edit" href="{{ action('PlanningController@index') }}" style="margin-left: 2px;" disabled><i class="fa fa-chevron-left editI i" aria-hidden="true"></i></a>
                         </td>
                     </tr>
                 </tbody>
@@ -96,9 +96,23 @@
                 @foreach($comments as $comment)
                     <tr>
                         <td class="generalData{{ $comment->id }}">{{ $comment->operator }}<br></td>
-                        <td>
-                            <textarea class="tareaComments" cols="50" rows="3" value="{{ $comment->comment }}">{{ $comment->comment }}</textarea>
-                        </td>
+                        @if(Auth::user()->name === $comment->operator)
+                            <form action="{{ action('PlanningController@updateComment', [$comment['id']]) }}">
+                                <td>
+                                    <textarea id="editableComment" name="comment" class="tareaComments hidden" cols="50" rows="3" value="{{ $comment->comment }}">{{ $comment->comment }}</textarea>
+                                    <p class="pComment">{{ $comment->comment }}</p>
+                                </td>
+                                <td class="tdButton">
+                                    <button id="modificaComm" type="button" class="btn btn-primary modifica buttonShadow"><i class="fa fa-pencil fa-lg i" aria-hidden="true"></i>&nbsp;&nbsp;&nbsp;&nbsp;Modifica</button>
+                                    <button id="editComm" type="submit" class="btn btn-success aggiungi buttonShadow hidden"><i class="fa fa-check fa-lg" aria-hidden="true"></i>&nbsp;&nbsp;Conferma</button><br>
+                                    <a id="elimina" class="btn btn-danger eliminaComm eliminaMed buttonShadow" href='{{ action("PlanningController@destroyComment", $comment["id"]) }}' disabled><i class="fa fa-trash-o i" aria-hidden="true"></i>&nbsp;&nbsp;&nbsp;&nbsp;Elimina</a>
+                                </td>
+                            </form>
+                        @else
+                            <td>
+                                <p>{{ $comment->comment }}</p>
+                            </td>
+                        @endif
                         <script>
                             date = new Date('{{ $comment->updated_at }}');
                             dateToAdd = date.toLocaleString('it-IT');
@@ -182,6 +196,14 @@
     });
 </script>
 <script>
+    $("#modificaComm").click(function(){
+        $(this).css('display','none');
+        $(".pComment").css('display','none');
+        $("#editableComment").toggleClass('hidden');
+        $("#editComm").toggleClass('hidden');
+    })
+</script>
+<script>
     function checkBox(notChecked) {
         $("#"+notChecked).prop('checked', false);
     }
@@ -193,7 +215,16 @@
             return true;
         else
             return false;
-    })
+    });
+</script>
+<script>
+    $(".eliminaComm").click(function(){
+        let result = confirm('Sei sicuro di voler cancellare il commento?');
+        if(result)
+            return true;
+        else
+            return false;
+    });
 </script>
 <script>
     $(".close").click(function(){

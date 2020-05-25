@@ -1,25 +1,6 @@
 <!doctype html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
-    <head>
-        <meta charset="utf-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-
-        <title>Planning Exe Progetti | Utenti</title>
-
-        <!-- Fonts & Style -->
-        <link href="https://fonts.googleapis.com/css?family=Nunito:200,600" rel="stylesheet">
-        <link href='../packages/core/main.css' rel='stylesheet' />
-        <link href='../packages/daygrid/main.css' rel='stylesheet' />
-        <link href="../public/css/aspect.css" rel="stylesheet">
-        <link type="javascript" src="../js/script.js" />
-        <link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.1.0/fullcalendar.min.css' />
-        <link href='https://use.fontawesome.com/releases/v5.0.6/css/all.css' rel='stylesheet'>
-        <link href='https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css' rel='stylesheet' />
-        <link href="http://127.0.0.2/Easy-Planning/public/css/app.css" rel="stylesheet">
-        
-        <script src="http://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-
-    </head>
+    @include('include.head')
     <body>
         @include('include.nav')
         @if(Auth::guest() || Auth::user()->admin==0)
@@ -89,17 +70,36 @@
                 </form>
                 <a class="backTo" href="../public/planning">Torna al planning</a>
             </div>
+            <div id="thirdWorkerForm">
+                <span class="spanWorker">Qui è possibile modificare le abilitazioni degli utenti</span>
+                <table>
+                    <th>
+                        <td class="label color">Colore</td>
+                        <td class="label">Attività</td>
+                    </th>   
+                    @foreach($activities as $activity)
+                        <tr>
+                            <td></td>
+                            <td class="label color" style="background-color: {{ $activity->color }};"></td>
+                            <td class="labelActivity">{{ $activity->type }}</td>
+                        </tr>
+                    @endforeach
+                    <tr class="">
+                        <td></td>
+                        <td class="label color"></td>
+                        <td>
+                            <form method="post" action="{{ action('PlanningController@storeActivity') }}">
+                                {{ csrf_field() }}
+                                <input name="type" placeholder="Aggiungi tipo attività..." onkeyup="return forceLower(this);" required>
+                                <input id="hex" name="color" type="color" required>
+                                <button id="addType" type="submit" class="btn btn-primary aggiungi buttonShadow"><i class="fa fa-plus fa-lg"></i>&nbsp;&nbsp;&nbsp;Aggiungi</button>
+                            </form>
+                        </td>
+                    </tr>
+                </table>
+            </div>
         </div>
-        <div class="flex-center position-ref full-height">
-            <form method="post" action="{{ action('PlanningController@storeActivity') }}">
-                {{ csrf_field() }}
-                <div class="content divContent">
-                    <input name="type" placeholder="Aggiungi tipo attività..." onkeyup="return forceLower(this); " required>
-                    <input id="hex" name="color" type="color" required>
-                    <button id="addType" type="submit" class="btn btn-primary aggiungi buttonShadow"><i class="fa fa-plus fa-lg"></i>&nbsp;&nbsp;&nbsp;Aggiungi</button>
-                </div>
-            </form>
-        </div>
+        
         @endif
         <script>
             $(document).ready(function(){
