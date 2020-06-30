@@ -42,6 +42,7 @@
 
             <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
                 @if(Auth::user()->admin == 1)<a class="dropdown-item" href="workers">Gestione utenti</a>@endif
+                <a class="dropdown-item" href="{{ action('PlanningController@showAllActivity', Auth::user()->name) }}">Le mie attività</a>
                 <a class="dropdown-item" href="{{ route('logout') }}"
                   onclick="event.preventDefault();
                                 document.getElementById('logout-form').submit();">
@@ -110,19 +111,20 @@
           </div>
           <div class="userNav">
             @if(Auth::user()->admin)
-              <form method="POST" action="{{ action('PlanningController@indexWeekly') }}">
+              <form class="seven" method="POST" action="{{ action('PlanningController@indexWeekly') }}">
                 {{ csrf_field() }}
                 <input  id="startDate" class="hidden" value="" name="startDate">
                 <input  id="endDate" class="hidden" value="" name="endDate">
                 <button id="confermaWeekly" type="submit"><i class="fa fa-plus" id="confermaWeeklyI"></i>7</button>
               </form>
             @endif
+            <a class="connect vacation" href="{{ action('PlanningController@indexVacation') }}">F</a>
             <a class="connect" href="{{ action('PlanningController@create') }}"><i class="fa fa-plus"></i></a>
           </div>
         </div>
       @endif
       @foreach ($workers as $worker)
-        @if($worker->suspended != 1)
+        @if($worker->no_assi != 1 && $worker->suspended != 1)
           <strong style="text-transform: capitalize;">{{ $worker->name }}</strong>
           <div class="tableUser" id='calendar{{ $worker->name }}'></div>
           <div class="divButton">
@@ -150,7 +152,7 @@
                 header: {
                   left: '',
                   center: 'title',
-                  right: 'Prec,Pros,Vai'
+                  right: 'Prec,Pros,Oggi,Vai'
                 },
                 eventRender: function (event, element) {
                   if(event.hour == "0") {
@@ -196,6 +198,14 @@
                       let endDate = $('#calendarPaolo').fullCalendar('getView').end.format('YYYY-MM-DD');
                       $("#startDate").attr('value',startDate);
                       $("#endDate").attr('value',endDate);
+                    },
+                  },
+                  Oggi: {
+                    text: 'Oggi',
+                    click: function() {
+                      $('.tableUser').fullCalendar('today');
+                      $("#calendarHardMor").fullCalendar('today');
+                      $("#calendarHardEvn").fullCalendar('today');
                     }
                   }
                 },
@@ -237,38 +247,38 @@
           hiddenDays: [0,6],
           header: false,
           dayRender: function(date,cell){
-              cell.css('background-color','#03a300');
-              busy = 0;
-              oldDayDate = "";
-              @foreach($tasksMor as $taskMor)
-                suspended = {{ $taskMor->suspended }};
-                noAssi = {{ $taskMor->no_assi }};
-                if(cell[0].dataset.date === "{{ $taskMor->date }}" && suspended != 1 && noAssi != 1){
-                  dayDate = "{{ $taskMor->date }}";
-                  operator = "{{ $taskMor->operator }}";
-                  if(oldDayDate === "")
+            cell.css('background-color','#03a300');
+            busy = 0;
+            oldDayDate = "";
+            @foreach($tasksMor as $taskMor)
+              suspended = {{ $taskMor->suspended }};
+              noAssi = {{ $taskMor->no_assi }};
+              if(cell[0].dataset.date === "{{ $taskMor->date }}" && suspended != 1 && noAssi != 1){
+                dayDate = "{{ $taskMor->date }}";
+                operator = "{{ $taskMor->operator }}";
+                if(oldDayDate === "")
+                  busy++;
+                if(oldDayDate === dayDate){  //old date è vuoto il primo giro!
+                  if(oldOperator != operator)
                     busy++;
-                  if(oldDayDate === dayDate){  //old date è vuoto il primo giro!
-                    if(oldOperator != operator)
-                      busy++;
-                  }
-                  if(busy==={{$intensityLight->number}}){
-                    console.log("busyLight = ",{{$intensityLight->number}});
-                    cell.css('background-color','#31ff2e');
-                  }
-                  if(busy==={{$intensityMedium->number}}){
-                    console.log("busyMedium = ",{{$intensityMedium->number}});
-                    cell.css('background-color','#fffc2e');
-                  }
-                  if(busy>={{$intensityHard->number}}){
-                    console.log("busyHard : ", {{$intensityHard->number}});
-                    cell.css('background-color','red');
-                  }
-                  oldOperator = operator;
-                  oldDayDate = dayDate;
                 }
-              @endforeach
-            }
+                if(busy==={{$intensityLight->number}}){
+                  console.log("busyLight = ",{{$intensityLight->number}});
+                  cell.css('background-color','#31ff2e');
+                }
+                if(busy==={{$intensityMedium->number}}){
+                  console.log("busyMedium = ",{{$intensityMedium->number}});
+                  cell.css('background-color','#fffc2e');
+                }
+                if(busy>={{$intensityHard->number}}){
+                  console.log("busyHard : ", {{$intensityHard->number}});
+                  cell.css('background-color','red');
+                }
+                oldOperator = operator;
+                oldDayDate = dayDate;
+              }
+            @endforeach
+          }
         });
         $('#calendarHardEvn').fullCalendar({
           defaultView: 'basicWeek',
@@ -277,6 +287,7 @@
           dayRender: function(date,cell){
             cell.css('background-color','#03a300');
             busy = 0;
+            oldDayDate = "";
             @foreach($tasksAft as $taskAft)
               suspended = {{ $taskAft->suspended }};
               noAssi = {{ $taskAft->no_assi }};
@@ -309,6 +320,69 @@
         });
       });
     </script>
+    <div class="generalContainer">
+      @foreach ($workers as $worker)
+        @if($worker->no_assi != 0 && $worker->suspended == 0)
+          <strong style="text-transform: capitalize;">{{ $worker->name }}</strong>
+          <div class="tableUser" id='calendar{{ $worker->name }}'></div>
+          <div class="divButton">
+            <button class="expandTable buttonToExpande " onclick="let worker = '{{ $worker->name }}'; hide(worker, this)"><i class="fa fa-angle-down"></i></button>
+            <button class="expandTable buttonToExpande " onclick="let worker = '{{ $worker->name }}'; hideAll(worker, this)"><i class="expendAll fa fa-angle-double-down"></i></button>
+          </div>
+          <script>
+            function hide(worker, e){
+              $("#calendar"+worker).toggleClass('hidden');
+              $(e.children).toggleClass('fa-angle-up');
+            }
+          </script>
+          <script>
+            function hideAll(worker, e){
+              $(".tableUser").toggleClass('hidden');
+              $(".expendAll").toggleClass('fa-angle-double-up');
+            }
+          </script>
+          <script>
+            $(document).ready(function() {
+              // page is now ready, initialize the calendar...
+              $('#calendar{{ $worker->name }}').fullCalendar({
+                height: 200,
+                lang: 'it',
+                locale: 'it',
+                header: { left: '', center: '', right: '' },
+                eventRender: function (event, element) {
+                  if(event.hour == "0") {
+                    element.find('.fc-title').html('<div class="activity">'+event.title+'</div><div class="hour">M</div>');
+                  }
+                  else {
+                    element.find('.fc-title').html('<div class="activity">'+event.title+'</div><div class="hour">P</div>');
+                  }
+                },
+                defaultView: 'basicWeek',
+                hiddenDays: [0,6],
+                // put your options and callbacks here
+                eventOrder: "hour",
+                eventTextColor: "#000 !important",
+                events: [
+                  @foreach($tasks as $task)
+                    @if ($worker->name === $task->operator)
+                    {
+                        title : '{{ $task->activity }}',
+                        start : '{{ $task->date }}',
+                        end : '{{ $task->date }}',
+                        url : '{{ action("PlanningController@edit", $task["id"]) }}',
+                        className : '{{ $task->type }}',
+                        color : '@foreach($types as $type) @if($type->type === $task->type) {{ $type->color }} @endif @endforeach',
+                        hour : '{{ $task->hour }}'
+                    },
+                    @endif
+                  @endforeach
+                ],
+              });
+            });
+          </script>
+        @endif
+      @endforeach
+    </div>
     <script>
       $('#nextButton').click(function() {
         $('#calendarHardMor, #calendarHardEvn').fullCalendar('next');

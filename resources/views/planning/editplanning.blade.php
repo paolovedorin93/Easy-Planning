@@ -36,6 +36,7 @@
                         <th>Tipo</th>
                         <th>Periodo</th>
                         <th>Data</th>
+                        @if($activity->type = "richiesta permesso/ferie")<th>Ore</th>@endif
                         <th>Operatore</th>
                         <th></th>
                     </tr>
@@ -54,10 +55,10 @@
                         </td>
                         <td>
                             <div class="content hourDiv">
-                                <input id="mattino" type="checkbox" name="hour" value="0" onclick="checkBox('pomeriggio')" required disabled @if(!$activity->hour) checked @endif><span>&nbsp;&nbsp;&nbsp;Mattino</span>
+                                <input id="mattino" type="checkbox" name="hour" value="0" onclick="checkBox('pomeriggio')" disabled @if(!$activity->hour) checked @endif><span>&nbsp;&nbsp;&nbsp;Mattino</span>
                             </div>
                             <div class="content hourDiv">
-                                <input id="pomeriggio" type="checkbox" name="hour" value="1" onclick="checkBox('mattino')" required disabled @if($activity->hour) checked @endif><span>&nbsp;&nbsp;&nbsp;Pomeriggio</span>
+                                <input id="pomeriggio" type="checkbox" name="hour" value="1" onclick="checkBox('mattino')" disabled @if($activity->hour) checked @endif><span>&nbsp;&nbsp;&nbsp;Pomeriggio</span>
                             </div>
                         </td>
                         <td>
@@ -65,6 +66,11 @@
                             <input name="repetition" value="0" style="display: none;">
                             <input name="date" id="datepicker" autocomplete="off" value="{{$activity->date}}" required disabled>
                         </td>
+                        @if($activity->type = "richiesta permesso/ferie")
+                        <td>
+                            <input name="time" value="{{ $activity->time }}" type="number" max="4" id="hoursRequired" class="hoursRequired" disabled/>
+                        </td>
+                        @endif
                         <td>
                             <select name="operator" required disabled>
                                 @foreach($users as $user)

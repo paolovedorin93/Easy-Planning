@@ -15,6 +15,7 @@
                         <th>
                             <td class="label">Sospeso</td>
                             <td class="label">Amministratore</td>
+                            <td class="label">Amm. Permessi</td>
                             <td class="label lastWorker">No Assistenza</td>
                         </th>   
                         @foreach($workers as $worker)
@@ -25,9 +26,10 @@
                             ?>
                             <tr class="contentTable">
                                 <td class="nameWorker">{{ $worker['name'] }}</td>
-                                <td class="inputWorker"><input id="workerSuspended" type="checkbox" value="{{ $suspended }}" name="suspended[{{$worker->id}}]" @if($suspended) checked  @endif></td>
-                                <td class="inputWorker"><input id="workerNoAssi" type="checkbox" value="{{ $admin }}" name="admin[{{$worker->id}}]" @if($admin) checked  @endif></td>
-                                <td class="inputWorker lastWorker"><input id="workerNoAssi" type="checkbox" value="{{ $no_assi }}" name="no_assi[{{$worker->id}}]" @if($no_assi) checked  @endif></td>
+                                <td class="inputWorker"><input id="workerSuspended" type="checkbox" value="{{ $worker->suspended }}" name="suspended[{{ $worker->id }}]" @if($worker->suspended) checked  @endif></td>
+                                <td class="inputWorker"><input id="workerNoAssi" type="checkbox" value="{{ $worker->admin }}" name="admin[{{ $worker->id }}]" @if($worker->admin) checked  @endif></td>
+                                <td class="inputWorker"><input id="workerNoAssi" type="checkbox" value="{{ $worker->ammVacation }}" name="ammVacation[{{ $worker->id }}]" @if($worker->ammVacation) checked  @endif></td>
+                                <td class="inputWorker lastWorker"><input id="workerNoAssi" type="checkbox" value="{{ $worker->no_assi }}" name="no_assi[{{ $worker->id }}]" @if($worker->no_assi) checked  @endif></td>
                             </tr>
                         @endforeach
                     </table>

@@ -2,14 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use App\User as Worker;
-use App\Tbgene as Intensity;
-use App\Activity as Activity;
+use App\Notifications;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 
-
-class WorkerController extends Controller
+class NotificationsController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -18,11 +15,7 @@ class WorkerController extends Controller
      */
     public function index()
     {
-        $workers = Worker::all();
-        $intensities = Intensity::where('type','1')
-                                            ->get();
-        $activities = Activity::all();
-        return view('worker/workers',compact('workers','intensities','activities'));
+        //
     }
 
     /**
@@ -32,7 +25,7 @@ class WorkerController extends Controller
      */
     public function create()
     {
-        //return view('worker/add');
+        //
     }
 
     /**
@@ -49,10 +42,10 @@ class WorkerController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  \App\Worker  $worker
+     * @param  \App\Notifications  $notifications
      * @return \Illuminate\Http\Response
      */
-    public function show(Worker $worker)
+    public function show(Notifications $notifications)
     {
         //
     }
@@ -60,41 +53,33 @@ class WorkerController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\Worker  $worker
+     * @param  \App\Notifications  $notifications
      * @return \Illuminate\Http\Response
      */
-    public function edit(Worker $worker)
+    public function edit(Notifications $notifications)
     {
-        return view('worker/edit');
+        //
     }
 
     /**
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Worker  $worker
+     * @param  \App\Notifications  $notifications
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request)
+    public function update(Request $request, Notifications $notifications)
     {
-        $users = Worker::all();
-        foreach($users as $user){
-            $user->no_assi = $request->has('no_assi.' . $user->id);
-            $user->suspended = $request->has('suspended.' . $user->id);
-            $user->admin = $request->has('admin.' . $user->id);
-            $user->ammVacation = $request->has('ammVacation.' . $user->id);
-            $user->save();
-        }
-        return redirect('/workers');
+        //
     }
 
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Worker  $worker
+     * @param  \App\Notifications  $notifications
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Worker $worker)
+    public function destroy(Notifications $notifications)
     {
         //
     }

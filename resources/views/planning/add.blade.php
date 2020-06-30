@@ -48,7 +48,7 @@
                         </td>
                         <td>
                             <div class="content">
-                                <input id="mattino" type="checkbox" name="hour" value="0" onclick="checkBox('pomeriggio')"><span>&nbsp;&nbsp;&nbsp;Mattino</span>
+                                <input id="mattino" type="checkbox" name="hour" value="0" onclick="checkBox('pomeriggio')" checked><span>&nbsp;&nbsp;&nbsp;Mattino</span>
                             </div>
                             <div class="content">
                                 <input id="pomeriggio" type="checkbox" name="hour" value="1" onclick="checkBox('mattino')"><span>&nbsp;&nbsp;&nbsp;Pomeriggio</span>
@@ -59,12 +59,6 @@
                             <input name="particular" value="0" style="display: none;">
                             <input name="date" id="datepicker" autocomplete="off">
                         </td>
-                        <!-- <td class="input-group clockpicker">
-                            <input type="text" class="form-control" name="time" value="">
-                            <span class="input-group-addon">
-                                <span class="glyphicon glyphicon-time"></span>
-                            </span>
-                        </td> -->
                         <td>
                             <select name="operator">
                                 <option value="" selected></option>

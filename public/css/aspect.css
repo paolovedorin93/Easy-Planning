@@ -66,8 +66,6 @@ a.fc-day-grid-event {
     }
 }
 
-
-
 .buttonShadow {
     box-shadow: 2px 3px 6px 0px rgba(0, 0, 0, 0.4) !important;
 }
@@ -78,11 +76,16 @@ a.fc-day-grid-event {
     position: relative;
 }
 
-#calendarHardMor,
-#calendarHardEvn {
+#calendarHardMor {
     bottom: 25px;
     position: relative;
     margin: 0 10px 0 10px;
+}
+
+#calendarHardEvn {
+    bottom: 25px;
+    position: relative;
+    margin: 0 10px 25px 10px;
 }
 
 .fc-row.fc-week.fc-widget-content,
@@ -211,7 +214,7 @@ a.fc-day-grid-event {
 
 .divButton {
     border-top: 1px solid #444;
-    margin-bottom: 20px;
+    margin-bottom: 15px;
 }
 
 .main {
@@ -373,6 +376,15 @@ a {
     /* left: 8px; */
     font-weight: bold;
     font-size: 33px;
+}
+
+a.connect.vacation {
+    position: relative;
+    right: 10px;
+    bottom: 4px;
+    font-size: 36px;
+    font-weight: bold;
+    text-decoration: none;
 }
 
 a.connect:hover{
@@ -715,7 +727,7 @@ button#genWeekly:focus {
 }
 
 .alertBox {
-    position: absolute !important;
+    position: fixed !important;
     z-index: 99;
     bottom: 0;
     left: 25px;
@@ -823,4 +835,50 @@ div#thirdWorkerForm {
     order: 3;
     position: relative;
     left: 200px;
+}
+
+.center {
+    text-align: center;
+    margin-top: 50px;
+}
+
+.box {
+    border-bottom: 1px solid #BBB;
+}
+
+.bord {
+    padding: 0 0 0 0 !important;
+    border-top: 1px solid #BBB;
+}
+
+.seven {
+    padding-right: 4px;
+}
+
+.hoursRequired {
+    width: 60px;
+    text-align: center;
+    margin-bottom: 15px;
+}
+
+.containerFilter {
+    margin-top: 50px;
+    text-align: center;
+}
+
+.containerFilterResults {
+    margin-top: 50px;
+}
+
+.spanDateFilter {
+    margin-left: 75px;
+}
+
+.inputDateFilter {
+    margin-right: 75px;
+}
+
+.bold {
+    font-weight: bold;
+    font-size: 20px;
 }

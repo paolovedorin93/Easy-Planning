@@ -24,19 +24,25 @@ Route::get('/risorse', function() {
 });
 
 Route::get('/planning', 'PlanningController@index')->name('planning');
-Route::get('/planning/add', 'PlanningController@create')->name('planning');
+Route::any('/planning/add', 'PlanningController@create')->name('planningAdd');
 Route::get('planning/{id}/edit', 'PlanningController@edit')->name('activity');
 //Route::get('planning/{id}/delete', 'PlanningController@delete');
-Route::any('/planning/{id}/edited',['as'=>'new_activity','uses'=>'PlanningController@update']);
-Route::get('/planning/add',['as'=>'new_activity','uses'=>'PlanningController@create']);
-Route::any('/planning/added',['as'=>'new_activity','uses'=>'PlanningController@store']);
-Route::any('/planning/addedActivity',['as'=>'new_activity','uses'=>'PlanningController@storeActivity']);
+Route::any('/planning/{id}/edited', ['as'=>'new_activity','uses'=>'PlanningController@update']);
+Route::get('/planning/add', ['as'=>'new_activity','uses'=>'PlanningController@create']);
+Route::any('/planning/added', ['as'=>'new_activity','uses'=>'PlanningController@store']);
+Route::any('/planning/addedActivity', ['as'=>'new_activity','uses'=>'PlanningController@storeActivity']);
 Route::any('/planning/{id}/deleted', ['as'=>'del_activity','uses'=>'PlanningController@destroy']);
 Route::any('/planning/addWeekly', ['as'=>'indexWeekly','uses'=>'PlanningController@indexWeekly']);
 Route::any('/planning/storedWeekly', ['as'=>'storeWeekly','uses'=>'PlanningController@storeWeeklyActivity']);
 Route::any('/planning/storedIntensity', ['as'=>'storeIntense','uses'=>'PlanningController@updateIntensity']);
 Route::get('/planning/ferie', 'PlanningController@indexVacation');
-Route::any('/planning/storedComment',['as'=>'new_comment','uses'=>'PlanningController@storeComment']);
+Route::any('/planning/storedComment', ['as'=>'new_comment','uses'=>'PlanningController@storeComment']);
+Route::any('/planning/storedVacation',['as'=>'new_comment','uses'=>'PlanningController@storeVacation']);
+Route::any('/planning/{id}/editedComment', ['as'=>'new_activity','uses'=>'PlanningController@updateComment']);
+Route::any('/planning/{id}/deletedComment', ['as'=>'del_activity','uses'=>'PlanningController@destroyComment']);
+Route::get('/planning/{user}/allActivity', ['as'=>'all_activity','uses'=>'PlanningController@showAllActivity']);
+Route::any('/planning/filtered', ['as'=>'filtered_activity','uses'=>'PlanningController@filterVacation']);
+Route::any('/planning/confirmedVacation', ['as'=>'filtered_activity','uses'=>'PlanningController@confirmVacation']);
 
 //Route::resource('planning','PlanningController'); --> NON FUNZIONA IL RESTO DELLE FUNZIONI
 
