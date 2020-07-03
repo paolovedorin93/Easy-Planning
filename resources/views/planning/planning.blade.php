@@ -152,7 +152,7 @@
                 header: {
                   left: '',
                   center: 'title',
-                  right: 'Prec,Pros,Oggi,Vai'
+                  right: 'Prec,Oggi,Pros,Vai'
                 },
                 eventRender: function (event, element) {
                   if(event.hour == "0") {
@@ -188,6 +188,14 @@
                       $("#endDate").attr('value',endDate);
                     }
                   },
+                  Oggi: {
+                    text: 'Oggi',
+                    click: function() {
+                      $('.tableUser').fullCalendar('today');
+                      $("#calendarHardMor").fullCalendar('today');
+                      $("#calendarHardEvn").fullCalendar('today');
+                    }
+                  },
                   Pros: {
                     text: 'Pros',
                     click: function() {
@@ -199,19 +207,10 @@
                       $("#startDate").attr('value',startDate);
                       $("#endDate").attr('value',endDate);
                     },
-                  },
-                  Oggi: {
-                    text: 'Oggi',
-                    click: function() {
-                      $('.tableUser').fullCalendar('today');
-                      $("#calendarHardMor").fullCalendar('today');
-                      $("#calendarHardEvn").fullCalendar('today');
-                    }
                   }
                 },
                 defaultView: 'basicWeek',
                 hiddenDays: [0,6],
-                // put your options and callbacks here
                 eventOrder: "hour",
                 eventTextColor: "#000 !important",
                 events: [

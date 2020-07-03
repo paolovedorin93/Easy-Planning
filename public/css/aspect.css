@@ -842,6 +842,20 @@ div#thirdWorkerForm {
     margin-top: 50px;
 }
 
+.centerBottom {
+    text-align: center;
+    margin: 0 0 200px 0;
+    font-weight: bold;
+    font-size: 20px;
+}
+
+.centerTop {
+    text-align: center;
+    margin: 50px 0 0 0;
+    font-weight: bold;
+    font-size: 20px;
+}
+
 .box {
     border-bottom: 1px solid #BBB;
 }

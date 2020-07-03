@@ -24,7 +24,7 @@ Route::get('/risorse', function() {
 });
 
 Route::get('/planning', 'PlanningController@index')->name('planning');
-Route::any('/planning/add', 'PlanningController@create')->name('planningAdd');
+//Route::any('/planning/add', 'PlanningController@create')->name('planningAdd');
 Route::get('planning/{id}/edit', 'PlanningController@edit')->name('activity');
 //Route::get('planning/{id}/delete', 'PlanningController@delete');
 Route::any('/planning/{id}/edited', ['as'=>'new_activity','uses'=>'PlanningController@update']);

@@ -149,7 +149,7 @@
                         </td>
                         <!-- FINE OPERATORE -->
                         <td id="button">
-                            <button id="conferma" type="submit" class="btn btn-success aggiungi buttonShadow" onclick="return showMessage();"><i class="fa fa-check fa-lg" aria-hidden="true"></i>&nbsp;&nbsp;&nbsp;Conferma</button>
+                            <button id="conferma" type="submit" class="btn btn-success aggiungi buttonShadow" onclick="openOutlook();"><i class="fa fa-check fa-lg" aria-hidden="true"></i>&nbsp;&nbsp;&nbsp;Conferma</button>
         </form>
                             <br>
                             <a id="elimina" class="btn btn-danger elimina eliminaBig buttonShadow" href="{{ action('PlanningController@index') }}"><i class="fa fa-chevron-left" aria-hidden="true"></i>&nbsp;&nbsp;&nbsp;Indietro</a>
@@ -163,11 +163,11 @@
                 <form method="post" action="{{ action('PlanningController@filterVacation') }}">
                     {{ csrf_field() }}
                     <span>Filtro da data</span>
-                    <input name="startDateFilter" value="<?php echo isset($_POST['startDateFilter']) ? $_POST['startDateFilter'] : '' ?>" id="datepickerStartFilter" autocomplete="off" class="dates" onchange="giveAttr(this);"/>
+                    <input name="startDateFilter" value="<?php echo isset($_POST['startDateFilter']) ? $_POST['startDateFilter'] : '' ?>" id="datepickerStartFilter" autocomplete="off" class="dates"/>
                     <span class="spanDateFilter">a data</span>
-                    <input name="endDateFilter" value="<?php echo isset($_POST['endDateFilter']) ? $_POST['endDateFilter'] : '' ?>" id="datepickerEndFilter" autocomplete="off" class="dates inputDateFilter" onchange="giveAttr(this);"/>
+                    <input name="endDateFilter" value="<?php echo isset($_POST['endDateFilter']) ? $_POST['endDateFilter'] : '' ?>" id="datepickerEndFilter" autocomplete="off" class="dates inputDateFilter"/>
                     <span class="">e operatore</span>
-                    <select name="operatorFilter" id="operatorFilter" onchange="giveAttr(this);">
+                    <select name="operatorFilter" id="operatorFilter">
                         <option value="" selected></option>
                         @foreach($users as $user)
                             <?php
@@ -214,11 +214,7 @@
                                     dateToAdd = dateToAdd.toString().substring(0,dateToAdd.length - 10)
                                     $(".date{{ $vacation->id }}").append(dateToAdd);
                                 </script>
-                                @if($vacation->type == "richiesta permesso/ferie")
-                                    <td>Da confermare</td>
-                                @else
-                                    <td>Confermata</td>
-                                @endif
+                                <td>Da confermare</td>
                             </tr>
                         @endforeach
                     </tbody>
@@ -250,6 +246,54 @@
                 </form>
             </div>
         @endif
+        <h3 class="headTitle">I TUOI PERMESSI</h3>
+        <div class="container">
+            <table class="tableComments containerFilter">
+                <thead>
+                    <tr class="bold">
+                        <td>UTENTE</td>
+                        <td>PERIODO</td>
+                        <td>DURATA (h)</td>
+                        <td>DATA</td>
+                        <td>STATO</td>
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php $time = 0; ?>
+                    <?php $pastTime = 0; ?>
+                    @foreach($operatorVacations as $operatorVacation)
+                        <tr>
+                            <td>{{ $operatorVacation->operator }}</td>
+                            @if($operatorVacation->hour == 0)
+                                <td>Mattina</td>
+                            @else
+                                <td>Pomeriggio</td>
+                            @endif
+                            <td>{{ $operatorVacation->time }}</td>
+                            <td class="date{{ $operatorVacation->id }}2"></td>
+                            <script>
+                                date = new Date('{{ $operatorVacation->date }}');
+                                dateToAdd = date.toLocaleString('it-IT');
+                                dateToAdd = dateToAdd.toString().substring(0,dateToAdd.length - 10)
+                                $(".date{{ $operatorVacation->id }}2").append(dateToAdd);
+                            </script>
+                            @if( $operatorVacation->type == "ferie" )
+                                <td>Confermata</td>
+                            @else
+                                <td>Da confermare</td>
+                            @endif
+                        </tr>
+                        <?php 
+                            $time = $time + $operatorVacation->time;
+                        ?>
+                    @endforeach
+                </tbody>
+            </table>
+        </div>
+        <p class="centerTop">TOTALE ORE PERMESSI RICHIESTI: {{ $time }}</p>
+        @foreach($pastHoursRequired as $pastHourRequired)
+            <p class="centerBottom">TOTALE ORE PERMESSI RICHIESTI {{ date('yy') -1 }}: {{ $pastHourRequired->pastTotalHours }}</p>
+        @endforeach
     @else
         <h3 class="headTitle container centeredText"><strong>Devi effettuare l'accesso per poter inserire un'attività</strong></h3>
     @endif
@@ -258,7 +302,6 @@
 <script>
     function checkRequired(){
         var checkedboxes = $('.hourDiv :checkbox:checked').length;
-
         if (checkedboxes === 0){
             alert('Selezionare periodo di attività');
             return false;
@@ -327,4 +370,22 @@
     $(".close").click(function(){
         $('.alert').css('display','none');
     });
+</script>
+<script>
+    function openOutlook(){
+        hoursToEmal = $("#hoursRequired").val();
+        dateToEmail = new Date($("#datepicker").val());
+        dateToAdd = dateToEmail.toLocaleString('it-IT');
+        dateToAdd = dateToAdd.toString().substring(0,dateToAdd.length - 10);
+        period = $("#mattino");
+        if($("#mattino").is(':checked'))
+            period = "mattino";
+        else if ($("#pomeriggio").is(':checked'))
+            period = "pomeriggio";
+        emailTo = "elena@exeprogetti.mail";
+        emailCC = "martino@exeprogetti.mail";
+        emailSub = "Richiesta permesso/ferie";
+        emailBody = "Ciao," + "%0D%0A" + "%0D%0A" + "  chiedo permesso di " + hoursToEmal + " ore per il giorno " + dateToAdd + " " + period;
+        location.href = "mailto:"+emailTo+'?cc='+emailCC+'&subject='+emailSub+'&body='+emailBody;
+    }
 </script>

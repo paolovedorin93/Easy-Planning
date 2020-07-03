@@ -36,7 +36,10 @@
                         <th>Tipo</th>
                         <th>Periodo</th>
                         <th>Data</th>
-                        @if($activity->type = "richiesta permesso/ferie")<th>Ore</th>@endif
+                        @if ($activity->type == "richiesta permesso/ferie" || $activity->type == "ferie")
+                            <th class="hoursRequired">Ore</th>
+                        @endif
+                        <th class="hoursRequired hidden">Ore</th>
                         <th>Operatore</th>
                         <th></th>
                     </tr>
@@ -44,10 +47,10 @@
                 <tbody>
                     <tr class="editActivity stopped">
                         <td>
-                            <textarea name="activity" rows="2" cols="40" placeholder="" required disabled>{{ $activity->activity }}</textarea>
+                            <textarea class="textarea" name="activity" rows="2" cols="40" placeholder="" required disabled>{{ $activity->activity }}</textarea>
                         </td>
                         <td>
-                            <select name="type" class="activitySelect" required disabled>
+                            <select name="type" class="activitySelect" onchange="onChange();" required disabled>
                                 @foreach($types as $type)
                                     <option value="{{ $type->type }}" @if($type->type == $activity->type) selected @endif style="background-color: {{ $type->color }}; color: #000;; font-weight: bold;">{{ $type->type }}</option>
                                 @endforeach
@@ -66,10 +69,20 @@
                             <input name="repetition" value="0" style="display: none;">
                             <input name="date" id="datepicker" autocomplete="off" value="{{$activity->date}}" required disabled>
                         </td>
-                        @if($activity->type = "richiesta permesso/ferie")
-                        <td>
-                            <input name="time" value="{{ $activity->time }}" type="number" max="4" id="hoursRequired" class="hoursRequired" disabled/>
+                        @if ($activity->type == "richiesta permesso/ferie" || $activity->type == "ferie")
+                        <td class="hoursRequired">
+                            <input type="number" id="hoursRequired" class="hoursRequiredInput" value="{{ $activity->time }}" min="0.25" max="4" step=".25" disabled/>
                         </td>
+                        <script>
+                            $(".hoursRequiredInput").attr('name','time');
+                        </script>
+                        @else
+                        <td class="hoursRequired hidden">
+                            <input type="number" id="hoursRequired" class="hoursRequiredNoHour" min="0.25" max="4" step=".25"/>
+                        </td>
+                        <script>
+                            $(".hoursRequiredNoHour").attr('name','time');
+                        </script>
                         @endif
                         <td>
                             <select name="operator" required disabled>
@@ -79,7 +92,7 @@
                             </select>
                         </td>
                         <td id="button">
-                            <button id="conferma" type="submit" class="btn btn-success aggiungi buttonShadow edit" disabled><i class="fa fa-check fa-lg i" aria-hidden="true" style="position: relative; right: 1px;"></i></button>
+                            <button id="conferma" type="submit" class="btn btn-success aggiungi buttonShadow edit" onclick="openOutlook();" disabled><i class="fa fa-check fa-lg i" aria-hidden="true" style="position: relative; right: 1px;"></i></button>
                             <button id="modifica" type="button" class="btn btn-primary modifica buttonShadow edit"><i class="fa fa-pencil fa-lg i" aria-hidden="true"></i></button>
         </form> 
                             <br>                    
@@ -172,26 +185,19 @@
     });
 </script>
 <script>
-    function openDiv(){
-        let variable = document.getElementsByClassName("activitySelect")[0];
-        let inside = 0;
-        if(variable.value === "Add" && inside!=1){
-            $(".addActivityDiv").toggleClass('addActivityDivClose');
-            inside++;
-        }
-        else{
-            $(".addActivityDiv").toggleClass('addActivityDivClose');
-            inside--;
+    function onChange(){
+        let value = $(".activitySelect").val();
+        if(value === "richiesta permesso/ferie" || value === "ferie"){
+            $('.hoursRequired').removeClass("hidden");
+            $('#hoursRequired').prop('required',true);
+            $(".textarea").val("Ferie");
+        } else {
+            $('.hoursRequired').addClass("hidden");
+            $('#hoursRequired').prop('required',false);
+            if(value === "assistenza")
+                $(".textarea").val("Assistenza");
         }
     }
-</script>
-<script>
-    $(document).ready(function(){
-        $("#addType").click(function(){
-            let invColor = invertHex(document.getElementById("hex").value.substr(1));
-            document.getElementById("invHex").value = "#"+invColor;
-        });
-    });
 </script>
 <script>
     $("#modifica").click(function(){
@@ -242,13 +248,32 @@
         if (event.keyCode == 13) {
             event.preventDefault();
             alert('INVIO non consentito.');
-            // let str = $('textarea').val();
-            // str = str.replace(/(?:\r|\n|\r\n)/g, '<br>');
         }
     });
 </script>
 <script>
     function forceLower(strInput) {
         strInput.value=strInput.value.toLowerCase();
+    }
+</script>
+<script>
+    function openOutlook(){
+        let value = $(".activitySelect").val();
+        if(value === "richiesta permesso/ferie"){
+            hoursToEmal = $("#hoursRequired").val();
+            dateToEmail = new Date($("#datepicker").val());
+            dateToAdd = dateToEmail.toLocaleString('it-IT');
+            dateToAdd = dateToAdd.toString().substring(0,dateToAdd.length - 10);
+            period = {{ $activity->hour }};
+            if(period === 0)
+                period = "mattino";
+            else
+                period = "pomeriggio";
+            emailTo = "elena@exeprogetti.mail";
+            emailCC = "martino@exeprogetti.mail";
+            emailSub = "Richiesta permesso/ferie";
+            emailBody = "Ciao," + "%0D%0A" + "%0D%0A" + "  chiedo permesso di " + hoursToEmal + " ore per il giorno " + dateToAdd + " " + period;
+            location.href = "mailto:"+emailTo+'?cc='+emailCC+'&subject='+emailSub+'&body='+emailBody;
+        }
     }
 </script>

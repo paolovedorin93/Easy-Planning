@@ -29,6 +29,7 @@
                         <th>Tipo</th>
                         <th>Periodo</th>
                         <th>Data</th>
+                        <th class="hoursRequired hidden">Ore</th>
                         <th>Operatore</th>
                         <th></th>
                     </tr>
@@ -39,7 +40,7 @@
                             <textarea name="activity" rows="2" cols="40" required></textarea>
                         </td>
                         <td>
-                            <select name="type" class="activitySelect" onchange="openDiv();">
+                            <select name="type" class="activitySelect" onchange="onChange();">
                                 @foreach($types as $type)
                                 <option value="{{ $type->type }}" style="background-color: {{ $type->color }}; color: #000;">{{ $type->type }}</option>
                                 @endforeach
@@ -58,6 +59,9 @@
                             <input name="repetition" value="0" style="display: none;">
                             <input name="particular" value="0" style="display: none;">
                             <input name="date" id="datepicker" autocomplete="off">
+                        </td>
+                        <td class="hoursRequired hidden">
+                            <input name="time" value="0" min="0" max="4" step=".25" type="number" id="hoursRequired" class="hoursRequired"/>
                         </td>
                         <td>
                             <select name="operator">
@@ -102,16 +106,17 @@
     });
 </script>
 <script>
-    function openDiv(){
-        let variable = document.getElementsByClassName("activitySelect")[0];
-        let inside = 0;
-        if(variable.value === "Add" && inside!=1){
-            $(".addActivityDiv").toggleClass('addActivityDivClose');
-            inside++;
-        }
-        else{
-            $(".addActivityDiv").toggleClass('addActivityDivClose');
-            inside--;
+    function onChange(){
+        let value = $(".activitySelect").val();
+        if(value === "richiesta permesso/ferie" || value === "ferie"){
+            $('.hoursRequired').removeClass("hidden");
+            $('#hoursRequired').prop('required',true);
+            $(".textarea").val("Ferie");
+        } else {
+            $('.hoursRequired').addClass("hidden");
+            $('#hoursRequired').prop('required',false);
+            if(value === "assistenza")
+                $(".textarea").val("Assistenza");
         }
     }
 </script>
