@@ -35,11 +35,26 @@
             <a class="nav-link" href="{{ route('register') }}">Registrati</a>
           </div>
         @else
+          <div class="dropdown myDropDownTwo">
+              <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
+                <i class="fa fa-bell" aria-hidden="true"></i>
+              </a>
+              <div class="dropdown-menu dropdown-menu-rightTwo" aria-labelledby="navbarDropdown">
+                <p class="marginNo">&nbsp;Attività modificate/aggiunte</p>
+                  <?php $countNotifications = 0; $notification = 1; ?>
+                  @foreach($notifications as $notification)
+                    @if($notification->operator == Auth::user()->name)
+                      <a href="{{ action('PlanningController@edit', [$notification->id_ref]) }}" class="box borderLeft ellipsed" style="display: flex;"><span class="ellipsed" style="width: 72%; order: 0;">{{ $notification->activity }}</span><span class="width: 34%; order: 1;"> {{ $notification->date }}</span></a>
+                      <?php $countNotifications += 1 ?>
+                    @endif
+                  @endforeach
+              </div>
+              <div class="numberNotifications">{{ $countNotifications }}</div>
+          </div>
           <div class="dropdown myDropDown">
             <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
                 {{ Auth::user()->name }} <span class="caret"></span>
             </a>
-
             <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
                 @if(Auth::user()->admin == 1)<a class="dropdown-item" href="workers">Gestione utenti</a>@endif
                 <a class="dropdown-item" href="{{ action('PlanningController@showAllActivity', Auth::user()->name) }}">Le mie attività</a>
@@ -111,15 +126,21 @@
           </div>
           <div class="userNav">
             @if(Auth::user()->admin)
-              <form class="seven" method="POST" action="{{ action('PlanningController@indexWeekly') }}">
-                {{ csrf_field() }}
-                <input  id="startDate" class="hidden" value="" name="startDate">
-                <input  id="endDate" class="hidden" value="" name="endDate">
-                <button id="confermaWeekly" type="submit"><i class="fa fa-plus" id="confermaWeeklyI"></i>7</button>
-              </form>
+              <div>
+                <form class="seven" method="POST" action="{{ action('PlanningController@indexWeekly') }}">
+                  {{ csrf_field() }}
+                  <input  id="startDate" class="hidden" value="" name="startDate">
+                  <input  id="endDate" class="hidden" value="" name="endDate">
+                  <button id="confermaWeekly" type="submit"><i class="fa fa-plus" id="confermaWeeklyI"></i>7</button>
+                </form>
+              </div>
             @endif
-            <a class="connect vacation" href="{{ action('PlanningController@indexVacation') }}">F</a>
-            <a class="connect" href="{{ action('PlanningController@create') }}"><i class="fa fa-plus"></i></a>
+            <div>
+              <a class="connect vacation" href="{{ action('PlanningController@indexVacation') }}">F</a>
+            </div>
+            <div>
+              <a class="connect" href="{{ action('PlanningController@create') }}"><i class="fa fa-plus"></i></a>
+            </div>
           </div>
         </div>
       @endif
@@ -405,6 +426,9 @@
         });
         $('.myDropDown').click(function(){
           $('.dropdown-menu-right').toggleClass('openDrop');
+        });
+        $('.myDropDownTwo').click(function(){
+          $('.dropdown-menu-rightTwo').toggleClass('openDrop');
         });
         $(".fc-button-group").append('<input name="date" id="goToDate" placeholder="aaaa/mm/gg" />');
       });

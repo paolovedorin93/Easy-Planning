@@ -84,6 +84,7 @@
                             <td></td>
                             <td class="label color" style="background-color: {{ $activity->color }};"></td>
                             <td class="labelActivity">{{ $activity->type }}</td>
+                            <td><a href='{{ action("PlanningController@destroyActivity", $activity["id"]) }}' onclick="return askConfirm();"><i class="fa fa-trash-o trashActivity" aria-hidden="true"></i></a></td>
                         </tr>
                     @endforeach
                     <tr class="">
@@ -112,6 +113,15 @@
                     $('.dropdown-menu-right').toggleClass('openDrop');
                 });
             });
+        </script>
+        <script>
+            function askConfirm() {
+                if (confirm('Sicuro di voler cancellare l\'attività?')) {
+                    return true;
+                } else {
+                    return false;
+                }
+            }
         </script>
     </body>
 </html>

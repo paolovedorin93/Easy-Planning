@@ -37,21 +37,21 @@
                 <tbody>
                     <tr class="addActivity">
                         <td>
-                            <textarea name="activity" rows="2" cols="40" required></textarea>
+                            <textarea class="textarea" name="activity" rows="2" cols="40" required></textarea>
                         </td>
                         <td>
                             <select name="type" class="activitySelect" onchange="onChange();">
+                                <option value="" selected></option>
                                 @foreach($types as $type)
                                 <option value="{{ $type->type }}" style="background-color: {{ $type->color }}; color: #000;">{{ $type->type }}</option>
                                 @endforeach
-                                <option value="Add" class="addActivity">Aggiungi...</option>
                             </select>
                         </td>
                         <td>
-                            <div class="content">
+                            <div class="content hourDiv">
                                 <input id="mattino" type="checkbox" name="hour" value="0" onclick="checkBox('pomeriggio')" checked><span>&nbsp;&nbsp;&nbsp;Mattino</span>
                             </div>
-                            <div class="content">
+                            <div class="content hourDiv">
                                 <input id="pomeriggio" type="checkbox" name="hour" value="1" onclick="checkBox('mattino')"><span>&nbsp;&nbsp;&nbsp;Pomeriggio</span>
                             </div>
                         </td>
@@ -72,7 +72,7 @@
                             </select>
                         </td>
                         <td id="button">
-                            <button id="conferma" type="submit" class="btn btn-success aggiungi buttonShadow"><i class="fa fa-check fa-lg" aria-hidden="true"></i>&nbsp;&nbsp;&nbsp;Conferma</button>
+                            <button id="conferma" type="submit" onclick="openOutlook();" class="btn btn-success aggiungi buttonShadow"><i class="fa fa-check fa-lg" aria-hidden="true"></i>&nbsp;&nbsp;&nbsp;Conferma</button>
         </form>
                             <br>
                             <a id="elimina" class="btn btn-danger elimina eliminaBig buttonShadow" href="{{ action('PlanningController@index') }}"><i class="fa fa-chevron-left" aria-hidden="true"></i>&nbsp;&nbsp;&nbsp;Indietro</a>
@@ -106,6 +106,14 @@
     });
 </script>
 <script>
+    $(document).ready(function(){
+        $("#addType").click(function(){
+            let invColor = invertHex(document.getElementById("hex").value.substr(1));
+            document.getElementById("invHex").value = "#"+invColor;
+        });
+    });
+</script>
+<script>
     function onChange(){
         let value = $(".activitySelect").val();
         if(value === "richiesta permesso/ferie" || value === "ferie"){
@@ -119,14 +127,6 @@
                 $(".textarea").val("Assistenza");
         }
     }
-</script>
-<script>
-    $(document).ready(function(){
-        $("#addType").click(function(){
-            let invColor = invertHex(document.getElementById("hex").value.substr(1));
-            document.getElementById("invHex").value = "#"+invColor;
-        });
-    });
 </script>
 <script>
     function checkBox(notChecked) {
@@ -144,5 +144,25 @@
 <script>
     function forceLower(strInput) {
         strInput.value=strInput.value.toLowerCase();
+    }
+</script>
+<script>
+    function openOutlook(){
+        let value = $(".activitySelect").val();
+        if(value === "richiesta permesso/ferie"){
+            hoursToEmal = $("#hoursRequired").val();
+            dateToEmail = new Date($("#datepicker").val());
+            dateToAdd = dateToEmail.toLocaleString('it-IT');
+            dateToAdd = dateToAdd.toString().substring(0,dateToAdd.length - 10);
+            if($(".hourDiv > #mattino").is(":checked"))
+                period = "mattino";
+            else
+                period = "pomeriggio";
+            emailTo = "elena@exeprogetti.mail";
+            emailCC = "martino@exeprogetti.mail";
+            emailSub = "Richiesta permesso/ferie";
+            emailBody = "Ciao," + "%0D%0A" + "%0D%0A" + "  chiedo permesso di " + hoursToEmal + " ore per il giorno " + dateToAdd + " " + period;
+            location.href = "mailto:"+emailTo+'?cc='+emailCC+'&subject='+emailSub+'&body='+emailBody;
+        }
     }
 </script>

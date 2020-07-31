@@ -80,7 +80,6 @@
             <table class="table table-striped addActivityTable">
                 <thead>
                     <tr class="addActivity">
-                        <th></th>
                         <th>Durata permesso/ferie</th>
                         <th class="hours hiddenHour">N° Ore</th>
                         <th class="hours hiddenHour">Data</th>
@@ -95,19 +94,12 @@
                         <input name="activity" id="activityHidden" type="text" value="Ferie" hidden/>
                         <input name="repetition" value="0" hidden>
                         <input name="particular" value="0" hidden>
-                        <!-- TIPO -->
-                        <td>
-                            <select name="type" id="typeVacation" hidden>
-                                <option value="richiesta permesso/ferie" selected>Ferie</option>
-                            </select>
-                        </td>
-                        <!-- FINE TIPO -->
                         <!-- DURATA -->
                         <td>
                             <select name="duration" id="howLongVacation" onchange="removeClass();" required>
                                 <option value=""></option>
-                                <option value="hours">Ore</option>
-                                <option value="days">Giorni</option>
+                                <option value="hours" class="vacationOre">Ore</option>
+                                <option value="days" class="vacationGiorni">Giorni</option>
                             </select>
                         </td>
                         <!-- DURATA -->
@@ -140,11 +132,14 @@
                         <!-- FINE DATA FINE -->
                         <!-- OPERATORE -->
                         <td>
-                            <select name="operator" required>
+                            <select class="operatorSelected" name="operator" onchange="return operatorSelected(this);" required>
                                 <option value="" selected></option>
                                 @foreach($users as $user)
                                     <option value="{{ $user->name }}">{{ $user->name }}</option>
                                 @endforeach
+                                @if(Auth::user()->ammVacation == 1)
+                                    <option value="all">Tutti</option>
+                                @endif
                             </select>
                         </td>
                         <!-- FINE OPERATORE -->
@@ -290,10 +285,6 @@
                 </tbody>
             </table>
         </div>
-        <p class="centerTop">TOTALE ORE PERMESSI RICHIESTI: {{ $time }}</p>
-        @foreach($pastHoursRequired as $pastHourRequired)
-            <p class="centerBottom">TOTALE ORE PERMESSI RICHIESTI {{ date('yy') -1 }}: {{ $pastHourRequired->pastTotalHours }}</p>
-        @endforeach
     @else
         <h3 class="headTitle container centeredText"><strong>Devi effettuare l'accesso per poter inserire un'attività</strong></h3>
     @endif
@@ -373,19 +364,42 @@
 </script>
 <script>
     function openOutlook(){
-        hoursToEmal = $("#hoursRequired").val();
-        dateToEmail = new Date($("#datepicker").val());
-        dateToAdd = dateToEmail.toLocaleString('it-IT');
-        dateToAdd = dateToAdd.toString().substring(0,dateToAdd.length - 10);
-        period = $("#mattino");
-        if($("#mattino").is(':checked'))
-            period = "mattino";
-        else if ($("#pomeriggio").is(':checked'))
-            period = "pomeriggio";
-        emailTo = "elena@exeprogetti.mail";
-        emailCC = "martino@exeprogetti.mail";
-        emailSub = "Richiesta permesso/ferie";
-        emailBody = "Ciao," + "%0D%0A" + "%0D%0A" + "  chiedo permesso di " + hoursToEmal + " ore per il giorno " + dateToAdd + " " + period;
-        location.href = "mailto:"+emailTo+'?cc='+emailCC+'&subject='+emailSub+'&body='+emailBody;
+        if($(".vacationOre").is(':selected')){
+            hoursToEmal = $("#hoursRequired").val();
+            dateToEmail = new Date($("#datepicker").val());
+            dateToAdd = dateToEmail.toLocaleString('it-IT');
+            dateToAdd = dateToAdd.toString().substring(0,dateToAdd.length - 10);
+            period = $("#mattino");
+            if($("#mattino").is(':checked'))
+                period = "mattino";
+            else if ($("#pomeriggio").is(':checked'))
+                period = "pomeriggio";
+            emailTo = "martino@exeprogetti.mail";
+            emailSub = "Richiesta permesso/ferie";
+            emailCC = "";
+            emailBody = "Ciao," + "%0D%0A" + "%0D%0A" + "  chiedo permesso di " + hoursToEmal + " ore per il giorno " + dateToAdd + " " + period + "%0D%0A" + "%0D%0A" + "Grazie" + "%0D%0A" + "{{ Auth::user()->name }}";
+            location.href = "mailto:"+emailTo+'?subject='+emailSub+'&body='+emailBody;
+        } else {
+            dateToEmailStart = new Date($("#datepickerStart").val());
+            dateToEmailEnd = new Date($("#datepickerEnd").val());
+            dateToAddStart = dateToEmailStart.toLocaleString('it-IT');
+            dateToAddStart = dateToAddStart.toString().substring(0,dateToAddStart.length - 10);
+            dateToAddEnd = dateToEmailEnd.toLocaleString('it-IT');
+            dateToAddEnd = dateToAddEnd.toString().substring(0,dateToAddEnd.length - 10);
+            emailTo = "martino@exeprogetti.mail";
+            emailSub = "Richiesta permesso/ferie";
+            emailCC = "";
+            emailBody = "Ciao," + "%0D%0A" + "%0D%0A" + "  chiedo permesso dal " + dateToAddStart + " al " + dateToAddEnd + "%0D%0A" + "%0D%0A" + "Grazie" + "%0D%0A" + "{{ Auth::user()->name }}";
+            location.href = "mailto:"+emailTo+'?subject='+emailSub+'&body='+emailBody;
+        }
+    }
+</script>
+<script>
+    function operatorSelected(e){
+        if(e.value == "all")
+            if(confirm("Generare le ferie per tutti gli utenti?"))
+                return true;
+            else
+                return false;
     }
 </script>

@@ -222,7 +222,7 @@ a.fc-day-grid-event {
     right: 36px;
     width: 50px;
     height: 50px;
-    border-radius: 48px;
+    /* border-radius: 48px; */
 }
 
 .main2 {
@@ -286,11 +286,12 @@ a {
 
 .extend {
     background-color: #03a300;
-    width: 300px;
+    width: 345px;
         /* Sfumatura */
         /* Sfumatura Safari */
         /* Sfumatura Opera */
         /* Sfumatura  Firefox */
+    height: 190px;
     background-color: #ff8100; /* non CSS3 browsers */
     /* background: linear-gradient(to right, #f7f7f7, #b8b8b8); */ /* Sfumatura */
     /* background: -webkit-linear-gradient(left, #CDDC39, #03a300); */ /* Sfumatura Safari */
@@ -409,10 +410,10 @@ a.connect:hover{
 
 .bottomRightCorner {
     position: relative;
-    left: -2px;
+    left: 9px;
     width: 17%;
     background-color: #f8fafc;
-    border-radius: 44px;
+    /* border-radius: 44px; */
     cursor: pointer;
     background-color: transparent;
     width: 50px;
@@ -458,6 +459,12 @@ a.connect:hover{
     border-style: solid;
     border-color: #ff8100;
     background-color: white !important;
+}
+
+.numberNotifications {
+    position: absolute;
+    top: 8px;
+    color: #018dfd;
 }
 
 .inputWorker {
@@ -714,6 +721,17 @@ button#genWeekly:hover {
     overflow: hidden;
 }
 
+.ellipsed {
+    text-overflow: ellipsis;
+    overflow: hidden;
+}
+
+.fc-button:focus {
+    outline: 0;
+    -webkit-box-shadow: none !important;
+    box-shadow: none !important;
+}
+
 .hour {    
     order: 1;
     right: 0;
@@ -782,8 +800,26 @@ button#genWeekly:focus {
 
 .backTo {
     position: relative;
-    top: 150px;
+    top: 115px;
     text-align: center;
+}
+
+.dropdown-menu-rightTwo {
+    width: 350px !important;
+}
+
+.borderLeft {
+    padding-left: 10px;
+}
+
+a.box.borderLeft:hover {
+    background-color: #2196F3;
+    color: #fff;
+    text-decoration: none;
+}
+
+.marginNo {
+    margin-bottom: 8px;
 }
 
 .activityLastEdit {
@@ -895,4 +931,10 @@ div#thirdWorkerForm {
 .bold {
     font-weight: bold;
     font-size: 20px;
+}
+
+.trashActivity {
+    color: #F00;
+    font-size: 25px;
+    margin-left: 10px;
 }

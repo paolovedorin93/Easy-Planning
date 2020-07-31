@@ -264,8 +264,7 @@
             dateToEmail = new Date($("#datepicker").val());
             dateToAdd = dateToEmail.toLocaleString('it-IT');
             dateToAdd = dateToAdd.toString().substring(0,dateToAdd.length - 10);
-            period = {{ $activity->hour }};
-            if(period === 0)
+            if($(".hourDiv > #mattino").is(":checked"))
                 period = "mattino";
             else
                 period = "pomeriggio";
