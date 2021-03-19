@@ -106,14 +106,14 @@
     @endif
     @if (session('alert'))
         <div class="alert alert-danger alertBox">
-            <button type="button" class="close" data-dismiss="alert">×</button>
-            {{ session('alert') }}
+          <button type="button" class="close" data-dismiss="alert">×</button>
+          {{ session('alert') }}
         </div>
     @endif
     @if (session('messaggio'))
         <div class="alert alert-success alertBox">
-            <button type="button" class="close" data-dismiss="alert">×</button>
-            {{ session('messaggio') }}
+          <button type="button" class="close" data-dismiss="alert">×</button>
+          {{ session('messaggio') }}
         </div>
     @endif
     <div class="generalContainer">

@@ -76,7 +76,7 @@
                     <a class="linkPlanning" href="planning">Planning Assistenza</a>
                 </div>
                 <div class="links">
-                    <a href="risorse">Planning Risorse</a>
+                    <!-- <a href="risorse">Planning Risorse</a> -->
                 </div>
                 @if(Auth::guest())
                 <div class="links home">

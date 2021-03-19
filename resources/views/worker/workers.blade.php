@@ -8,7 +8,7 @@
         @else
         <div class="flex-center position-ref full-height">
             <div id="firstWorkerForm">
-                <span class="spanWorker">Qui è possibile modificare le abilitazioni degli utenti</span>
+                <p class="pWorker">Qui è possibile modificare le abilitazioni degli utenti</p>
                 <form method="post" action="{{ action('WorkerController@update') }}">
                     {{csrf_field()}}
                     <table>
@@ -39,7 +39,7 @@
                 </form>
             </div>
             <div id="secondWorkerForm">
-                <span class="spanWorker">Qui è possibile modificare la gestione dell'intensità lavoro</span>
+                <p class="pWorker">Qui è possibile modificare la gestione dell'intensità lavoro</p>
                 <form class="formSecondWorker" method="post" action="{{ action('PlanningController@updateIntensity') }}">
                     {{csrf_field()}}
                     <?php $count = 1; ?>
@@ -73,7 +73,7 @@
                 <a class="backTo" href="../public/planning">Torna al planning</a>
             </div>
             <div id="thirdWorkerForm">
-                <span class="spanWorker">Qui è possibile modificare le abilitazioni degli utenti</span>
+                <p class="pWorker">Qui è possibile creare le tipologie di attività</p>
                 <table>
                     <th>
                         <td class="label color">Colore</td>

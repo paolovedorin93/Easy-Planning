@@ -20,10 +20,12 @@ class CreatePlanningTable extends Migration
             $table->date('startDate')->nullable();
             $table->string('activity');
             $table->string('type', 50);
-            $table->tinyInteger('hour', 1);
+            $table->tinyInteger('hour');
             $table->string('edit');
-            $table->tinyInteger('particular', 1);
-            $table->time('time'); //where to save clock time
+            $table->tinyInteger('particular');
+            $table->tinyInteger('repetition');
+            $table->tinyInteger('notification');
+            $table->
             $table->timestamps();
         });
     }

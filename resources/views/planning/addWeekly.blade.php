@@ -68,7 +68,6 @@
                                     @foreach($types as $type)
                                         <option value="{{ $type->type }}" style="background-color: {{ $type->color }}; color: #000;">{{ $type->type }}</option>
                                     @endforeach
-                                    <option value="Add" class="addActivity">Aggiungi...</option>
                                 </select>                       
                             </td>
                             <td>
@@ -107,17 +106,6 @@
                     </tbody>    
                 </table>
             </form> 
-            <div class="addActivityDiv addActivityDivClose">
-                <form method="post" action="{{ action('PlanningController@storeActivity') }}">
-                    {{ csrf_field() }}
-                    <div class="content divContent">
-                        <input name="type" placeholder="Aggiungi tipo attività..." onkeyup="return forceLower(this); " required>
-                        <input id="hex" name="color" type="color" required>
-                        <input id="invHex" name="inv_hex" style="display: none;">
-                        <button id="addType" type="submit" class="btn btn-primary aggiungi buttonShadow"><i class="fa fa-plus fa-lg"></i>&nbsp;&nbsp;&nbsp;Aggiungi</button>
-                    </div>
-                </form>
-            </div>
             <table class="table table-striped editActivityWeeklyTable">
                 <thead class="editActivity">
                     <tr>
@@ -146,7 +134,6 @@
                                         @foreach($types as $type)
                                             <option value="{{ $type->type }}" @if($type->type == $particularAct->type) selected @endif style="background-color: {{ $type->color }}; color: #000; font-weight: bold;">{{ $type->type }}</option>
                                         @endforeach
-                                        <option value="Add" class="addActivity">Aggiungi...</option>
                                     </select>                        
                                 </td>
                                 <td>

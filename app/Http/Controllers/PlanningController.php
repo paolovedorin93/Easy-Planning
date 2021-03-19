@@ -109,7 +109,7 @@ class PlanningController extends Controller
         $users = User::all();
         $today = new DateTime();
         $vacationsFiltered = DB::table('plannings')
-                                                ->where('type','richiesta permesso/ferie')
+                                                ->where('type','Richiesta Permesso/Ferie')
                                                 ->orderby('operator','ASC')
                                                 ->orderby('date','ASC')
                                                 ->orderby('hour','ASC')
@@ -127,7 +127,7 @@ class PlanningController extends Controller
         $hoursRequired = DB::table('plannings')
                                             ->select(DB::raw('SUM(time) as totalHours'))
                                             ->where([
-                                                ['type','richiesta permesso/ferie'],
+                                                ['type','Richiesta Permesso/Ferie'],
                                                 ['operator',Auth::user()->name],
                                                 ['date','>=','01/01/'.date("y")],
                                                 ['date','<=','31/12/'.date("y")],
@@ -154,7 +154,7 @@ class PlanningController extends Controller
     {
         $users = User::all();
         $types = Activity::all();
-        return view('planning/add',compact('users','types','date'));
+        return view('planning/add',compact('users','types'));
     }
 
     /**
@@ -174,12 +174,12 @@ class PlanningController extends Controller
         $activity->edit = Auth::user()->name;
         $activity->particular = $request->get('particular');
         $activity->repetition = $request->get('repetition');
-        if($activity->type == "richiesta permesso/ferie" || $activity->type == "ferie")
+        if($activity->type == "Richiesta Permesso/Ferie" || $activity->type == "ferie")
             $activity->time = $request->get('time');
         else 
             $activity->time = 0;
         $activity->save();
-        if(Auth::user()->name != $activity->operator) {
+        if(Auth::user()->name != $activity->operator && $request->get('repetition')==0) {
             $notification = new Notification;
             $notification->worker = $activity->operator;
             $notification->id_ref = $activity->id;
@@ -252,7 +252,7 @@ class PlanningController extends Controller
                         $activity->activity = "Assistenza";
                         $activity->operator = $worker->name;
                         $activity->date = $changeDate;
-                        $activity->type = "assistenza";
+                        $activity->type = "Assistenza";
                         $activity->hour = $x;
                         $activity->edit = Auth::user()->name;
                         $activity->particular = "0";
@@ -291,10 +291,11 @@ class PlanningController extends Controller
             $activity->activity = $request->get('activity');
             $activity->operator = $request->get('operator');
             $activity->date = $request->get('date');
-            $activity->type = "richiesta permesso/ferie";
+            $activity->type = "Richiesta Permesso/Ferie";
             $activity->hour = $request->get('hour');
             $activity->time = $request->get('time');
             $activity->edit = Auth::user()->name;
+            $activity->particular = 0;
             $activity->save();
             session()->flash('messaggio','Operazione completata');
             return redirect()->to('/planning')->with(['date' => $request->get('date')]);
@@ -341,10 +342,11 @@ class PlanningController extends Controller
                                 $activity->activity = "Ferie";
                                 $activity->operator = $user->name;
                                 $activity->date = $changeDate;
-                                $activity->type = "richiesta permesso/ferie";
+                                $activity->type = "Richiesta Permesso/Ferie";
                                 $activity->hour = $x;
                                 $activity->edit = Auth::user()->name;
                                 $activity->time = $request->get('time');
+                                $activity->particular = 0;
                                 $activity->save();
                             }
                         }
@@ -354,10 +356,11 @@ class PlanningController extends Controller
                             $activity->activity = "Ferie";
                             $activity->operator = $request->get('operator');
                             $activity->date = $changeDate;
-                            $activity->type = "richiesta permesso/ferie";
+                            $activity->type = "Richiesta Permesso/Ferie";
                             $activity->hour = $x;
                             $activity->edit = Auth::user()->name;
                             $activity->time = $request->get('time');
+                            $activity->particular = 0;
                             $activity->save();
                         }
                 }
@@ -414,7 +417,7 @@ class PlanningController extends Controller
         if($operator == '') {
             $vacationsFiltered = DB::table('plannings')
                                                     ->where([
-                                                        ['type','richiesta permesso/ferie'],
+                                                        ['type','Richiesta Permesso/Ferie'],
                                                         ['date','>=',$request->get('startDateFilter')],
                                                         ['date','<=',$request->get('endDateFilter')],
                                                     ])
@@ -434,7 +437,7 @@ class PlanningController extends Controller
         } else {
             $vacationsFiltered = DB::table('plannings')
                                                     ->where([
-                                                        ['type','richiesta permesso/ferie'],
+                                                        ['type','Richiesta Permesso/Ferie'],
                                                         ['date','>=',$request->get('startDateFilter')],
                                                         ['date','<=',$request->get('endDateFilter')],
                                                         ['operator',$operator],
@@ -480,8 +483,8 @@ class PlanningController extends Controller
                                                 ->get();
         $notification = Notification::where('id_ref', $id)
                                                     ->first();
-        $notification->read = 1;
-        $notification->save();
+        // $notification->read = 1;
+        // $notification->save();
         return view('planning/editplanning', compact('activity','users', 'types', 'comments'));
     }
 
@@ -540,7 +543,7 @@ class PlanningController extends Controller
         $activity->particular = $request->get('particular');
         $activity->repetition = $request->get('repetition');
         $activity->edit = Auth::user()->name;
-        if($activity->type == "richiesta permesso/ferie" || $activity->type == "ferie")
+        if($activity->type == "Richiesta Permesso/Ferie" || $activity->type == "ferie")
             $activity->time = $request->get('time');
         else 
             $activity->time = 0;
@@ -569,7 +572,7 @@ class PlanningController extends Controller
             if($operator == '') {
                 $vacationsFiltered = DB::table('plannings')
                                                         ->where([
-                                                            ['type','richiesta permesso/ferie'],
+                                                            ['type','Richiesta Permesso/Ferie'],
                                                             ['date','>=',$request->get('startDateFiltered')],
                                                             ['date','<=',$request->get('endDateFiltered')],
                                                         ])
@@ -577,7 +580,7 @@ class PlanningController extends Controller
             } else {
                 $vacationsFiltered = DB::table('plannings')
                                                         ->where([
-                                                            ['type','richiesta permesso/ferie'],
+                                                            ['type','Richiesta Permesso/Ferie'],
                                                             ['date','>=',$request->get('startDateFiltered')],
                                                             ['date','<=',$request->get('endDateFiltered')],
                                                             ['operator',$operator],
@@ -593,13 +596,13 @@ class PlanningController extends Controller
             if($operator == '') {
                 $vacationsFiltered = DB::table('plannings')
                                                         ->where([
-                                                            ['type','richiesta permesso/ferie']
+                                                            ['type','Richiesta Permesso/Ferie']
                                                         ])
                                                         ->get();
             } else {
                 $vacationsFiltered = DB::table('plannings')
                                                         ->where([
-                                                            ['type','richiesta permesso/ferie'],
+                                                            ['type','Richiesta Permesso/Ferie'],
                                                             ['operator',$operator],
                                                         ])
                                                         ->get();

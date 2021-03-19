@@ -13,10 +13,10 @@ class CreateTbgeneTable extends Migration
      */
     public function up()
     {
-        Schema::create('tbgene', function (Blueprint $table) {
+        Schema::create('tbgenes', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->integer('type', 5);
-            $table->integer('number', 5);
+            $table->integer('type');
+            $table->integer('number');
             $table->timestamps();
         });
     }

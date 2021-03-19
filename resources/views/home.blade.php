@@ -18,7 +18,7 @@
                 </div>
                 <div class="card-body">
                     <a href="planning">Planning</a><br>
-                    <a href="risorse">Planning risorse</a>
+                    <!-- <a href="risorse">Planning risorse</a> -->
                 </div>
                 <div class="card-body">
                 </div>

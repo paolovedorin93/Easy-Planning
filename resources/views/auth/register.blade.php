@@ -44,6 +44,11 @@
 
                             <div class="col-md-6">
                                 <input id="password-confirm" type="password" class="form-control" name="password_confirmation" required autocomplete="new-password">
+                                <input id="password-confirm" type="password" class="form-control" name="particular" value="0" hidden>
+                                <input id="password-confirm" type="password" class="form-control" name="ammVacation" value="0" hidden>
+                                <input id="password-confirm" type="password" class="form-control" name="suspended" value="0" hidden>
+                                <input id="password-confirm" type="password" class="form-control" name="no_assi" value="0" hidden>
+                                <input id="password-confirm" type="password" class="form-control" name="admin" value="0" hidden>
                             </div>
                         </div>
 
