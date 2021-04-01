@@ -26,10 +26,11 @@
                         </script>
                         <div>
                             @if($task->hour == 0)
-                                Mattino
+                                <span>Mattino</span>
                             @else
-                                Pomeriggio
+                                <span>Pomeriggio</span>
                             @endif
+                            <span>- {{ $task->type }} </span>
                         </div>
                     </a>
                 </div>

@@ -133,11 +133,14 @@
                         <!-- OPERATORE -->
                         <td>
                             <select class="operatorSelected" name="operator" onchange="return operatorSelected(this);" required>
-                                <option value="" selected></option>
-                                @foreach($users as $user)
-                                    <option value="{{ $user->name }}">{{ $user->name }}</option>
-                                @endforeach
+                                @if(Auth::user()->ammVacation == 0)
+                                    <option value="{{ Auth::user()->name }}">{{ Auth::user()->name }}</option>
+                                @endif
                                 @if(Auth::user()->ammVacation == 1)
+                                    <option value="" selected></option>
+                                    @foreach($users as $user)
+                                        <option value="{{ $user->name }}">{{ $user->name }}</option>
+                                    @endforeach
                                     <option value="all">Tutti</option>
                                 @endif
                             </select>
@@ -365,7 +368,7 @@
 <script>
     function openOutlook(){
         if($(".vacationOre").is(':selected')){
-            hoursToEmal = $("#hoursRequired").val();
+            hoursToEmail = $("#hoursRequired").val();
             dateToEmail = new Date($("#datepicker").val());
             dateToAdd = dateToEmail.toLocaleString('it-IT');
             dateToAdd = dateToAdd.toString().substring(0,dateToAdd.length - 10);
@@ -377,7 +380,7 @@
             emailTo = "martino@exeprogetti.mail";
             emailSub = "Richiesta permesso/ferie";
             emailCC = "";
-            emailBody = "Ciao," + "%0D%0A" + "%0D%0A" + "  chiedo permesso di " + hoursToEmal + " ore per il giorno " + dateToAdd + " " + period + "%0D%0A" + "%0D%0A" + "Grazie" + "%0D%0A" + "{{ Auth::user()->name }}";
+            emailBody = "Ciao," + "%0D%0A" + "%0D%0A" + "  chiedo permesso di " + hoursToEmail + " ore per il giorno " + dateToAdd + " " + period + "%0D%0A" + "%0D%0A" + "Grazie" + "%0D%0A" + "{{ Auth::user()->name }}";
             location.href = "mailto:"+emailTo+'?subject='+emailSub+'&body='+emailBody;
         } else {
             dateToEmailStart = new Date($("#datepickerStart").val());

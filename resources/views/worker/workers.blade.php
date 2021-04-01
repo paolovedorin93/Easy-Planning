@@ -4,7 +4,7 @@
     <body>
         @include('include.nav')
         @if(Auth::guest() || Auth::user()->admin==0)
-        <div class="container centeredText">Non hai diritti di amministratore per poter modificare le impostazioni utenti</div>
+        <div class="container centeredText">Non hai diritti di amministratore per poter modificare le impostazioni utente</div>
         @else
         <div class="flex-center position-ref full-height">
             <div id="firstWorkerForm">

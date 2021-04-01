@@ -121,6 +121,10 @@ a.fc-day-grid-event {
     display: none !important;
 }
 
+.hiddenAll {
+    display: none !important;
+}
+
 .fc-icon {
     line-height: 0.5em !important;
 }
@@ -837,6 +841,14 @@ a.box.borderLeft:hover {
     margin: 0 auto;
 }
 
+.tableComments > tbody > tr > td {
+    padding: 8px;
+}
+
+.tableComments > tbody > tr:not(:last-child){
+    border-bottom: 1px solid black
+}
+
 .tareaComments {
     width: 100%;
 }
@@ -941,4 +953,8 @@ div#thirdWorkerForm {
 
 .pWorker {
     text-align: center;
+}
+
+th.fc-day-header.fc-today {
+    background-color: #fcf8e3;
 }

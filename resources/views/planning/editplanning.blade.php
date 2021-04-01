@@ -260,7 +260,7 @@
     function openOutlook(){
         let value = $(".activitySelect").val();
         if(value === "richiesta permesso/ferie"){
-            hoursToEmal = $("#hoursRequired").val();
+            hoursToEmail = $("#hoursRequired").val();
             dateToEmail = new Date($("#datepicker").val());
             dateToAdd = dateToEmail.toLocaleString('it-IT');
             dateToAdd = dateToAdd.toString().substring(0,dateToAdd.length - 10);
@@ -271,7 +271,7 @@
             emailTo = "elena@exeprogetti.mail";
             emailCC = "martino@exeprogetti.mail";
             emailSub = "Richiesta permesso/ferie";
-            emailBody = "Ciao," + "%0D%0A" + "%0D%0A" + "  chiedo permesso di " + hoursToEmal + " ore per il giorno " + dateToAdd + " " + period;
+            emailBody = "Ciao," + "%0D%0A" + "%0D%0A" + "  chiedo permesso di " + hoursToEmail + " ore per il giorno " + dateToAdd + " " + period;
             location.href = "mailto:"+emailTo+'?cc='+emailCC+'&subject='+emailSub+'&body='+emailBody;
         }
     }

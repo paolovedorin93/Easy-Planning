@@ -179,7 +179,7 @@ class PlanningController extends Controller
         else 
             $activity->time = 0;
         $activity->save();
-        if(Auth::user()->name != $activity->operator && $request->get('repetition')==0) {
+        if(Auth::user()->name != $activity->operator && $request->get('repetition')==0) { //todo: è necessario repetition?
             $notification = new Notification;
             $notification->worker = $activity->operator;
             $notification->id_ref = $activity->id;
@@ -397,7 +397,7 @@ class PlanningController extends Controller
                                     ->where([
                                         ['operator',$user],
                                         ['particular','<>',1],
-                                        ['activity','<>','Assistenza'],
+                                        ['type','<>','Assistenza'],
                                         ['date','>=',Carbon::now()->subDays(7)],
                                         ['date','<=',Carbon::now()->addDays(7)],
                                     ])
