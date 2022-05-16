@@ -381,7 +381,17 @@ class PlanningController extends Controller
         $comment->comment = $request->get('comment');
         $comment->idActivity = $request->get('idActivity');
         $comment->save();
-        //TODO: add notification callback
+        $worker = Planning::select('operator')
+                                        ->where('id','=',$request->get('idActivity'))
+                                        ->get();
+        if($worker != $request->get('operator')){
+            $notification = new Notification;
+            $notification->worker = $worker;
+            $notification->id_ref = "123";
+            $notification->save();
+        }
+        else
+            return "BYE";
         return redirect()->back()->with('Messaggio: ','Commento inserito');
     }
 
@@ -483,8 +493,8 @@ class PlanningController extends Controller
                                                 ->get();
         $notification = Notification::where('id_ref', $id)
                                                     ->first();
-        // $notification->read = 1;
-        // $notification->save();
+        if($notification!="")
+            $notification->delete();
         return view('planning/editplanning', compact('activity','users', 'types', 'comments'));
     }
 
@@ -547,6 +557,14 @@ class PlanningController extends Controller
             $activity->time = $request->get('time');
         else 
             $activity->time = 0;
+        if($activity->type == "Assistenza")
+            $activity->activity = "Assistenza";
+        if(Auth::user()->name != $activity->operator && $request->get('repetition')==0) { //todo: è necessario repetition?
+            $notification = new Notification;
+            $notification->worker = $activity->operator;
+            $notification->id_ref = $activity->id;
+            $notification->save();
+        }
         $activity->save();
         return redirect()->back()->with('messaggio','Operazione completata');
     }
@@ -671,7 +689,8 @@ class PlanningController extends Controller
     /**
      * Check if is weekend
      */
-    public function isWeekend($date) {
+    public function isWeekend($date) 
+    {
         return ($date->format('N') >= 6);
     }
 

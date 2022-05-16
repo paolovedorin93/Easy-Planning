@@ -12,13 +12,14 @@ textarea {
 }
 
 #mainNav {
-    bottom: 45px;
+    
     -webkit-transition: .25s ease-in-out;
     -moz-transition: .25s ease-in-out;
     -o-transition: .25s ease-in-out;
     transition: .25s ease-in-out;
     z-index: 10;
-}
+    border-bottom: ridge;
+position: fixed;top: -46px;width: 100%;}
 
 a.fc-day-grid-event {
     font-weight: bold;
@@ -26,7 +27,7 @@ a.fc-day-grid-event {
 }
 
 .down {
-    bottom: 0 !important;
+    top: 0 !important;
     background-color: #fffd !important;
 }
 
@@ -71,7 +72,7 @@ a.fc-day-grid-event {
 }
 
 .generalContainer {
-    margin: 0 10px 0 10px !important;
+    margin: 53px 10px 0 10px !important;
     bottom: 25px;
     position: relative;
 }
@@ -656,7 +657,7 @@ i#confermaWeeklyI {
 }
 
 .generalContainer {
-    margin-bottom: 50px !important;
+    /* margin-bottom: 50px !important; */
 }
 
 #genWeekly {
@@ -758,7 +759,7 @@ button#genWeekly:focus {
 
 #firstWorkerForm {
     position: relative;
-    right: 235px;
+    right: 65px;
 }
 
 .formSecondWorker {
@@ -767,7 +768,7 @@ button#genWeekly:focus {
 
 #secondWorkerForm {
     position: relative;
-    left: 7px;
+    left: -1px;
     height: 290px;
 }
 
@@ -882,7 +883,7 @@ a.box.borderLeft:hover {
 div#thirdWorkerForm {
     order: 3;
     position: relative;
-    left: 200px;
+    left: 25px;
 }
 
 .center {

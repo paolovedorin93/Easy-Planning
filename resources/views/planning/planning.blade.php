@@ -147,8 +147,8 @@
       @foreach ($workers as $worker)
         @if($worker->no_assi != 1 && $worker->suspended != 1)
           <strong style="text-transform: capitalize;">{{ $worker->name }}</strong>
-          <div class="tableUser" id='calendar{{ $worker->name }}'></div>
-          <div class="divButton">
+          <div class="tableUser" id='calendar{{ $worker->name }}' style="margin-bottom: 15px;"></div>
+          <!-- <div class="divButton">
             <button class="expandTable buttonToExpande " onclick="let worker = '{{ $worker->name }}'; hide(worker, this)"><i class="fa fa-angle-down"></i></button>
             <button class="expandTable buttonToExpande " onclick="let worker = '{{ $worker->name }}'; hideAll(worker, this)"><i class="expendAll fa fa-angle-double-down"></i></button>
           </div>
@@ -163,7 +163,7 @@
               $(".tableUser").toggleClass('hidden');
               $(".expendAll").toggleClass('fa-angle-double-up');
             }
-          </script>
+          </script> -->
           <script>
             $(document).ready(function() {
               // page is now ready, initialize the calendar...
@@ -229,6 +229,10 @@
                       $("#endDate").attr('value',endDate);
                     },
                   }
+                },
+                buttonsIcons: {
+                  Prec: 'left-single-arrow',
+                  Pros: 'right-single-arrow',
                 },
                 defaultView: 'basicWeek',
                 hiddenDays: [0,6],
@@ -345,7 +349,7 @@
         @if($worker->no_assi != 0 && $worker->suspended == 0)
           <strong style="text-transform: capitalize;">{{ $worker->name }}</strong>
           <div class="tableUser" id='calendar{{ $worker->name }}'></div>
-          <div class="divButton">
+          <!-- <div class="divButton">
             <button class="expandTable buttonToExpande " onclick="let worker = '{{ $worker->name }}'; hide(worker, this)"><i class="fa fa-angle-down"></i></button>
             <button class="expandTable buttonToExpande " onclick="let worker = '{{ $worker->name }}'; hideAll(worker, this)"><i class="expendAll fa fa-angle-double-down"></i></button>
           </div>
@@ -360,7 +364,7 @@
               $(".tableUser").toggleClass('hidden');
               $(".expendAll").toggleClass('fa-angle-double-up');
             }
-          </script>
+          </script> -->
           <script>
             $(document).ready(function() {
               // page is now ready, initialize the calendar...

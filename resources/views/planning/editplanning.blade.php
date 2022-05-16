@@ -109,6 +109,7 @@
             dateToAdd = dateToAdd.toString().substring(0,dateToAdd.length - 10)
             $(".activityLastEdit").append(dateToAdd);
         </script>
+        <!-- Commenti -->
         <h3 class="headTitle">Commenti</h3>
         <div class="container containerComment">
             <table class="tableComments">
